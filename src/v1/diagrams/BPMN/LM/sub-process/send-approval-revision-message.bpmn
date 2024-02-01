@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0mkwh7u" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="send-approval-revision-message-sub" name="(sub) send-approval-revision-message" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>Flow_1qsrvd2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1nsawzt" name="get-contract-parties" camunda:type="external" camunda:topic="get-contract-parties">
+      <bpmn:incoming>Flow_1qe4bgr</bpmn:incoming>
+      <bpmn:outgoing>Flow_158rwzz</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_158rwzz" sourceRef="Activity_1nsawzt" targetRef="Activity_0io829a" />
+    <bpmn:serviceTask id="Activity_0io829a" name="Get Platform Parameters" camunda:type="external" camunda:topic="get-platform-parameters">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="platformName">Bridgefund BV</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_158rwzz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1a3h8dh</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_15aym65" name="Error end">
+      <bpmn:incoming>Flow_04kuou5</bpmn:incoming>
+      <bpmn:incoming>Flow_1p9ozce</bpmn:incoming>
+      <bpmn:incoming>Flow_01dwh74</bpmn:incoming>
+      <bpmn:incoming>Flow_1nrqpju</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1oji3j3" errorRef="Error_0xghfly" />
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="Event_08vuxye" attachedToRef="Activity_1nsawzt">
+      <bpmn:outgoing>Flow_04kuou5</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1ivyjus" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0cynvw2" attachedToRef="Activity_0io829a">
+      <bpmn:outgoing>Flow_1p9ozce</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1rwk9mq" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_04kuou5" sourceRef="Event_08vuxye" targetRef="Event_15aym65" />
+    <bpmn:sequenceFlow id="Flow_1p9ozce" sourceRef="Event_0cynvw2" targetRef="Event_15aym65" />
+    <bpmn:sequenceFlow id="Flow_1a3h8dh" sourceRef="Activity_0io829a" targetRef="Activity_0fcbssn" />
+    <bpmn:serviceTask id="Activity_0fcbssn" name="Create Email Notifications For Revision Approval" camunda:type="external" camunda:topic="create-email-notifications-for-revision-approval">
+      <bpmn:incoming>Flow_1a3h8dh</bpmn:incoming>
+      <bpmn:outgoing>Flow_04k1ss6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0vc4731" attachedToRef="Activity_0fcbssn">
+      <bpmn:outgoing>Flow_01dwh74</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0h5klca" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_01dwh74" sourceRef="Event_0vc4731" targetRef="Event_15aym65" />
+    <bpmn:sequenceFlow id="Flow_04k1ss6" sourceRef="Activity_0fcbssn" targetRef="Activity_0waq8zz" />
+    <bpmn:callActivity id="Activity_0waq8zz" name="Prepare emails" calledElement="prepare-emails" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="dataList" target="dataList" />
+        <camunda:in variables="all" />
+        <camunda:in source="metaData" target="metaData" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="result" target="result" />
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">revision-approval</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_04k1ss6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0kp5x9a</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_0kp5x9a" sourceRef="Activity_0waq8zz" targetRef="Activity_0x8lvpb" />
+    <bpmn:serviceTask id="Activity_0x8lvpb" name="Create Revision Approval Result" camunda:type="external" camunda:topic="create-revision-approval-result">
+      <bpmn:incoming>Flow_0kp5x9a</bpmn:incoming>
+      <bpmn:incoming>Flow_04vpwhk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ie9lv1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1ie9lv1" sourceRef="Activity_0x8lvpb" targetRef="Event_1lu7m99" />
+    <bpmn:endEvent id="Event_1lu7m99" name="End">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">revision-approval</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ie9lv1</bpmn:incoming>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_0yxcl4t" signalRef="Signal_0zf03qk">
+        <bpmn:extensionElements>
+          <camunda:in variables="all" />
+          <camunda:in source="emailList" target="emailList" />
+        </bpmn:extensionElements>
+      </bpmn:signalEventDefinition>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1qsrvd2" sourceRef="StartEvent_1" targetRef="Activity_0dk9mn7" />
+    <bpmn:serviceTask id="Activity_0dk9mn7" name="Check SME Loan For Send Approval Revision Message" camunda:type="external" camunda:topic="check-sme-loan-for-send-approval-revision-message">
+      <bpmn:incoming>Flow_1qsrvd2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0aycmrk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1rf3hks" attachedToRef="Activity_0dk9mn7">
+      <bpmn:outgoing>Flow_1nrqpju</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1dsoa7w" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1nrqpju" sourceRef="Event_1rf3hks" targetRef="Event_15aym65" />
+    <bpmn:exclusiveGateway id="Gateway_0psi82x">
+      <bpmn:incoming>Flow_0aycmrk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qe4bgr</bpmn:outgoing>
+      <bpmn:outgoing>Flow_04vpwhk</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0aycmrk" sourceRef="Activity_0dk9mn7" targetRef="Gateway_0psi82x" />
+    <bpmn:sequenceFlow id="Flow_1qe4bgr" sourceRef="Gateway_0psi82x" targetRef="Activity_1nsawzt">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approvedRevision== true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_04vpwhk" sourceRef="Gateway_0psi82x" targetRef="Activity_0x8lvpb">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approvedRevision== false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmn:signal id="Signal_0zf03qk" name="start-email-queue" />
+  <bpmn:error id="Error_0xghfly" name="Error send approval revision emails" errorCode="ERROR_SEND_APPROVAL_REVISION_EMAILS" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="send-approval-revision-message-sub">
+      <bpmndi:BPMNEdge id="Flow_04vpwhk_di" bpmnElement="Flow_04vpwhk">
+        <di:waypoint x="390" y="182" />
+        <di:waypoint x="390" y="80" />
+        <di:waypoint x="1180" y="80" />
+        <di:waypoint x="1180" y="167" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qe4bgr_di" bpmnElement="Flow_1qe4bgr">
+        <di:waypoint x="415" y="207" />
+        <di:waypoint x="490" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0aycmrk_di" bpmnElement="Flow_0aycmrk">
+        <di:waypoint x="310" y="207" />
+        <di:waypoint x="365" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nrqpju_di" bpmnElement="Flow_1nrqpju">
+        <di:waypoint x="260" y="265" />
+        <di:waypoint x="260" y="330" />
+        <di:waypoint x="1282" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qsrvd2_di" bpmnElement="Flow_1qsrvd2">
+        <di:waypoint x="188" y="207" />
+        <di:waypoint x="210" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ie9lv1_di" bpmnElement="Flow_1ie9lv1">
+        <di:waypoint x="1230" y="207" />
+        <di:waypoint x="1282" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kp5x9a_di" bpmnElement="Flow_0kp5x9a">
+        <di:waypoint x="1070" y="207" />
+        <di:waypoint x="1130" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04k1ss6_di" bpmnElement="Flow_04k1ss6">
+        <di:waypoint x="910" y="207" />
+        <di:waypoint x="970" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01dwh74_di" bpmnElement="Flow_01dwh74">
+        <di:waypoint x="860" y="265" />
+        <di:waypoint x="860" y="330" />
+        <di:waypoint x="1282" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a3h8dh_di" bpmnElement="Flow_1a3h8dh">
+        <di:waypoint x="750" y="207" />
+        <di:waypoint x="810" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1p9ozce_di" bpmnElement="Flow_1p9ozce">
+        <di:waypoint x="700" y="265" />
+        <di:waypoint x="700" y="330" />
+        <di:waypoint x="1282" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04kuou5_di" bpmnElement="Flow_04kuou5">
+        <di:waypoint x="540" y="265" />
+        <di:waypoint x="540" y="330" />
+        <di:waypoint x="1282" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_158rwzz_di" bpmnElement="Flow_158rwzz">
+        <di:waypoint x="590" y="207" />
+        <di:waypoint x="650" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="189" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="232" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03xwgtj_di" bpmnElement="Activity_1nsawzt">
+        <dc:Bounds x="490" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1x01lj2_di" bpmnElement="Activity_0io829a">
+        <dc:Bounds x="650" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1b4b1v8_di" bpmnElement="Event_15aym65">
+        <dc:Bounds x="1282" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1278" y="355" width="46" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ylez1f_di" bpmnElement="Activity_0fcbssn">
+        <dc:Bounds x="810" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kt0wd5_di" bpmnElement="Activity_0waq8zz">
+        <dc:Bounds x="970" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0x9dapf_di" bpmnElement="Activity_0x8lvpb">
+        <dc:Bounds x="1130" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0tevhin_di" bpmnElement="Event_1lu7m99">
+        <dc:Bounds x="1282" y="189" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1290" y="232" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1wzets4_di" bpmnElement="Activity_0dk9mn7">
+        <dc:Bounds x="210" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0psi82x_di" bpmnElement="Gateway_0psi82x" isMarkerVisible="true">
+        <dc:Bounds x="365" y="182" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rnyq2n_di" bpmnElement="Event_1rf3hks">
+        <dc:Bounds x="242" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_19d56i8_di" bpmnElement="Event_0vc4731">
+        <dc:Bounds x="842" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1m8gxok_di" bpmnElement="Event_0cynvw2">
+        <dc:Bounds x="682" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0n4i90d_di" bpmnElement="Event_08vuxye">
+        <dc:Bounds x="522" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

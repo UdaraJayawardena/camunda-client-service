@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_13u87mk" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="sme-loans-transaction-migrations" name="(Migrations) Sme loans transaction migrations" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0gk6bpt</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0gk6bpt" sourceRef="StartEvent_1" targetRef="Task_0i0irvc" />
+    <bpmn:sequenceFlow id="SequenceFlow_0nm3i3a" sourceRef="Task_0i0irvc" targetRef="Task_0n3oosz" />
+    <bpmn:serviceTask id="Task_0i0irvc" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_0gk6bpt</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0nm3i3a</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_02b9oic">
+      <bpmn:incoming>SequenceFlow_1rlgw9q</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1fkcdyq</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_02nup3x" camunda:type="external" camunda:topic="end-sme-loans-transaction-migrations" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:endEvent id="EndEvent_0c2wsat">
+      <bpmn:incoming>SequenceFlow_0xe8q3h</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_12urvim</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1rlgw9q" sourceRef="Task_0n3oosz" targetRef="IntermediateThrowEvent_02b9oic" />
+    <bpmn:serviceTask id="Task_0n3oosz" name="Make migrate sme-loan-transactions request" camunda:type="external" camunda:topic="make-migrate-sme-loan-transactions-request">
+      <bpmn:incoming>SequenceFlow_0nm3i3a</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1rlgw9q</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:callActivity id="Task_0fnxzgz" name="Loop sme-loan for migrate sme-loan-transactions" calledElement="sme-loan-transactions-migrations-loop" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="numOfLoanPerLoop" target="numOfLoanPerLoop" />
+        <camunda:out source="result" target="result" />
+        <camunda:out source="resultList" target="resultList" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="isError" target="isError" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1fkcdyq</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0jqu4e1</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="SequenceFlow_1fkcdyq" sourceRef="IntermediateThrowEvent_02b9oic" targetRef="Task_0fnxzgz" />
+    <bpmn:boundaryEvent id="BoundaryEvent_1ws7pc7" attachedToRef="Task_0fnxzgz">
+      <bpmn:outgoing>SequenceFlow_0m2vt94</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_1bc16hx" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="BoundaryEvent_0gsxwo1" attachedToRef="Task_0n3oosz">
+      <bpmn:outgoing>SequenceFlow_1xcin8f</bpmn:outgoing>
+      <bpmn:errorEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1xcin8f" sourceRef="BoundaryEvent_0gsxwo1" targetRef="EndEvent_1pznwto" />
+    <bpmn:sequenceFlow id="SequenceFlow_0xe8q3h" sourceRef="Task_1a711nk" targetRef="EndEvent_0c2wsat" />
+    <bpmn:sequenceFlow id="SequenceFlow_0m2vt94" sourceRef="BoundaryEvent_1ws7pc7" targetRef="Task_1a711nk" />
+    <bpmn:serviceTask id="Task_1a711nk" name="Rollback migration sme-loan-transactions" camunda:type="external" camunda:topic="rollback-migrated-sme-loan-transactions">
+      <bpmn:incoming>SequenceFlow_0m2vt94</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0fdrkna</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0xe8q3h</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0q8b40m">
+      <bpmn:incoming>SequenceFlow_0jqu4e1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0fdrkna</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_136rkc4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0fdrkna" sourceRef="ExclusiveGateway_0q8b40m" targetRef="Task_1a711nk">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isError == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_1pznwto">
+      <bpmn:incoming>SequenceFlow_1xcin8f</bpmn:incoming>
+      <bpmn:messageEventDefinition camunda:type="external" camunda:topic="end-sme-loans-transaction-migrations" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0jqu4e1" sourceRef="Task_0fnxzgz" targetRef="ExclusiveGateway_0q8b40m" />
+    <bpmn:sequenceFlow id="SequenceFlow_136rkc4" sourceRef="ExclusiveGateway_0q8b40m" targetRef="Task_1rf1vl7">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isError == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_12urvim" sourceRef="Task_1rf1vl7" targetRef="EndEvent_0c2wsat" />
+    <bpmn:serviceTask id="Task_1rf1vl7" name="Take out Sme loan fields" camunda:type="external" camunda:topic="take-out-sme-loan-fields">
+      <bpmn:incoming>SequenceFlow_136rkc4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12urvim</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_0orhebd">
+      <bpmn:text>Take out thesme-loan  
+
+partial-payment-amount
+discount-amount
+closing-payment-amount</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1pljowq" sourceRef="Task_1rf1vl7" targetRef="TextAnnotation_0orhebd" />
+  </bpmn:process>
+  <bpmn:error id="Error_049gp68" name="Get migrated sme loan error" errorCode="ERROR_GET_MIGRATED_SME_LOANS" />
+  <bpmn:error id="Error_1bc16hx" name="Migrate transaction loop error" errorCode="ERROR_MIGRATE_TRANSACTION_LOOP" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sme-loans-transaction-migrations">
+      <bpmndi:BPMNEdge id="SequenceFlow_12urvim_di" bpmnElement="SequenceFlow_12urvim">
+        <di:waypoint x="850" y="237" />
+        <di:waypoint x="882" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_136rkc4_di" bpmnElement="SequenceFlow_136rkc4">
+        <di:waypoint x="705" y="237" />
+        <di:waypoint x="750" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0jqu4e1_di" bpmnElement="SequenceFlow_0jqu4e1">
+        <di:waypoint x="610" y="237" />
+        <di:waypoint x="655" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fdrkna_di" bpmnElement="SequenceFlow_0fdrkna">
+        <di:waypoint x="680" y="212" />
+        <di:waypoint x="680" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0m2vt94_di" bpmnElement="SequenceFlow_0m2vt94">
+        <di:waypoint x="560" y="179" />
+        <di:waypoint x="560" y="120" />
+        <di:waypoint x="630" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0xe8q3h_di" bpmnElement="SequenceFlow_0xe8q3h">
+        <di:waypoint x="730" y="120" />
+        <di:waypoint x="900" y="120" />
+        <di:waypoint x="900" y="219" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1xcin8f_di" bpmnElement="SequenceFlow_1xcin8f">
+        <di:waypoint x="360" y="179" />
+        <di:waypoint x="360" y="120" />
+        <di:waypoint x="442" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1fkcdyq_di" bpmnElement="SequenceFlow_1fkcdyq">
+        <di:waypoint x="478" y="237" />
+        <di:waypoint x="510" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1rlgw9q_di" bpmnElement="SequenceFlow_1rlgw9q">
+        <di:waypoint x="410" y="237" />
+        <di:waypoint x="442" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0nm3i3a_di" bpmnElement="SequenceFlow_0nm3i3a">
+        <di:waypoint x="270" y="237" />
+        <di:waypoint x="310" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0gk6bpt_di" bpmnElement="SequenceFlow_0gk6bpt">
+        <di:waypoint x="148" y="237" />
+        <di:waypoint x="170" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="112" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0xwca8c_di" bpmnElement="Task_0i0irvc">
+        <dc:Bounds x="170" y="197" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_0tdo8wz_di" bpmnElement="IntermediateThrowEvent_02b9oic">
+        <dc:Bounds x="442" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_09iqjaj_di" bpmnElement="EndEvent_0c2wsat">
+        <dc:Bounds x="882" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_13rtq63_di" bpmnElement="Task_0n3oosz">
+        <dc:Bounds x="310" y="197" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_1e1b4f3_di" bpmnElement="Task_0fnxzgz">
+        <dc:Bounds x="510" y="197" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0nwgu6t_di" bpmnElement="Task_1a711nk">
+        <dc:Bounds x="630" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0q8b40m_di" bpmnElement="ExclusiveGateway_0q8b40m" isMarkerVisible="true">
+        <dc:Bounds x="655" y="212" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0o9l71r_di" bpmnElement="EndEvent_1pznwto">
+        <dc:Bounds x="442" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1o40jr6_di" bpmnElement="Task_1rf1vl7">
+        <dc:Bounds x="750" y="197" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0orhebd_di" bpmnElement="TextAnnotation_0orhebd">
+        <dc:Bounds x="688" y="350" width="223" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0enhz2l_di" bpmnElement="BoundaryEvent_0gsxwo1">
+        <dc:Bounds x="342" y="179" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1yrwq7i_di" bpmnElement="BoundaryEvent_1ws7pc7">
+        <dc:Bounds x="542" y="179" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1pljowq_di" bpmnElement="Association_1pljowq">
+        <di:waypoint x="800" y="277" />
+        <di:waypoint x="800" y="350" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ghwk2k" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.10.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+  <bpmn:process id="singnal-revision-flex-loan" name="Singnal revision flex loan" isExecutable="true">
+    <bpmn:startEvent id="Event_0u03e82" name="Singnal Start">
+      <bpmn:outgoing>Flow_0dk56vz</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_1f3fbrz" signalRef="Signal_03toocz" />
+    </bpmn:startEvent>
+    <bpmn:callActivity id="Activity_1qldk6k" name="Revision Flex-Loan" calledElement="revision-flex-loan">
+      <bpmn:extensionElements>
+        <camunda:in source="loanId" target="loanId" />
+        <camunda:in source="contractId" target="contractId" />
+        <camunda:in source="customerId" target="customerId" />
+        <camunda:in source="messageType" target="messageType" />
+        <camunda:in source="creditLimitAmount" target="creditLimitAmount" />
+        <camunda:in source="status" target="status" />
+        <camunda:in businessKey="${contractId}" />
+        <camunda:in source="systemDate" target="systemDate" />
+        <camunda:in source="revisionDate" target="revisionDate" />
+        <camunda:in source="numberOfMonths" target="numberOfMonths" />
+        <camunda:in source="language" target="language" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0dk56vz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1y5ldyd</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_0cga0xp" name="End">
+      <bpmn:incoming>Flow_1y5ldyd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0dk56vz" sourceRef="Event_0u03e82" targetRef="Activity_1qldk6k" />
+    <bpmn:sequenceFlow id="Flow_1y5ldyd" sourceRef="Activity_1qldk6k" targetRef="Event_0cga0xp" />
+  </bpmn:process>
+  <bpmn:signal id="Signal_03toocz" name="start-revision-flex-loan" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="singnal-revision-flex-loan">
+      <bpmndi:BPMNEdge id="Flow_1y5ldyd_di" bpmnElement="Flow_1y5ldyd">
+        <di:waypoint x="330" y="117" />
+        <di:waypoint x="412" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dk56vz_di" bpmnElement="Flow_0dk56vz">
+        <di:waypoint x="188" y="117" />
+        <di:waypoint x="230" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0u03e82_di" bpmnElement="Event_0u03e82">
+        <dc:Bounds x="152" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="139" y="142" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qldk6k_di" bpmnElement="Activity_1qldk6k">
+        <dc:Bounds x="230" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0cga0xp_di" bpmnElement="Event_0cga0xp">
+        <dc:Bounds x="412" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="420" y="142" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,113 @@
+paths:
+  /history/tasks/count:
+    get:
+      tags:
+        - Tasks (History)
+      name: Get Tasks Count (Historic)
+      summary: Queries for historic tasks count that fulfill the given parameters.
+      operationId: getTaskListCount
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: processInstanceBusinessKey
+          type: string
+          description: Restrict to tasks that belong to process instances with the given business key.
+          required: false
+        - in: query
+          name: processDefinitionKey
+          type: string
+          description: Restrict to tasks that belong to a process definition with the given key.
+          required: false
+        - in: query
+          name: taskDefinitionKey
+          type: string
+          description: Restrict to tasks that have the given key.
+          required: false
+        - in: query
+          name: taskDefinitionKeyLike
+          type: string
+          description: Restrict to tasks that have a key that has the parameter value as a substring.
+          required: false
+        - in: query
+          name: finished
+          type: boolean
+          description: Only include finished tasks. Value may only be true, as false is the default behavior.
+          required: false
+        - in: query
+          name: unfinished
+          type: boolean
+          description: Only include unfinished tasks. Value may only be true, as false is the default behavior.
+          required: false
+        - in: query
+          name: processFinished
+          type: boolean
+          description: Only include tasks of finished processes. Value may only be true, as false is the default behavior.
+          required: false
+        - in: query
+          name: processUnfinished
+          type: boolean
+          description: Only include tasks of unfinished processes. Value may only be true, as false is the default behavior.
+          required: false
+        - in: query
+          name: taskAssignee
+          type: string
+          description: Restrict to tasks that the given user is assigned to.
+          required: false
+        - in: query
+          name: taskAssigneeLike
+          type: string
+          description: Restrict to tasks that are assigned to users with the parameter value as a substring.
+          required: false
+        - in: query
+          name: taskHadCandidateGroup
+          type: string
+          description: Restrict to tasks with a historic identity link to the given candidate group.
+          required: false
+        - in: query
+          name: taskHadCandidateUser
+          type: string
+          description: Restrict to tasks with a historic identity link to the given candidate user.
+          required: false
+        - in: query
+          name: taskInvolvedUser
+          type: string
+          description: Restrict to tasks with a historic identity link to the given user.
+          required: false
+        - in: query
+          name: sortBy
+          type: string
+          description: Valid values are instanceId, definitionId, definitionKey, definitionName, definitionVersion, businessKey, startTime, endTime, duration and tenantId. Must be used in conjunction with the sortOrder parameter.
+          required: false
+        - in: query
+          name: sortOrder
+          type: string
+          description: Values may be asc for ascending order or desc for descending order. Must be used in conjunction with the sortBy parameter.
+          required: false
+        - in: query
+          name: firstResult
+          type: string
+          description: Pagination of results. Specifies the index of the first result to return.
+          required: false
+        - in: query
+          name: maxResults
+          type: string
+          description: Pagination of results. Specifies the maximum number of results to return. Will return less results if there are no more results left.
+          required: false
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              data:
+                type: number
+                example: 90
+              success:
+                type: boolean
+                example: true

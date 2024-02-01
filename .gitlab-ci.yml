@@ -1,0 +1,17 @@
+include:
+  - project: "b5087/devops/ci-templates"
+    file: "/v2-alpha/trunk.yml"
+
+variables:
+  SERVICE: "camunda-client"
+  SERVICE_TYPE: "api"
+  NAMESPACE: initiation
+  DEV_HOSTNAME: camunda-client.bridgefund-development.net
+  ACCEPTANCE_HOSTNAME: camunda-client.bridgefund-acceptance.net
+  APPROVAL_HOSTNAME: camunda-client.bridgefund-approval.net
+  PRODUCTION_HOSTNAME: camunda-client.bridgefund.net
+  SERVICE_PATH: "/"
+  NPM_AUDIT: "false"
+  BUILD_IMAGE: 002665144501.dkr.ecr.eu-central-1.amazonaws.com/base:node-16
+  SKIP_IMAGE_SCAN: "true"
+# added container scanning

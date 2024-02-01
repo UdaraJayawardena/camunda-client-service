@@ -1,0 +1,42 @@
+paths:
+  /users:
+    post:
+      tags:
+        - User
+      summary: "Create a new user."
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              firstName:
+                type: string
+                example: demo
+              lastName:
+                type: string
+                example: demo
+              email:
+                type: string
+                example: demo@360Development.net
+              password:
+                type: string
+                example: demo
+      responses:
+        204:
+          description: No content.
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

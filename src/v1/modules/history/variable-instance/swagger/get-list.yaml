@@ -1,0 +1,58 @@
+paths:
+  /history/variable-instances:
+    get:
+      tags:
+        - Variable Instances (History)
+      name: Get Variable Instances
+      summary: Queries for historic variable instances that fulfill the given parameters. 
+      operationId: getVariableInstanceList
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: processInstanceId
+          type: string
+          description: Filter by the process instance the variable belongs to.
+          required: false
+        - in: query
+          name: deserializeValues
+          type: boolean
+          description: Determines whether serialize variable values
+          required: false
+        - in: query
+          name: sortBy
+          type: string
+          description: Valid values are instanceId, definitionId, definitionKey, definitionName, definitionVersion, businessKey, startTime, endTime, duration and tenantId. Must be used in conjunction with the sortOrder parameter.
+          required: false
+        - in: query
+          name: sortOrder
+          type: string
+          description: Values may be asc for ascending order or desc for descending order. Must be used in conjunction with the sortBy parameter.
+          required: false
+        - in: query
+          name: firstResult
+          type: string
+          description: Pagination of results. Specifies the index of the first result to return.
+          required: false
+        - in: query
+          name: maxResults
+          type: string
+          description: Pagination of results. Specifies the maximum number of results to return. Will return less results if there are no more results left.
+          required: false
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              data:
+                type: number
+                example: 90
+              success:
+                type: boolean
+                example: true

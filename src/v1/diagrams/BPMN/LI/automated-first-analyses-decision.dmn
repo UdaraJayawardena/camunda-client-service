@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="atomated-first-analyses-drd" name="Automated Frst Aalyses DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <decision id="first-analyses-indicator-decision" name="First Analyses Indicator Decision">
+    <informationRequirement id="InformationRequirement_036lqgg">
+      <requiredDecision href="#high-risk-indicator-decision" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_14re2q2">
+      <requiredDecision href="#bank-file-indicator-decision" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_1q3r0u7">
+      <requiredInput href="#turnOverIndicator" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_1n9w6o4">
+      <requiredInput href="#expectedSuccessDDIndicator" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_1pn38i1">
+      <requiredInput href="#legalFormIndicator" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_18epuen" hitPolicy="FIRST">
+      <input id="Input_1" label="Legal Form Indicator">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>legalFormIndicator</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0aekdi8" label="Customer/Person High Risk Indicator">
+        <inputExpression id="LiteralExpression_0ghw2dw" typeRef="string">
+          <text>customerPersonHighRiskIndicator</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0wlb3bi" label="Bank File Indicator 1/2/3">
+        <inputExpression id="LiteralExpression_1henxos" typeRef="string">
+          <text>bankFileIndicator</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1oh4i3j" label="Turn Over Indicator">
+        <inputExpression id="LiteralExpression_0g2si5a" typeRef="string">
+          <text>turnOverIndicator</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1txlt2n" label="Expected Success DD Indicator">
+        <inputExpression id="LiteralExpression_18t0f41" typeRef="string">
+          <text>expectedSuccessDDIndicator</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="First Analyses Indicator" name="firstAnalysesIndicator" typeRef="string" />
+      <rule id="DecisionRule_0b8xyqb">
+        <inputEntry id="UnaryTests_1bcngfl">
+          <text>"red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_13z3z83">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_08bxr0u">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0l6pzk9">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1e2gptz">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1cwbid8">
+          <text>"red"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0fszzre">
+        <inputEntry id="UnaryTests_0u7o7xy">
+          <text>"green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0snwr8q">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0393dta">
+          <text>"red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_13c9pxi">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1wumxbt">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1wioir0">
+          <text>"red"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0k6sd2c">
+        <inputEntry id="UnaryTests_1gicvy4">
+          <text>"green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1pkwvou">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1jezafg">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0w3lyg1">
+          <text>"red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0pv3b4i">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0g12qum">
+          <text>"red"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1f5dnwm">
+        <inputEntry id="UnaryTests_17gq0no">
+          <text>"green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0x3jy8e">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_17dkun7">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0qh3lof">
+          <text>"","green","orange","red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1sn1vad">
+          <text>"red"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0jyr03h">
+          <text>"red"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0p2i68y">
+        <inputEntry id="UnaryTests_1vveqrh">
+          <text>"green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0iacvov">
+          <text>"green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0v0ah7y">
+          <text>"green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1mw2vlk">
+          <text>"green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19ayuz3">
+          <text>"green"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ut7wgx">
+          <text>"green"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1yn3q63">
+        <inputEntry id="UnaryTests_1erwj3j">
+          <text>"orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0jff430">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0z4zu39">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0f2pm3b">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0tc0cif">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_05psvw9">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0zkb40o">
+        <inputEntry id="UnaryTests_0kqholu">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_11m6i6v">
+          <text>"orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02le31d">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1tkqv8x">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_06oyf8w">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1byme01">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1llmz78">
+        <inputEntry id="UnaryTests_11l4a56">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1y6wcot">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1plui1o">
+          <text>"orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_13uj61w">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1c7tr6y">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_02pjnih">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ce9piw">
+        <inputEntry id="UnaryTests_0dup8sh">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1t0fow3">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_107kh6l">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_018kl2p">
+          <text>"orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1unb9uw">
+          <text>"","green","orange"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_10va5k0">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0le7fcy">
+        <inputEntry id="UnaryTests_0m57kar">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1fddtdk">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1enaqhf">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0pcm034">
+          <text>"green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1dlvkhw">
+          <text>"orange"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_07xmh4a">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="high-risk-indicator-decision" name="High Risk Indicator Decision">
+    <informationRequirement id="InformationRequirement_0mi3x6m">
+      <requiredInput href="#customerHighRiskIndicator" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_1qshwid">
+      <requiredInput href="#personHighRiskIndicator" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_08tnzp0">
+      <input id="InputClause_0v185xe" label="Customer High Risk Indicator">
+        <inputExpression id="LiteralExpression_1nl6n3a" typeRef="string">
+          <text>customerHighRiskIndicator</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1lq0es4" label="Person High Risk Indicator">
+        <inputExpression id="LiteralExpression_123i6pd" typeRef="string">
+          <text>personHighRiskIndicator</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_1hxa4ci" label="Customer/Person High Risk Indicator" name="customerPersonHighRiskIndicator" typeRef="string" />
+      <rule id="DecisionRule_0ljmy6n">
+        <inputEntry id="UnaryTests_1kohutf">
+          <text>""</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ifq93o">
+          <text>""</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_02lf28k">
+          <text>""</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0obraoe">
+        <inputEntry id="UnaryTests_17dmqix">
+          <text>"orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0cbvqdm">
+          <text>"orange"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1dxckzk">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_10hwk9y">
+        <inputEntry id="UnaryTests_0l0r4gt">
+          <text>"orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_01c2cx7">
+          <text>"green"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ca7yj6">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_03x6cxg">
+        <inputEntry id="UnaryTests_0yw34hp">
+          <text>"green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0fv0flz">
+          <text>"orange"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1l0i6gu">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1spk6jv">
+        <inputEntry id="UnaryTests_1a6vqiw">
+          <text>"green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1sw9jn7">
+          <text>"green"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0saczzl">
+          <text>"green"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="bank-file-indicator-decision" name="Bank File Indicator Decision">
+    <informationRequirement id="InformationRequirement_0vpuf1e">
+      <requiredInput href="#bankFileIndicator1" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_11r9d2h">
+      <requiredInput href="#bankFileIndicator2" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_00zr6y1">
+      <requiredInput href="#bankFileIndicator3" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_07wil3k" hitPolicy="FIRST">
+      <input id="InputClause_0jfn10c" label="Bank File Indicator 1 ">
+        <inputExpression id="LiteralExpression_1q3y229" typeRef="string">
+          <text>bankFileIndicator1</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0tr7xh3" label="Bank File Indicator 2">
+        <inputExpression id="LiteralExpression_0gfudfa" typeRef="string">
+          <text>bankFileIndicator2</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1mvoufn" label="Bank File Indicator 3">
+        <inputExpression id="LiteralExpression_170xgc7" typeRef="string">
+          <text>bankFileIndicator3</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_1p0yc8y" label="Bank File Indicator1/2/3" name="bankFileIndicator" typeRef="string" />
+      <rule id="DecisionRule_11b0j4r">
+        <inputEntry id="UnaryTests_0xyq0yt">
+          <text>""</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_05jj5sc">
+          <text>""</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_12g0dxs">
+          <text>""</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0lrff28">
+          <text>""</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0wbxzri">
+        <inputEntry id="UnaryTests_17s4xgf">
+          <text>"red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18ktqut">
+          <text>"red","green","orange",""</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0hdn3lw">
+          <text>"red","green","orange",""</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_00amd67">
+          <text>"red"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1f2otlv">
+        <inputEntry id="UnaryTests_0hdl1wo">
+          <text>"red","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0z1p1rz">
+          <text>"red"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1pfqfuq">
+          <text>"red","orange","green",""</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0v14ygg">
+          <text>"red"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0v65u66">
+        <inputEntry id="UnaryTests_11al71t">
+          <text>"red","green","orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0s2yoft">
+          <text>"red","green","orange",""</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_17sfhvh">
+          <text>"red"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_04g75xe">
+          <text>"red"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1r2x4tb">
+        <inputEntry id="UnaryTests_0uscfcy">
+          <text>"orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1vqfraw">
+          <text>"green","orange",""</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1h5bqp9">
+          <text>"green","orange",""</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0rakodw">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1djmo4i">
+        <inputEntry id="UnaryTests_120c58h">
+          <text>"orange","green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1omq9co">
+          <text>"orange"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ftpkv4">
+          <text>"green","orange",""</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_030m4co">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_043kwt2">
+        <inputEntry id="UnaryTests_1fmxqy3">
+          <text>"orange","green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0seu92d">
+          <text>"green","orange",""</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0mrvjiz">
+          <text>"orange"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ezrtg6">
+          <text>"orange"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1lypbdg">
+        <inputEntry id="UnaryTests_16puet0">
+          <text>"green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1agvjzp">
+          <text>"green"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02lh97s">
+          <text>"green"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_09hmis4">
+          <text>"green"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <inputData id="customerHighRiskIndicator" name="Customer High Risk Indicator" />
+  <inputData id="personHighRiskIndicator" name="Person High Risk Indicator" />
+  <inputData id="bankFileIndicator1" name="Bank File Indicator 1" />
+  <inputData id="bankFileIndicator2" name="Bank File Indicator 2" />
+  <inputData id="bankFileIndicator3" name="Bank File Indicator 3" />
+  <inputData id="turnOverIndicator" name="Turn Over Indicator" />
+  <inputData id="expectedSuccessDDIndicator" name="Expected Success DD Indicator" />
+  <inputData id="legalFormIndicator" name="Legal Form Indicator" />
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="first-analyses-indicator-decision">
+        <dc:Bounds height="80" width="180" x="640" y="390" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1qea5yu" dmnElementRef="high-risk-indicator-decision">
+        <dc:Bounds height="80" width="180" x="390" y="180" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1bzdzsi" dmnElementRef="bank-file-indicator-decision">
+        <dc:Bounds height="80" width="180" x="820" y="180" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0gs1seo" dmnElementRef="InformationRequirement_036lqgg">
+        <di:waypoint x="480" y="260" />
+        <di:waypoint x="700" y="370" />
+        <di:waypoint x="700" y="390" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_0l0v0of" dmnElementRef="InformationRequirement_14re2q2">
+        <di:waypoint x="910" y="260" />
+        <di:waypoint x="730" y="370" />
+        <di:waypoint x="730" y="390" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_07yz522" dmnElementRef="customerHighRiskIndicator">
+        <dc:Bounds height="45" width="125" x="337" y="48" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0b1ropa" dmnElementRef="personHighRiskIndicator">
+        <dc:Bounds height="45" width="125" x="497" y="48" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_077n7ih" dmnElementRef="InformationRequirement_0mi3x6m">
+        <di:waypoint x="400" y="93" />
+        <di:waypoint x="450" y="160" />
+        <di:waypoint x="450" y="180" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_13qjhhq" dmnElementRef="InformationRequirement_1qshwid">
+        <di:waypoint x="560" y="93" />
+        <di:waypoint x="510" y="160" />
+        <di:waypoint x="510" y="180" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1ih7jxo" dmnElementRef="bankFileIndicator1">
+        <dc:Bounds height="45" width="125" x="687" y="48" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_00pb97u" dmnElementRef="bankFileIndicator2">
+        <dc:Bounds height="45" width="125" x="847" y="48" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1ebmx9l" dmnElementRef="bankFileIndicator3">
+        <dc:Bounds height="45" width="125" x="1007" y="48" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1g2pb0s" dmnElementRef="InformationRequirement_0vpuf1e">
+        <di:waypoint x="750" y="93" />
+        <di:waypoint x="865" y="160" />
+        <di:waypoint x="865" y="180" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_1qahwav" dmnElementRef="InformationRequirement_11r9d2h">
+        <di:waypoint x="910" y="93" />
+        <di:waypoint x="910" y="160" />
+        <di:waypoint x="910" y="180" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_06t1yuq" dmnElementRef="InformationRequirement_00zr6y1">
+        <di:waypoint x="1070" y="93" />
+        <di:waypoint x="955" y="160" />
+        <di:waypoint x="955" y="180" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1e7r4ib" dmnElementRef="turnOverIndicator">
+        <dc:Bounds height="45" width="125" x="1097" y="197" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_132ud1v" dmnElementRef="expectedSuccessDDIndicator">
+        <dc:Bounds height="45" width="125" x="1257" y="197" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0pufybu" dmnElementRef="InformationRequirement_1q3r0u7">
+        <di:waypoint x="1160" y="242" />
+        <di:waypoint x="760" y="370" />
+        <di:waypoint x="760" y="390" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_19dh922" dmnElementRef="InformationRequirement_1n9w6o4">
+        <di:waypoint x="1320" y="242" />
+        <di:waypoint x="790" y="370" />
+        <di:waypoint x="790" y="390" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0vpok7k" dmnElementRef="legalFormIndicator">
+        <dc:Bounds height="45" width="125" x="158" y="198" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1msriu4" dmnElementRef="InformationRequirement_1pn38i1">
+        <di:waypoint x="221" y="243" />
+        <di:waypoint x="670" y="370" />
+        <di:waypoint x="670" y="390" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

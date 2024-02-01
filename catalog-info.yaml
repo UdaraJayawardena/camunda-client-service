@@ -1,0 +1,16 @@
+# This file is maintained by an automation script and should not be modified manually
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: camunda-client-service
+  namespace: initiation
+  description: This service connect with Camunda Rest API
+  title: Camunda Client Service
+  tags:
+  - node16
+spec:
+  type: service
+  system: initiation
+  owner: default/initiation-team
+  lifecycle: production
+  dependsOn: []

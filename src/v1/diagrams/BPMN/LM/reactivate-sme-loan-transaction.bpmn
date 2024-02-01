@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0we03j2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="reactivate-sme-loan-transactions" name="(Main) Reactivate SME Loan Transactions" isExecutable="true" camunda:versionTag="2.1" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0v1zqv2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0v1zqv2" sourceRef="StartEvent_1" targetRef="Task_0i9dsn3" />
+    <bpmn:sequenceFlow id="SequenceFlow_1wupgpe" sourceRef="Task_0i9dsn3" targetRef="EndEvent_0cu9v46" />
+    <bpmn:serviceTask id="Task_0i9dsn3" name="update sme loan transactions planned date and status" camunda:type="external" camunda:topic="reactivate-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">d5889856-b440-4603-b93a-52f719685c7b</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0v1zqv2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1wupgpe</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0lvaou9" attachedToRef="Task_0i9dsn3">
+      <bpmn:outgoing>SequenceFlow_0othakx</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0vhacdm" errorRef="Error_1azfsxi" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="EndEvent_0cu9v46">
+      <bpmn:incoming>SequenceFlow_1wupgpe</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1y2d60z</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0mjwpxl" camunda:type="external" camunda:topic="end-reactivate-sme-loan-transactions" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0othakx" sourceRef="IntermediateThrowEvent_0lvaou9" targetRef="Task_0pv6osz" />
+    <bpmn:serviceTask id="Task_0pv6osz" name="rollback update multiple transactions" camunda:type="external" camunda:topic="rollback-update-multiple-sme-loan-transaction">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">d5889856-b440-4603-b93a-52f719685c7b</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0othakx</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1y2d60z</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1y2d60z" sourceRef="Task_0pv6osz" targetRef="EndEvent_0cu9v46" />
+  </bpmn:process>
+  <bpmn:error id="Error_1azfsxi" name="ERROR_REACTIVATE_SME_LOAN_TRANSACTIONS" errorCode="ERROR_REACTIVATE_SME_LOAN_TRANSACTIONS" camunda:errorMessage="Unexpected Error Occured while reactivating the SME Loan transactions" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="reactivate-sme-loan-transactions">
+      <bpmndi:BPMNEdge id="SequenceFlow_1y2d60z_di" bpmnElement="SequenceFlow_1y2d60z">
+        <di:waypoint x="490" y="160" />
+        <di:waypoint x="610" y="160" />
+        <di:waypoint x="610" y="269" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0othakx_di" bpmnElement="SequenceFlow_0othakx">
+        <di:waypoint x="320" y="229" />
+        <di:waypoint x="320" y="160" />
+        <di:waypoint x="390" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wupgpe_di" bpmnElement="SequenceFlow_1wupgpe">
+        <di:waypoint x="370" y="287" />
+        <di:waypoint x="592" y="287" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0v1zqv2_di" bpmnElement="SequenceFlow_0v1zqv2">
+        <di:waypoint x="215" y="287" />
+        <di:waypoint x="270" y="287" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="269" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0wl1jr1_di" bpmnElement="Task_0i9dsn3">
+        <dc:Bounds x="270" y="247" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_064p1i2_di" bpmnElement="EndEvent_0cu9v46">
+        <dc:Bounds x="592" y="269" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1f3elfl_di" bpmnElement="Task_0pv6osz">
+        <dc:Bounds x="390" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0ljv2ai_di" bpmnElement="IntermediateThrowEvent_0lvaou9">
+        <dc:Bounds x="302" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

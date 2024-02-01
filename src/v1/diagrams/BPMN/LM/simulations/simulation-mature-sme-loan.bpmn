@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_05yrjij" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="sme-loan-maturiry-process" name="(main) SME loan maturity Process" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1olko3k</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1eeez5l</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1ccxkz5" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_1olko3k</bpmn:incoming>
+      <bpmn:incoming>Flow_1eeez5l</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ol8pj5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1olko3k" sourceRef="StartEvent_1" targetRef="Activity_1ccxkz5" />
+    <bpmn:serviceTask id="Activity_0a19roq" name="Generate The Maturity Date" camunda:type="external" camunda:topic="get-the-previous-working-day">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="noOfDaysAhead">4</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ol8pj5</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qz3uxs</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1ol8pj5" sourceRef="Activity_1ccxkz5" targetRef="Activity_0a19roq" />
+    <bpmn:serviceTask id="Activity_16vzejy" name="Get Mature SME Loans" camunda:type="external" camunda:topic="get-mature-sme-loans">
+      <bpmn:incoming>Flow_1qz3uxs</bpmn:incoming>
+      <bpmn:outgoing>Flow_001adk0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1qz3uxs" sourceRef="Activity_0a19roq" targetRef="Activity_16vzejy" />
+    <bpmn:serviceTask id="Activity_1rbobcf" name="Get SME Loan Transactions" camunda:type="external" camunda:topic="get-mature-sme-loan-transactions">
+      <bpmn:incoming>Flow_001adk0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1a4ylv6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_001adk0" sourceRef="Activity_16vzejy" targetRef="Activity_1rbobcf" />
+    <bpmn:sequenceFlow id="Flow_1eeez5l" sourceRef="StartEvent_1" targetRef="Activity_1ccxkz5" />
+    <bpmn:serviceTask id="Activity_03gv0bb" name="Check Maturity Condition" camunda:type="external" camunda:topic="check-maturity-condition">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="loanStatus">normally settled</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1a4ylv6</bpmn:incoming>
+      <bpmn:outgoing>Flow_15ty7ed</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1a4ylv6" sourceRef="Activity_1rbobcf" targetRef="Activity_03gv0bb" />
+    <bpmn:exclusiveGateway id="Gateway_14e0mpw">
+      <bpmn:incoming>Flow_15ty7ed</bpmn:incoming>
+      <bpmn:outgoing>Flow_08clxyr</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0x3h1wv</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_15ty7ed" sourceRef="Activity_03gv0bb" targetRef="Gateway_14e0mpw" />
+    <bpmn:exclusiveGateway id="Gateway_1az76of">
+      <bpmn:incoming>Flow_08clxyr</bpmn:incoming>
+      <bpmn:incoming>Flow_1pom0y6</bpmn:incoming>
+      <bpmn:outgoing>Flow_07nph0d</bpmn:outgoing>
+      <bpmn:outgoing>Flow_17a9b9j</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_08clxyr" sourceRef="Gateway_14e0mpw" targetRef="Gateway_1az76of">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${managerSendMail== false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_07nph0d" sourceRef="Gateway_1az76of" targetRef="Activity_0pl0a75">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${clientSendMail== true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_0pl0a75" name="Get SME Details" camunda:type="external" camunda:topic="get-sme-details-notification">
+      <bpmn:incoming>Flow_07nph0d</bpmn:incoming>
+      <bpmn:outgoing>Flow_12fcvxk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:callActivity id="Activity_1gmnh5y" name="Prepare emails" calledElement="prepare-emails" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="dataList" target="dataList" />
+        <camunda:in variables="all" />
+        <camunda:in source="metaData" target="metaData" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="result" target="result" />
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">sme-loan-maturity</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_12fcvxk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wbjmjq</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_0uyk9o4">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">sme-loan-maturity</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_074fgxk</bpmn:incoming>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_0698q3n" signalRef="Signal_1l7ljxq">
+        <bpmn:extensionElements>
+          <camunda:in local="true" variables="all" />
+          <camunda:in source="newEmailList" target="emailList" />
+        </bpmn:extensionElements>
+      </bpmn:signalEventDefinition>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_12fcvxk" sourceRef="Activity_0pl0a75" targetRef="Activity_1gmnh5y" />
+    <bpmn:sequenceFlow id="Flow_17a9b9j" sourceRef="Gateway_1az76of" targetRef="Event_1ua9p59">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${clientSendMail== false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:boundaryEvent id="Event_1gqkq2g" attachedToRef="Activity_0a19roq">
+      <bpmn:outgoing>Flow_1gnumt4</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0s567bd" errorRef="Error_0pmtd6x" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1ujfdpj" attachedToRef="Activity_16vzejy">
+      <bpmn:outgoing>Flow_0ldejv3</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0cvqwy7" errorRef="Error_188ea2q" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1exo6hc" attachedToRef="Activity_1rbobcf">
+      <bpmn:outgoing>Flow_1gnxgj0</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0wpmzrh" errorRef="Error_0aj01ya" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1pnrr2d" attachedToRef="Activity_03gv0bb">
+      <bpmn:outgoing>Flow_1s4rufy</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0x2tys4" errorRef="Error_0ko1a18" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="Event_1ua9p59">
+      <bpmn:incoming>Flow_0wbjmjq</bpmn:incoming>
+      <bpmn:incoming>Flow_17a9b9j</bpmn:incoming>
+      <bpmn:incoming>Flow_1gnumt4</bpmn:incoming>
+      <bpmn:incoming>Flow_0ldejv3</bpmn:incoming>
+      <bpmn:incoming>Flow_1gnxgj0</bpmn:incoming>
+      <bpmn:incoming>Flow_1s4rufy</bpmn:incoming>
+      <bpmn:outgoing>Flow_074fgxk</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0wt3v9d" camunda:type="external" camunda:topic="end-sme-loan-maturiry-process" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_0wbjmjq" sourceRef="Activity_1gmnh5y" targetRef="Event_1ua9p59" />
+    <bpmn:sequenceFlow id="Flow_074fgxk" sourceRef="Event_1ua9p59" targetRef="Event_0uyk9o4" />
+    <bpmn:sequenceFlow id="Flow_1gnumt4" sourceRef="Event_1gqkq2g" targetRef="Event_1ua9p59" />
+    <bpmn:sequenceFlow id="Flow_0ldejv3" sourceRef="Event_1ujfdpj" targetRef="Event_1ua9p59" />
+    <bpmn:sequenceFlow id="Flow_1gnxgj0" sourceRef="Event_1exo6hc" targetRef="Event_1ua9p59" />
+    <bpmn:sequenceFlow id="Flow_1s4rufy" sourceRef="Event_1pnrr2d" targetRef="Event_1ua9p59" />
+    <bpmn:callActivity id="Activity_0p3tr8v" name="Prepare email" calledElement="prepare-emails" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="dataList" target="dataList" />
+        <camunda:in local="true" variables="all" />
+        <camunda:in source="metaData" target="metaData" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="result" target="result" />
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">manager-notification-maturity</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0x3h1wv</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pom0y6</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_0x3h1wv" sourceRef="Gateway_14e0mpw" targetRef="Activity_0p3tr8v">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${managerSendMail== true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1pom0y6" sourceRef="Activity_0p3tr8v" targetRef="Gateway_1az76of" />
+  </bpmn:process>
+  <bpmn:signal id="Signal_192nsqi" name="Signal_12flvel" />
+  <bpmn:signal id="Signal_1l7ljxq" name="start-email-queue" />
+  <bpmn:error id="Error_0pmtd6x" name="generate previous date" errorCode="ERROR_GET_PREVIOUS_DATE" />
+  <bpmn:error id="Error_188ea2q" name="get mature sme loans" errorCode="ERROR_GET_MATURE_SME_LOANS" />
+  <bpmn:error id="Error_0aj01ya" name="get mature sme loan transactions" errorCode="ERROR_GET_MATURE_SME_LOANS_TRANSACTIONS" />
+  <bpmn:error id="Error_0ko1a18" name="check maturity conditions" errorCode="ERROR_CHECK_MATURITY_CONDITIONS" />
+  <bpmn:error id="Error_14dpyn1" name="send message to manager" errorCode="ERROR_SEND_MESSAGE_TO_MANAGER" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sme-loan-maturiry-process">
+      <bpmndi:BPMNEdge id="Flow_1pom0y6_di" bpmnElement="Flow_1pom0y6">
+        <di:waypoint x="1170" y="190" />
+        <di:waypoint x="1235" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0x3h1wv_di" bpmnElement="Flow_0x3h1wv">
+        <di:waypoint x="1015" y="190" />
+        <di:waypoint x="1070" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1s4rufy_di" bpmnElement="Flow_1s4rufy">
+        <di:waypoint x="870" y="248" />
+        <di:waypoint x="870" y="320" />
+        <di:waypoint x="1680" y="320" />
+        <di:waypoint x="1680" y="208" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gnxgj0_di" bpmnElement="Flow_1gnxgj0">
+        <di:waypoint x="730" y="248" />
+        <di:waypoint x="730" y="360" />
+        <di:waypoint x="1680" y="360" />
+        <di:waypoint x="1680" y="208" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ldejv3_di" bpmnElement="Flow_0ldejv3">
+        <di:waypoint x="590" y="248" />
+        <di:waypoint x="590" y="400" />
+        <di:waypoint x="1680" y="400" />
+        <di:waypoint x="1680" y="208" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gnumt4_di" bpmnElement="Flow_1gnumt4">
+        <di:waypoint x="430" y="248" />
+        <di:waypoint x="430" y="440" />
+        <di:waypoint x="1680" y="440" />
+        <di:waypoint x="1680" y="208" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_074fgxk_di" bpmnElement="Flow_074fgxk">
+        <di:waypoint x="1698" y="190" />
+        <di:waypoint x="1762" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wbjmjq_di" bpmnElement="Flow_0wbjmjq">
+        <di:waypoint x="1600" y="190" />
+        <di:waypoint x="1662" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17a9b9j_di" bpmnElement="Flow_17a9b9j">
+        <di:waypoint x="1260" y="215" />
+        <di:waypoint x="1260" y="260" />
+        <di:waypoint x="1680" y="260" />
+        <di:waypoint x="1680" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12fcvxk_di" bpmnElement="Flow_12fcvxk">
+        <di:waypoint x="1450" y="190" />
+        <di:waypoint x="1500" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07nph0d_di" bpmnElement="Flow_07nph0d">
+        <di:waypoint x="1285" y="190" />
+        <di:waypoint x="1350" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08clxyr_di" bpmnElement="Flow_08clxyr">
+        <di:waypoint x="990" y="165" />
+        <di:waypoint x="990" y="100" />
+        <di:waypoint x="1260" y="100" />
+        <di:waypoint x="1260" y="165" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15ty7ed_di" bpmnElement="Flow_15ty7ed">
+        <di:waypoint x="920" y="190" />
+        <di:waypoint x="965" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a4ylv6_di" bpmnElement="Flow_1a4ylv6">
+        <di:waypoint x="780" y="190" />
+        <di:waypoint x="820" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1eeez5l_di" bpmnElement="Flow_1eeez5l">
+        <di:waypoint x="178" y="190" />
+        <di:waypoint x="230" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_001adk0_di" bpmnElement="Flow_001adk0">
+        <di:waypoint x="640" y="190" />
+        <di:waypoint x="680" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qz3uxs_di" bpmnElement="Flow_1qz3uxs">
+        <di:waypoint x="480" y="190" />
+        <di:waypoint x="540" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ol8pj5_di" bpmnElement="Flow_1ol8pj5">
+        <di:waypoint x="330" y="190" />
+        <di:waypoint x="380" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1olko3k_di" bpmnElement="Flow_1olko3k">
+        <di:waypoint x="178" y="190" />
+        <di:waypoint x="230" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="142" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zxneiw_di" bpmnElement="Activity_1ccxkz5">
+        <dc:Bounds x="230" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0oxrdcl_di" bpmnElement="Activity_0a19roq">
+        <dc:Bounds x="380" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kjry9t_di" bpmnElement="Activity_16vzejy">
+        <dc:Bounds x="540" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_133wt3h_di" bpmnElement="Activity_1rbobcf">
+        <dc:Bounds x="680" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0113x7r_di" bpmnElement="Activity_03gv0bb">
+        <dc:Bounds x="820" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_14e0mpw_di" bpmnElement="Gateway_14e0mpw" isMarkerVisible="true">
+        <dc:Bounds x="965" y="165" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1az76of_di" bpmnElement="Gateway_1az76of" isMarkerVisible="true">
+        <dc:Bounds x="1235" y="165" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1p09zcv_di" bpmnElement="Activity_0pl0a75">
+        <dc:Bounds x="1350" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jb2ksw_di" bpmnElement="Activity_1gmnh5y">
+        <dc:Bounds x="1500" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1gkuq9d_di" bpmnElement="Event_0uyk9o4">
+        <dc:Bounds x="1762" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0cya6s1_di" bpmnElement="Event_1ua9p59">
+        <dc:Bounds x="1662" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07862lf_di" bpmnElement="Activity_0p3tr8v">
+        <dc:Bounds x="1070" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_13wq9w8_di" bpmnElement="Event_1pnrr2d">
+        <dc:Bounds x="852" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1fhcaoi_di" bpmnElement="Event_1exo6hc">
+        <dc:Bounds x="712" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_18hn86a_di" bpmnElement="Event_1ujfdpj">
+        <dc:Bounds x="572" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0p7baky_di" bpmnElement="Event_1gqkq2g">
+        <dc:Bounds x="412" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

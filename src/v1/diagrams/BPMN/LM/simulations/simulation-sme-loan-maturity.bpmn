@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0taj172" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="simulation-sme-loan-maturity" name="simulation-sme-loan-maturity" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0dk4nno</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0dk4nno" sourceRef="StartEvent_1" targetRef="Activity_1pwlx3g" />
+    <bpmn:serviceTask id="Activity_1pwlx3g" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_0dk4nno</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ftshr5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:callActivity id="Activity_04ycjdc" name="SME Loan Maturity" calledElement="sub-sme-loan-maturiry-process" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="startDate" target="startDate" />
+        <camunda:out source="result" target="result" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ftshr5</bpmn:incoming>
+      <bpmn:outgoing>Flow_0o8cyq9</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_1ftshr5" sourceRef="Activity_1pwlx3g" targetRef="Activity_04ycjdc" />
+    <bpmn:endEvent id="Event_0wy67zy">
+      <bpmn:incoming>Flow_0o8cyq9</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1gczt1e" camunda:type="external" camunda:topic="end-simulation-sme-loan-maturity" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0o8cyq9" sourceRef="Activity_04ycjdc" targetRef="Event_0wy67zy" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="simulation-sme-loan-maturity">
+      <bpmndi:BPMNEdge id="Flow_0o8cyq9_di" bpmnElement="Flow_0o8cyq9">
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="592" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ftshr5_di" bpmnElement="Flow_1ftshr5">
+        <di:waypoint x="350" y="120" />
+        <di:waypoint x="410" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dk4nno_di" bpmnElement="Flow_0dk4nno">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="250" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1evez5u_di" bpmnElement="Activity_1pwlx3g">
+        <dc:Bounds x="250" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0niv7h6_di" bpmnElement="Activity_04ycjdc">
+        <dc:Bounds x="410" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ieai83_di" bpmnElement="Event_0wy67zy">
+        <dc:Bounds x="592" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1pwg9ms" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="approve-generated-direct-debit-batch" name="(Main) Approve Generated Direct Debits Batch" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0srl98h</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_0kwlk6r" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_0srl98h</bpmn:incoming>
+      <bpmn:outgoing>Flow_1euyoxs</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0srl98h" sourceRef="StartEvent_1" targetRef="Task_0kwlk6r" />
+    <bpmn:serviceTask id="Task_035t4pe" name="Change Status In Transactions" camunda:type="external" camunda:topic="update-status-of-batch-transactions">
+      <bpmn:incoming>SequenceFlow_1qjzf8t</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1xtcacg</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_1l0cugw" name="Change Status Of The Batch" camunda:type="external" camunda:topic="update-status-of-batch-object">
+      <bpmn:incoming>SequenceFlow_1xtcacg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0endf8i</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1xtcacg" sourceRef="Task_035t4pe" targetRef="Task_1l0cugw" />
+    <bpmn:sequenceFlow id="SequenceFlow_0endf8i" sourceRef="Task_1l0cugw" targetRef="EndEvent_05qxvef" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0g19n94" attachedToRef="Task_035t4pe">
+      <bpmn:outgoing>SequenceFlow_1d8ezsi</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_1979hgt" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0qtecxf" attachedToRef="Task_1l0cugw">
+      <bpmn:outgoing>SequenceFlow_1tdggj4</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_0jo670m" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="EndEvent_05qxvef">
+      <bpmn:incoming>SequenceFlow_0endf8i</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1t0dxey</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0zzsc51</bpmn:incoming>
+      <bpmn:incoming>Flow_00c2ka4</bpmn:incoming>
+      <bpmn:messageEventDefinition camunda:type="external" camunda:topic="end-approve-generated-direct-debit-batch" />
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_0l914w7" name="Eject Batch ID from Excluded DDs" camunda:type="external" camunda:topic="eject-external-batch-id-from-rejected-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">05e944e9-32d1-4c43-bfff-b30b078ce522</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0f7ivd8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1qjzf8t</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1qjzf8t" sourceRef="Task_0l914w7" targetRef="Task_035t4pe" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_1m3wogr" attachedToRef="Task_0l914w7">
+      <bpmn:outgoing>SequenceFlow_1t0dxey</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_056nllv" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1t0dxey" sourceRef="IntermediateThrowEvent_1m3wogr" targetRef="EndEvent_05qxvef" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_138r11o" attachedToRef="Task_035t4pe">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_0p8db3s" name="Rollback transaction status update" isForCompensation="true" camunda:type="external" camunda:topic="rollback-batch-transactions-status-update" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_07g6ehe" attachedToRef="Task_0l914w7">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_1skgw9l" name="Rollback Batch Id Eject" isForCompensation="true" camunda:type="external" camunda:topic="rollback-batch-id-reject-from-transactions" />
+    <bpmn:sequenceFlow id="SequenceFlow_1tdggj4" sourceRef="IntermediateThrowEvent_0qtecxf" targetRef="IntermediateThrowEvent_0t0tjfd" />
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0t0tjfd" name="rollback-batch-transactions-status-update">
+      <bpmn:incoming>SequenceFlow_1tdggj4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1fhll44</bpmn:outgoing>
+      <bpmn:compensateEventDefinition activityRef="Task_035t4pe" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1d8ezsi" sourceRef="IntermediateThrowEvent_0g19n94" targetRef="IntermediateThrowEvent_1e2smz5" />
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1e2smz5" name="rollback-batch-id-reject-from-transactions">
+      <bpmn:incoming>SequenceFlow_1d8ezsi</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1fhll44</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0zzsc51</bpmn:outgoing>
+      <bpmn:compensateEventDefinition activityRef="Task_0l914w7" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1fhll44" sourceRef="IntermediateThrowEvent_0t0tjfd" targetRef="IntermediateThrowEvent_1e2smz5" />
+    <bpmn:sequenceFlow id="SequenceFlow_0zzsc51" sourceRef="IntermediateThrowEvent_1e2smz5" targetRef="EndEvent_05qxvef" />
+    <bpmn:sequenceFlow id="Flow_1euyoxs" sourceRef="Task_0kwlk6r" targetRef="Activity_1smzbds" />
+    <bpmn:sequenceFlow id="Flow_0f7ivd8" sourceRef="Activity_1smzbds" targetRef="Task_0l914w7" />
+    <bpmn:serviceTask id="Activity_1smzbds" name="Get System Date" camunda:type="external" camunda:topic="get-simulation-date">
+      <bpmn:incoming>Flow_1euyoxs</bpmn:incoming>
+      <bpmn:outgoing>Flow_0f7ivd8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_08hd743" attachedToRef="Activity_1smzbds">
+      <bpmn:outgoing>Flow_00c2ka4</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1qi9prf" errorRef="Error_03hbm4w" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_00c2ka4" sourceRef="Event_08hd743" targetRef="EndEvent_05qxvef" />
+    <bpmn:association id="Association_0dhajkp" associationDirection="One" sourceRef="IntermediateThrowEvent_138r11o" targetRef="Task_0p8db3s" />
+    <bpmn:association id="Association_1kq2ene" associationDirection="One" sourceRef="IntermediateThrowEvent_07g6ehe" targetRef="Task_1skgw9l" />
+  </bpmn:process>
+  <bpmn:error id="Error_1979hgt" name="ERROR_UPDATING_TRANSACTION_STATUS_FOR_BATCH" camunda:errorMessage="Unexpected Error Occurred while updating transactions status for batch" />
+  <bpmn:error id="Error_0jo670m" name="ERROR_UPDATING_BATCH_STATUS" camunda:errorMessage="Unexpected Error Occurred while updating batch status" />
+  <bpmn:error id="Error_0cjsfjv" name="ERROR_EJECTING_BATCH_ID_FROM_TRANSACTIONS" camunda:errorMessage="Unexpected Error Occurred while ejecting batch id from transactions" />
+  <bpmn:error id="Error_056nllv" name="ERROR_EJECTING_BATCH_ID_FROM_TRANSACTIONS" camunda:errorMessage="Unexpected Error Occurred while ejecting batch id from transactions" />
+  <bpmn:error id="Error_03hbm4w" name="ERROR_GET_SIMULATION_DATE" camunda:errorMessage="Unexpected Error Occurred while getting simulation date" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="approve-generated-direct-debit-batch">
+      <bpmndi:BPMNEdge id="Flow_00c2ka4_di" bpmnElement="Flow_00c2ka4">
+        <di:waypoint x="460" y="329" />
+        <di:waypoint x="460" y="70" />
+        <di:waypoint x="1030" y="70" />
+        <di:waypoint x="1030" y="369" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f7ivd8_di" bpmnElement="Flow_0f7ivd8">
+        <di:waypoint x="480" y="387" />
+        <di:waypoint x="530" y="387" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1euyoxs_di" bpmnElement="Flow_1euyoxs">
+        <di:waypoint x="320" y="387" />
+        <di:waypoint x="380" y="387" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0zzsc51_di" bpmnElement="SequenceFlow_0zzsc51">
+        <di:waypoint x="770" y="222" />
+        <di:waypoint x="770" y="90" />
+        <di:waypoint x="1030" y="90" />
+        <di:waypoint x="1030" y="369" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1fhll44_di" bpmnElement="SequenceFlow_1fhll44">
+        <di:waypoint x="912" y="240" />
+        <di:waypoint x="788" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1d8ezsi_di" bpmnElement="SequenceFlow_1d8ezsi">
+        <di:waypoint x="770" y="329" />
+        <di:waypoint x="770" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1tdggj4_di" bpmnElement="SequenceFlow_1tdggj4">
+        <di:waypoint x="930" y="329" />
+        <di:waypoint x="930" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1t0dxey_di" bpmnElement="SequenceFlow_1t0dxey">
+        <di:waypoint x="610" y="329" />
+        <di:waypoint x="610" y="80" />
+        <di:waypoint x="1030" y="80" />
+        <di:waypoint x="1030" y="369" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qjzf8t_di" bpmnElement="SequenceFlow_1qjzf8t">
+        <di:waypoint x="630" y="387" />
+        <di:waypoint x="690" y="387" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0endf8i_di" bpmnElement="SequenceFlow_0endf8i">
+        <di:waypoint x="950" y="387" />
+        <di:waypoint x="1012" y="387" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1xtcacg_di" bpmnElement="SequenceFlow_1xtcacg">
+        <di:waypoint x="790" y="387" />
+        <di:waypoint x="850" y="387" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0srl98h_di" bpmnElement="SequenceFlow_0srl98h">
+        <di:waypoint x="188" y="387" />
+        <di:waypoint x="220" y="387" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="369" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1eb73wj_di" bpmnElement="Task_0kwlk6r">
+        <dc:Bounds x="220" y="347" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1hjgnhp_di" bpmnElement="Task_035t4pe">
+        <dc:Bounds x="690" y="347" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1lnoqqw_di" bpmnElement="Task_1l0cugw">
+        <dc:Bounds x="850" y="347" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0o7yhh2_di" bpmnElement="EndEvent_05qxvef">
+        <dc:Bounds x="1012" y="369" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0zsm7pw_di" bpmnElement="Task_0l914w7">
+        <dc:Bounds x="530" y="347" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0xqrfua_di" bpmnElement="Task_0p8db3s">
+        <dc:Bounds x="690" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_03vzwzb_di" bpmnElement="Task_1skgw9l">
+        <dc:Bounds x="530" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_0c7pki1_di" bpmnElement="IntermediateThrowEvent_0t0tjfd">
+        <dc:Bounds x="912" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="893" y="170" width="73" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_1h99akz_di" bpmnElement="IntermediateThrowEvent_1e2smz5">
+        <dc:Bounds x="752" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="655" y="230" width="85" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0mqd5we_di" bpmnElement="Activity_1smzbds">
+        <dc:Bounds x="380" y="347" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ur7184_di" bpmnElement="Event_08hd743">
+        <dc:Bounds x="442" y="329" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_04c7ers_di" bpmnElement="IntermediateThrowEvent_07g6ehe">
+        <dc:Bounds x="592" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_17rv85p_di" bpmnElement="IntermediateThrowEvent_138r11o">
+        <dc:Bounds x="752" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1j9w5v5_di" bpmnElement="IntermediateThrowEvent_1m3wogr">
+        <dc:Bounds x="592" y="329" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1hzmi83_di" bpmnElement="IntermediateThrowEvent_0qtecxf">
+        <dc:Bounds x="912" y="329" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_18lhq8e_di" bpmnElement="IntermediateThrowEvent_0g19n94">
+        <dc:Bounds x="752" y="329" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0dhajkp_di" bpmnElement="Association_0dhajkp">
+        <di:waypoint x="770" y="445" />
+        <di:waypoint x="770" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1kq2ene_di" bpmnElement="Association_1kq2ene">
+        <di:waypoint x="610" y="445" />
+        <di:waypoint x="610" y="520" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

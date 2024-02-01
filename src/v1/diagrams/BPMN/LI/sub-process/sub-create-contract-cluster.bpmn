@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0gcig01" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
+  <bpmn:process id="create-contract-cluster" name="(Sub) create-contract-cluster" isExecutable="true" camunda:versionTag="1">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>SequenceFlow_00j18so</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_00j18so" sourceRef="StartEvent_1" targetRef="Task_1asnpbv" />
+    <bpmn:serviceTask id="Task_1asnpbv" name="Get SME-Loan-Request-Proposal" camunda:type="external" camunda:topic="get-sme-loan-request-proposal">
+      <bpmn:incoming>SequenceFlow_00j18so</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13sqk55</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_13sqk55" sourceRef="Task_1asnpbv" targetRef="Activity_04wvmse" />
+    <bpmn:serviceTask id="Task_0f6akzk" name="Get CRM data" camunda:type="external" camunda:topic="get-crm-data">
+      <bpmn:incoming>Flow_0mi8gr7</bpmn:incoming>
+      <bpmn:incoming>Flow_1stm5ju</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0uqlm2x</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0uqlm2x" sourceRef="Task_0f6akzk" targetRef="Task_0nyjv0m" />
+    <bpmn:callActivity id="Task_0nyjv0m" name="Create Contract/Contract-pary" calledElement="create-contract">
+      <bpmn:extensionElements>
+        <camunda:in source="requestId" target="requestId" />
+        <camunda:in source="smeLoanRequest" target="smeLoanRequest" />
+        <camunda:in source="smeLoanRequestProposal" target="smeLoanRequestProposal" />
+        <camunda:in source="crmData" target="crmData" />
+        <camunda:out source="contractPartySequenceNumber" target="contractPartySequenceNumber" />
+        <camunda:in source="errorLog" target="errorLog" />
+        <camunda:out source="errorLog" target="errorLog" />
+        <camunda:out source="contract" target="contract" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0uqlm2x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_08p0nux</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="SequenceFlow_08p0nux" sourceRef="Task_0nyjv0m" targetRef="ExclusiveGateway_1iap3id" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1iap3id">
+      <bpmn:incoming>SequenceFlow_08p0nux</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1wxfox1</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_17ssvay</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1wxfox1" sourceRef="ExclusiveGateway_1iap3id" targetRef="Task_0jwv19f">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${customerLegalForm != 'eenmanszaak'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Task_0jwv19f" name="Create other Contract-Parties" camunda:type="external" camunda:topic="create-other-contract-parties">
+      <bpmn:incoming>SequenceFlow_1wxfox1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0gn8jg7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_0fm45og" attachedToRef="Task_0f6akzk">
+      <bpmn:outgoing>SequenceFlow_03avfzy</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_15jzc6u" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_03avfzy" sourceRef="BoundaryEvent_0fm45og" targetRef="EndEvent_1kgerw8" />
+    <bpmn:sequenceFlow id="SequenceFlow_0sse8zt" sourceRef="BoundaryEvent_0hhrgt4" targetRef="EndEvent_1kgerw8" />
+    <bpmn:boundaryEvent id="BoundaryEvent_0hhrgt4" attachedToRef="Task_1asnpbv">
+      <bpmn:outgoing>SequenceFlow_0sse8zt</bpmn:outgoing>
+      <bpmn:errorEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="BoundaryEvent_0r99w1v" attachedToRef="Task_0nyjv0m">
+      <bpmn:outgoing>SequenceFlow_0082dg5</bpmn:outgoing>
+      <bpmn:errorEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0082dg5" sourceRef="BoundaryEvent_0r99w1v" targetRef="EndEvent_1kgerw8" />
+    <bpmn:endEvent id="EndEvent_1kgerw8" name="Error">
+      <bpmn:incoming>SequenceFlow_03avfzy</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0sse8zt</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0082dg5</bpmn:incoming>
+      <bpmn:incoming>Flow_01035nz</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1a81jkl</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0bttk3o</bpmn:incoming>
+      <bpmn:incoming>Flow_1pm2909</bpmn:incoming>
+      <bpmn:incoming>Flow_03gt1aa</bpmn:incoming>
+      <bpmn:errorEventDefinition errorRef="Error_1pgt7ll" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1skjtv5" sourceRef="Activity_04wvmse" targetRef="Gateway_1y9igdr" />
+    <bpmn:serviceTask id="Activity_04wvmse" name="Check already exist Contract" camunda:type="external" camunda:topic="delete-contract-and-contractparty-if-exist">
+      <bpmn:incoming>SequenceFlow_13sqk55</bpmn:incoming>
+      <bpmn:outgoing>Flow_1skjtv5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_01035nz" sourceRef="Event_1altvyi" targetRef="EndEvent_1kgerw8" />
+    <bpmn:boundaryEvent id="Event_1altvyi" attachedToRef="Activity_04wvmse">
+      <bpmn:outgoing>Flow_01035nz</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0mqdan0" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="EndEvent_0895lya" name="End">
+      <bpmn:incoming>SequenceFlow_0ez28wk</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0gn8jg7" sourceRef="Task_0jwv19f" targetRef="Task_0x2bu9z" />
+    <bpmn:sequenceFlow id="SequenceFlow_17ssvay" sourceRef="ExclusiveGateway_1iap3id" targetRef="Task_0x2bu9z">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${customerLegalForm == 'eenmanszaak'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0ez28wk" sourceRef="Task_0x2bu9z" targetRef="EndEvent_0895lya" />
+    <bpmn:serviceTask id="Task_0x2bu9z" name="Generate Contact" camunda:type="external" camunda:topic="generate-contract-html">
+      <bpmn:incoming>SequenceFlow_0gn8jg7</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_17ssvay</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ez28wk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1a81jkl" sourceRef="BoundaryEvent_1tbzhi4" targetRef="EndEvent_1kgerw8" />
+    <bpmn:boundaryEvent id="BoundaryEvent_1tbzhi4" attachedToRef="Task_0x2bu9z">
+      <bpmn:outgoing>SequenceFlow_1a81jkl</bpmn:outgoing>
+      <bpmn:errorEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="BoundaryEvent_0ln2nxo" attachedToRef="Task_0jwv19f">
+      <bpmn:outgoing>SequenceFlow_0bttk3o</bpmn:outgoing>
+      <bpmn:errorEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0bttk3o" sourceRef="BoundaryEvent_0ln2nxo" targetRef="EndEvent_1kgerw8" />
+    <bpmn:exclusiveGateway id="Gateway_1y9igdr">
+      <bpmn:incoming>Flow_1skjtv5</bpmn:incoming>
+      <bpmn:outgoing>Flow_17muc73</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0mi8gr7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_17muc73" sourceRef="Gateway_1y9igdr" targetRef="Activity_1i1m3so">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${reviewAction == 'regenerate-contract'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0otklnr" sourceRef="Activity_1i1m3so" targetRef="Activity_1ga0xwv" />
+    <bpmn:serviceTask id="Activity_1i1m3so" name="Import V-Tiger data" camunda:type="external" camunda:topic="get-all-info-out-of-v-tiger">
+      <bpmn:incoming>Flow_17muc73</bpmn:incoming>
+      <bpmn:outgoing>Flow_0otklnr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0b0pn8w" attachedToRef="Activity_1i1m3so">
+      <bpmn:outgoing>Flow_1pm2909</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0s6mpui" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1pm2909" sourceRef="Event_0b0pn8w" targetRef="EndEvent_1kgerw8" />
+    <bpmn:sequenceFlow id="Flow_0mi8gr7" sourceRef="Gateway_1y9igdr" targetRef="Task_0f6akzk">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${reviewAction != 'regenerate-contract'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1stm5ju" sourceRef="Activity_1ga0xwv" targetRef="Task_0f6akzk" />
+    <bpmn:sequenceFlow id="Flow_03gt1aa" sourceRef="Event_0xot14i" targetRef="EndEvent_1kgerw8" />
+    <bpmn:boundaryEvent id="Event_0xot14i" attachedToRef="Activity_1ga0xwv">
+      <bpmn:outgoing>Flow_03gt1aa</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0hdjdug" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_1ga0xwv" name="Update Customer" camunda:type="external" camunda:topic="update-customer">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="dataSource">v-tiger</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0otklnr</bpmn:incoming>
+      <bpmn:outgoing>Flow_1stm5ju</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmn:error id="Error_1pgt7ll" name="Contract cluster error" errorCode="ERROR_CONTRCT_CLUSTER" />
+  <bpmn:error id="Error_15jzc6u" name="Get crm data error" errorCode="ERROR_GET_CRM_DATA" camunda:errorMessage="Unexpected Error Occurred while getting crm data" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="create-contract-cluster">
+      <bpmndi:BPMNEdge id="Flow_03gt1aa_di" bpmnElement="Flow_03gt1aa">
+        <di:waypoint x="860" y="255" />
+        <di:waypoint x="860" y="350" />
+        <di:waypoint x="1582" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1stm5ju_di" bpmnElement="Flow_1stm5ju">
+        <di:waypoint x="910" y="197" />
+        <di:waypoint x="950" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mi8gr7_di" bpmnElement="Flow_0mi8gr7">
+        <di:waypoint x="590" y="172" />
+        <di:waypoint x="590" y="70" />
+        <di:waypoint x="1000" y="70" />
+        <di:waypoint x="1000" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pm2909_di" bpmnElement="Flow_1pm2909">
+        <di:waypoint x="710" y="255" />
+        <di:waypoint x="710" y="350" />
+        <di:waypoint x="1582" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0otklnr_di" bpmnElement="Flow_0otklnr">
+        <di:waypoint x="760" y="197" />
+        <di:waypoint x="810" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17muc73_di" bpmnElement="Flow_17muc73">
+        <di:waypoint x="615" y="197" />
+        <di:waypoint x="660" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0bttk3o_di" bpmnElement="SequenceFlow_0bttk3o">
+        <di:waypoint x="1360" y="255" />
+        <di:waypoint x="1360" y="350" />
+        <di:waypoint x="1582" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1a81jkl_di" bpmnElement="SequenceFlow_1a81jkl">
+        <di:waypoint x="1500" y="255" />
+        <di:waypoint x="1500" y="350" />
+        <di:waypoint x="1582" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ez28wk_di" bpmnElement="SequenceFlow_0ez28wk">
+        <di:waypoint x="1550" y="197" />
+        <di:waypoint x="1582" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_17ssvay_di" bpmnElement="SequenceFlow_17ssvay">
+        <di:waypoint x="1260" y="172" />
+        <di:waypoint x="1260" y="80" />
+        <di:waypoint x="1500" y="80" />
+        <di:waypoint x="1500" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0gn8jg7_di" bpmnElement="SequenceFlow_0gn8jg7">
+        <di:waypoint x="1410" y="197" />
+        <di:waypoint x="1450" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01035nz_di" bpmnElement="Flow_01035nz">
+        <di:waypoint x="460" y="255" />
+        <di:waypoint x="460" y="350" />
+        <di:waypoint x="1582" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1skjtv5_di" bpmnElement="Flow_1skjtv5">
+        <di:waypoint x="510" y="197" />
+        <di:waypoint x="565" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0082dg5_di" bpmnElement="SequenceFlow_0082dg5">
+        <di:waypoint x="1120" y="255" />
+        <di:waypoint x="1120" y="350" />
+        <di:waypoint x="1582" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sse8zt_di" bpmnElement="SequenceFlow_0sse8zt">
+        <di:waypoint x="300" y="255" />
+        <di:waypoint x="300" y="390" />
+        <di:waypoint x="1600" y="390" />
+        <di:waypoint x="1600" y="368" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_03avfzy_di" bpmnElement="SequenceFlow_03avfzy">
+        <di:waypoint x="1000" y="255" />
+        <di:waypoint x="1000" y="350" />
+        <di:waypoint x="1582" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wxfox1_di" bpmnElement="SequenceFlow_1wxfox1">
+        <di:waypoint x="1285" y="197" />
+        <di:waypoint x="1310" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_08p0nux_di" bpmnElement="SequenceFlow_08p0nux">
+        <di:waypoint x="1200" y="197" />
+        <di:waypoint x="1235" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0uqlm2x_di" bpmnElement="SequenceFlow_0uqlm2x">
+        <di:waypoint x="1050" y="197" />
+        <di:waypoint x="1100" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13sqk55_di" bpmnElement="SequenceFlow_13sqk55">
+        <di:waypoint x="350" y="197" />
+        <di:waypoint x="410" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_00j18so_di" bpmnElement="SequenceFlow_00j18so">
+        <di:waypoint x="188" y="197" />
+        <di:waypoint x="250" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="179" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="159" y="222" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1gnaeip_di" bpmnElement="Task_1asnpbv">
+        <dc:Bounds x="250" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1ysjsyb_di" bpmnElement="Task_0f6akzk">
+        <dc:Bounds x="950" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_11wwjej_di" bpmnElement="Task_0nyjv0m">
+        <dc:Bounds x="1100" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1iap3id_di" bpmnElement="ExclusiveGateway_1iap3id" isMarkerVisible="true">
+        <dc:Bounds x="1235" y="172" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_17wc1ns_di" bpmnElement="Task_0jwv19f">
+        <dc:Bounds x="1310" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1odzfhi_di" bpmnElement="EndEvent_1kgerw8">
+        <dc:Bounds x="1582" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1587" y="313" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1j32nd6_di" bpmnElement="Activity_04wvmse">
+        <dc:Bounds x="410" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0895lya_di" bpmnElement="EndEvent_0895lya">
+        <dc:Bounds x="1582" y="179" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1591" y="222" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1j14s2y_di" bpmnElement="Task_0x2bu9z">
+        <dc:Bounds x="1450" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1y9igdr_di" bpmnElement="Gateway_1y9igdr" isMarkerVisible="true">
+        <dc:Bounds x="565" y="172" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pke5n3_di" bpmnElement="Activity_1i1m3so">
+        <dc:Bounds x="660" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0i4ze2x_di" bpmnElement="Activity_1ga0xwv">
+        <dc:Bounds x="810" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1tor8si_di" bpmnElement="Event_0xot14i">
+        <dc:Bounds x="842" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0nncdqk_di" bpmnElement="Event_0b0pn8w">
+        <dc:Bounds x="692" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0axcx1m_di" bpmnElement="BoundaryEvent_0ln2nxo">
+        <dc:Bounds x="1342" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0dj5f5n_di" bpmnElement="BoundaryEvent_1tbzhi4">
+        <dc:Bounds x="1482" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1um1qrx_di" bpmnElement="Event_1altvyi">
+        <dc:Bounds x="442" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1c4unbd_di" bpmnElement="BoundaryEvent_0r99w1v">
+        <dc:Bounds x="1102" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0e2uoz4_di" bpmnElement="BoundaryEvent_0hhrgt4">
+        <dc:Bounds x="282" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0j9fgv6_di" bpmnElement="BoundaryEvent_0fm45og">
+        <dc:Bounds x="982" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0mccna3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1">
+  <bpmn:process id="daily-update-psd2-data" name="Daily-Update-PSD2-Data" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>Flow_1epbny4</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_00iffw2" name="consent = valid">
+      <bpmn:incoming>Flow_14eg7yh</bpmn:incoming>
+      <bpmn:outgoing>Flow_02qe2st</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1po7gdq</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Event_0fnkfwb" name="End">
+      <bpmn:incoming>Flow_0kud78r</bpmn:incoming>
+      <bpmn:incoming>Flow_1rz328x</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:callActivity id="Activity_0wsg2c2" name="Categorize Daily PSD2 Transactions" calledElement="categories-bank-transactions-sub">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+        <camunda:in source="collectionId" target="collectionId" />
+        <camunda:in source="ibanNumber" target="ibanNumber" />
+        <camunda:in source="customerId" target="customerId" />
+        <camunda:in source="consentStatus" target="consentStatus" />
+        <camunda:in source="systemDate" target="systemDate" />
+        <camunda:out source="collectionId" target="collectionId" />
+        <camunda:out source="ibanNumber" target="ibanNumber" />
+        <camunda:out source="customerId" target="customerId" />
+        <camunda:out source="consentStatus" target="consentStatus" />
+        <camunda:out source="systemDate" target="systemDate" />
+        <camunda:in source="dateFrom" target="dateFrom" />
+        <camunda:in source="runForPSD2DailyUpdate" target="runForPSD2DailyUpdate" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1v9ba49</bpmn:incoming>
+      <bpmn:outgoing>Flow_0kud78r</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:boundaryEvent id="Event_074a1ne" attachedToRef="Activity_0wsg2c2">
+      <bpmn:outgoing>Flow_0ftw069</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0btbcir</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0132zn1" errorRef="Error_1myj18k" camunda:errorCodeVariable="error_categorizeDailyPSD2Transactions" camunda:errorMessageVariable="errorCategorizeDailyPSD2Transactions" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0kud78r" sourceRef="Activity_0wsg2c2" targetRef="Event_0fnkfwb" />
+    <bpmn:callActivity id="Activity_0hrtojr" name="Update Consent Status" calledElement="update_consent_status">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+        <camunda:in source="consentCollectionId" target="consentCollectionId" />
+        <camunda:in source="ibanNumber" target="ibanNumber" />
+        <camunda:in source="customerId" target="customerId" />
+        <camunda:in source="consentStatus" target="consentStatus" />
+        <camunda:in source="systemDate" target="systemDate" />
+        <camunda:out source="consentCollectionId" target="consentCollectionId" />
+        <camunda:out source="ibanNumber" target="ibanNumber" />
+        <camunda:out source="customerId" target="customerId" />
+        <camunda:out source="consentStatus" target="consentStatus" />
+        <camunda:out source="systemDate" target="systemDate" />
+        <camunda:in source="dateFrom" target="dateFrom" />
+        <camunda:in source="dbConsentId" target="dbConsentId" />
+        <camunda:inputOutput>
+          <camunda:inputParameter name="doNeedGenerateEmails">no</camunda:inputParameter>
+          <camunda:inputParameter name="onTimeSend">true</camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:in source="onTimeSend" target="onTimeSend" />
+        <camunda:in source="doNeedGenerateEmails" target="doNeedGenerateEmails" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_02qe2st</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rz328x</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:boundaryEvent id="Event_0mf384p" attachedToRef="Activity_0hrtojr">
+      <bpmn:outgoing>Flow_03uy7kp</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0bymblr" errorRef="Error_0hi77cl" camunda:errorCodeVariable="error_updateConsentStatus" camunda:errorMessageVariable="errorUpdateConsentStatus" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_02qe2st" sourceRef="Gateway_00iffw2" targetRef="Activity_0hrtojr">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isConsentValid == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1rz328x" sourceRef="Activity_0hrtojr" targetRef="Event_0fnkfwb" />
+    <bpmn:sequenceFlow id="Flow_1epbny4" sourceRef="StartEvent_1" targetRef="Activity_16vgv8j" />
+    <bpmn:serviceTask id="Activity_16vgv8j" name="Update PSD2 bank transactions" camunda:type="external" camunda:topic="update-psd2-bank-transactions">
+      <bpmn:incoming>Flow_1epbny4</bpmn:incoming>
+      <bpmn:outgoing>Flow_14eg7yh</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_14eg7yh" sourceRef="Activity_16vgv8j" targetRef="Gateway_00iffw2" />
+    <bpmn:boundaryEvent id="Event_0sqso5h" attachedToRef="Activity_16vgv8j">
+      <bpmn:outgoing>Flow_0e945rb</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_045r5hw" errorRef="Error_14dg0xw" camunda:errorCodeVariable="error_updatePSD2BankTransactions" camunda:errorMessageVariable="errorUpdatePSD2BankTransactions" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1po7gdq" sourceRef="Gateway_00iffw2" targetRef="Activity_06oabge">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isConsentValid == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1v9ba49" sourceRef="Activity_06oabge" targetRef="Activity_0wsg2c2" />
+    <bpmn:serviceTask id="Activity_06oabge" name="Pars Daily PSD2 Bank Transactions" camunda:type="external" camunda:topic="pars-daily-PSD2-transactions">
+      <bpmn:incoming>Flow_1po7gdq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1v9ba49</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0gx1zy0" attachedToRef="Activity_06oabge">
+      <bpmn:outgoing>Flow_0xaykgk</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0cz90ph" errorRef="Error_00juvw7" camunda:errorCodeVariable="error_parsDailyPSD2BankTransactions" camunda:errorMessageVariable="errorParsDailyPSD2BankTransactions" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0e945rb" sourceRef="Event_0sqso5h" targetRef="Event_0cnh3s6" />
+    <bpmn:endEvent id="Event_0cnh3s6" name="Error">
+      <bpmn:incoming>Flow_0e945rb</bpmn:incoming>
+      <bpmn:incoming>Flow_0xaykgk</bpmn:incoming>
+      <bpmn:incoming>Flow_0ftw069</bpmn:incoming>
+      <bpmn:incoming>Flow_0btbcir</bpmn:incoming>
+      <bpmn:incoming>Flow_03uy7kp</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1k3qwbe" errorRef="Error_005u64b" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0xaykgk" sourceRef="Event_0gx1zy0" targetRef="Event_0cnh3s6" />
+    <bpmn:sequenceFlow id="Flow_0ftw069" sourceRef="Event_074a1ne" targetRef="Event_0cnh3s6" />
+    <bpmn:sequenceFlow id="Flow_0btbcir" sourceRef="Event_074a1ne" targetRef="Event_0cnh3s6" />
+    <bpmn:sequenceFlow id="Flow_03uy7kp" sourceRef="Event_0mf384p" targetRef="Event_0cnh3s6" />
+  </bpmn:process>
+  <bpmn:error id="Error_14dg0xw" name="Error_updatePSD2BankTransactions" errorCode="ERROR_UPDATE_PSD2_BANK_TRANSACTIONS" />
+  <bpmn:error id="Error_00juvw7" name="Error_parsDailyPSD2BankTransactions" errorCode="ERROR_PARS_DAILY_PSD2_BANK_TRANSACTIONS" />
+  <bpmn:error id="Error_1myj18k" name="Error_categorizeDailyPSD2Transactions" errorCode="ERROR_CATEGORIZE_DAILY_PSD2_TRANSACTIONS" />
+  <bpmn:error id="Error_0hi77cl" name="Error_updateConsentStatus" errorCode="ERROR_UPDATE_CONSENT_STATUS" />
+  <bpmn:error id="Error_005u64b" name="daily update PSD2 data error" errorCode="ERROR_DAILY_UPDATE_PSD2_DATA" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="daily-update-psd2-data">
+      <bpmndi:BPMNEdge id="Flow_03uy7kp_di" bpmnElement="Flow_03uy7kp">
+        <di:waypoint x="580" y="548" />
+        <di:waypoint x="580" y="568" />
+        <di:waypoint x="1110" y="568" />
+        <di:waypoint x="1110" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0btbcir_di" bpmnElement="Flow_0btbcir">
+        <di:waypoint x="800" y="192" />
+        <di:waypoint x="800" y="100" />
+        <di:waypoint x="1092" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ftw069_di" bpmnElement="Flow_0ftw069">
+        <di:waypoint x="800" y="192" />
+        <di:waypoint x="800" y="100" />
+        <di:waypoint x="1092" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xaykgk_di" bpmnElement="Flow_0xaykgk">
+        <di:waypoint x="580" y="192" />
+        <di:waypoint x="580" y="100" />
+        <di:waypoint x="1092" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e945rb_di" bpmnElement="Flow_0e945rb">
+        <di:waypoint x="300" y="192" />
+        <di:waypoint x="300" y="100" />
+        <di:waypoint x="1092" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1v9ba49_di" bpmnElement="Flow_1v9ba49">
+        <di:waypoint x="630" y="250" />
+        <di:waypoint x="750" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1po7gdq_di" bpmnElement="Flow_1po7gdq">
+        <di:waypoint x="455" y="250" />
+        <di:waypoint x="530" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14eg7yh_di" bpmnElement="Flow_14eg7yh">
+        <di:waypoint x="350" y="250" />
+        <di:waypoint x="405" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1epbny4_di" bpmnElement="Flow_1epbny4">
+        <di:waypoint x="198" y="250" />
+        <di:waypoint x="250" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rz328x_di" bpmnElement="Flow_1rz328x">
+        <di:waypoint x="630" y="490" />
+        <di:waypoint x="1030" y="490" />
+        <di:waypoint x="1030" y="268" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02qe2st_di" bpmnElement="Flow_02qe2st">
+        <di:waypoint x="430" y="275" />
+        <di:waypoint x="430" y="490" />
+        <di:waypoint x="530" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kud78r_di" bpmnElement="Flow_0kud78r">
+        <di:waypoint x="850" y="250" />
+        <di:waypoint x="1012" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="162" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="168" y="275" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_00iffw2_di" bpmnElement="Gateway_00iffw2" isMarkerVisible="true">
+        <dc:Bounds x="405" y="225" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="393" y="213" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0fnkfwb_di" bpmnElement="Event_0fnkfwb">
+        <dc:Bounds x="1012" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1020" y="208" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wsg2c2_di" bpmnElement="Activity_0wsg2c2">
+        <dc:Bounds x="750" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hrtojr_di" bpmnElement="Activity_0hrtojr">
+        <dc:Bounds x="530" y="450" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18bwcyo_di" bpmnElement="Activity_16vgv8j">
+        <dc:Bounds x="250" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0uqo1gt_di" bpmnElement="Activity_06oabge">
+        <dc:Bounds x="530" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_18pwyod_di" bpmnElement="Event_0cnh3s6">
+        <dc:Bounds x="1092" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1097" y="52" width="26" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0byepb2_di" bpmnElement="Event_0gx1zy0">
+        <dc:Bounds x="562" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1okwp5j_di" bpmnElement="Event_0sqso5h">
+        <dc:Bounds x="282" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mf384p_di" bpmnElement="Event_0mf384p">
+        <dc:Bounds x="562" y="512" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_074a1ne_di" bpmnElement="Event_074a1ne">
+        <dc:Bounds x="782" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

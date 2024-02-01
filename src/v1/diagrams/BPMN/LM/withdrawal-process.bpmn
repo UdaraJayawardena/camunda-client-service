@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0cqdg20" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+  <bpmn:process id="withdrawal-process" name="Withdrawal Process" isExecutable="true" camunda:versionTag="1.0.0">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1rf8ega</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1rf8ega" sourceRef="StartEvent_1" targetRef="Activity_04kwyv5" />
+    <bpmn:exclusiveGateway id="Gateway_1ql5bru" default="Flow_1d63xze">
+      <bpmn:incoming>Flow_0v7akey</bpmn:incoming>
+      <bpmn:outgoing>Flow_0d4j6fw</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1d63xze</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0d4j6fw" sourceRef="Gateway_1ql5bru" targetRef="Event_0005eyw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${(returnCode &gt;= 200 &amp;&amp; returnCode &lt; 400 )  || (returnCode == 404 &amp;&amp; initiator == 'csm')  }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1d63xze" sourceRef="Gateway_1ql5bru" targetRef="Activity_0vs7ut6" />
+    <bpmn:userTask id="waiting-for-confirmation" name="Waiting for Confirmation">
+      <bpmn:incoming>Flow_00qaz0a</bpmn:incoming>
+      <bpmn:outgoing>Flow_0sa6osa</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0v7akey" sourceRef="Activity_0n08haj" targetRef="Gateway_1ql5bru" />
+    <bpmn:sequenceFlow id="Flow_0sa6osa" sourceRef="waiting-for-confirmation" targetRef="Gateway_1790dts" />
+    <bpmn:exclusiveGateway id="Gateway_1790dts" default="Flow_0mpdn1k">
+      <bpmn:incoming>Flow_0sa6osa</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mpdn1k</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0b1lmbt</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0mpdn1k" sourceRef="Gateway_1790dts" targetRef="Activity_06uxbvp" />
+    <bpmn:endEvent id="Event_0agra9c">
+      <bpmn:incoming>Flow_1vpyep5</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_17ugzvj" camunda:type="external" camunda:topic="end-withdrawal-process" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_00qaz0a" sourceRef="Event_0005eyw" targetRef="waiting-for-confirmation" />
+    <bpmn:sequenceFlow id="Flow_1vpyep5" sourceRef="Activity_0vs7ut6" targetRef="Event_0agra9c" />
+    <bpmn:sequenceFlow id="Flow_0b1lmbt" sourceRef="Gateway_1790dts" targetRef="Activity_0c4ke0f">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ returnCode == 499 }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1q8h0f5" sourceRef="Activity_06uxbvp" targetRef="Activity_0vs7ut6" />
+    <bpmn:intermediateThrowEvent id="Event_0005eyw">
+      <bpmn:incoming>Flow_0d4j6fw</bpmn:incoming>
+      <bpmn:outgoing>Flow_00qaz0a</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_022r5px" camunda:type="external" camunda:topic="end-withdrawal-process" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:scriptTask id="Activity_0vs7ut6" name="Update Camunda process" scriptFormat="Javascript">
+      <bpmn:incoming>Flow_1d63xze</bpmn:incoming>
+      <bpmn:incoming>Flow_1q8h0f5</bpmn:incoming>
+      <bpmn:incoming>Flow_0y54lrd</bpmn:incoming>
+      <bpmn:incoming>Flow_1l8h5s2</bpmn:incoming>
+      <bpmn:incoming>Flow_1il1f8j</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vpyep5</bpmn:outgoing>
+      <bpmn:script>returnCode = execution.getVariable("returnCode");
+
+succesfullIndicator = '';
+
+if(returnCode == 200){
+succesfullIndicator = 'processed'
+}else{
+succesfullIndicator = 'cancelled'
+}
+
+execution.setVariable('succesfullIndicator',  succesfullIndicator);</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:boundaryEvent id="Event_1kl6sed" attachedToRef="waiting-for-confirmation">
+      <bpmn:outgoing>Flow_0y54lrd</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0gwmszd">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10M</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0y54lrd" sourceRef="Event_1kl6sed" targetRef="Activity_0vs7ut6" />
+    <bpmn:serviceTask id="Activity_0n08haj" name="Validate Withdrawal" camunda:type="external" camunda:topic="validate-withdrawal">
+      <bpmn:incoming>Flow_1a3da8j</bpmn:incoming>
+      <bpmn:outgoing>Flow_0v7akey</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_06uxbvp" name="Add Flex-Loan Withdrawal" camunda:type="external" camunda:topic="add-flex-loan-withdrawal">
+      <bpmn:incoming>Flow_0mpdn1k</bpmn:incoming>
+      <bpmn:outgoing>Flow_1q8h0f5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1a3da8j" sourceRef="Activity_04kwyv5" targetRef="Activity_0n08haj" />
+    <bpmn:serviceTask id="Activity_04kwyv5" name="Get System Date" camunda:type="external" camunda:topic="get-simulation-date">
+      <bpmn:incoming>Flow_1rf8ega</bpmn:incoming>
+      <bpmn:outgoing>Flow_1a3da8j</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1l8h5s2" sourceRef="Event_1h2jgek" targetRef="Activity_0vs7ut6" />
+    <bpmn:boundaryEvent id="Event_1h2jgek" attachedToRef="Activity_04kwyv5">
+      <bpmn:outgoing>Flow_1l8h5s2</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_072iobs" errorRef="Error_0satq3q" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1il1f8j" sourceRef="Activity_0c4ke0f" targetRef="Activity_0vs7ut6" />
+    <bpmn:scriptTask id="Activity_0c4ke0f" name="Fill api-out Invalid Pin Fields" scriptFormat="Javascript">
+      <bpmn:incoming>Flow_0b1lmbt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1il1f8j</bpmn:outgoing>
+      <bpmn:script>returnCode = execution.getVariable("returnCode");
+result = JSON.parse(execution.getVariable("result"));
+
+returnMessage = 'Pin-Code is wrong';
+returnAppCode =  'INVALID_PIN';
+
+result.returnCode = returnCode;
+result.returnMessage = returnMessage;
+result.returnAppCode = returnAppCode;
+
+execution.setVariable('result',  JSON.stringify(result));
+execution.setVariable('returnMessage', returnMessage);
+execution.setVariable('returnAppCode', returnAppCode);</bpmn:script>
+    </bpmn:scriptTask>
+  </bpmn:process>
+  <bpmn:error id="Error_0satq3q" name="ERROR_GET_SIMULATION_DATE" camunda:errorMessage="Unexpected Error Occurred while getting simulation date" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="withdrawal-process">
+      <bpmndi:BPMNEdge id="Flow_1l8h5s2_di" bpmnElement="Flow_1l8h5s2">
+        <di:waypoint x="290" y="375" />
+        <di:waypoint x="290" y="470" />
+        <di:waypoint x="920" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a3da8j_di" bpmnElement="Flow_1a3da8j">
+        <di:waypoint x="340" y="317" />
+        <di:waypoint x="400" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y54lrd_di" bpmnElement="Flow_0y54lrd">
+        <di:waypoint x="810" y="188" />
+        <di:waypoint x="810" y="440" />
+        <di:waypoint x="920" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1q8h0f5_di" bpmnElement="Flow_1q8h0f5">
+        <di:waypoint x="1230" y="170" />
+        <di:waypoint x="1230" y="340" />
+        <di:waypoint x="990" y="340" />
+        <di:waypoint x="990" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b1lmbt_di" bpmnElement="Flow_0b1lmbt">
+        <di:waypoint x="970" y="155" />
+        <di:waypoint x="970" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vpyep5_di" bpmnElement="Flow_1vpyep5">
+        <di:waypoint x="1020" y="450" />
+        <di:waypoint x="1212" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00qaz0a_di" bpmnElement="Flow_00qaz0a">
+        <di:waypoint x="708" y="130" />
+        <di:waypoint x="760" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mpdn1k_di" bpmnElement="Flow_0mpdn1k">
+        <di:waypoint x="995" y="130" />
+        <di:waypoint x="1180" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sa6osa_di" bpmnElement="Flow_0sa6osa">
+        <di:waypoint x="860" y="130" />
+        <di:waypoint x="945" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0v7akey_di" bpmnElement="Flow_0v7akey">
+        <di:waypoint x="500" y="317" />
+        <di:waypoint x="565" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1d63xze_di" bpmnElement="Flow_1d63xze">
+        <di:waypoint x="590" y="342" />
+        <di:waypoint x="590" y="450" />
+        <di:waypoint x="920" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d4j6fw_di" bpmnElement="Flow_0d4j6fw">
+        <di:waypoint x="590" y="292" />
+        <di:waypoint x="590" y="130" />
+        <di:waypoint x="672" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rf8ega_di" bpmnElement="Flow_1rf8ega">
+        <di:waypoint x="188" y="317" />
+        <di:waypoint x="240" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1il1f8j_di" bpmnElement="Flow_1il1f8j">
+        <di:waypoint x="970" y="280" />
+        <di:waypoint x="970" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="299" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1ql5bru_di" bpmnElement="Gateway_1ql5bru" isMarkerVisible="true">
+        <dc:Bounds x="565" y="292" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12yje44_di" bpmnElement="waiting-for-confirmation">
+        <dc:Bounds x="760" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_183g4n9_di" bpmnElement="Event_0agra9c">
+        <dc:Bounds x="1212" y="432" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0zkxhev_di" bpmnElement="Event_0005eyw">
+        <dc:Bounds x="672" y="112" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0akzluy_di" bpmnElement="Activity_0vs7ut6">
+        <dc:Bounds x="920" y="410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1i15xie_di" bpmnElement="Activity_0n08haj">
+        <dc:Bounds x="400" y="277" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09vnnwc_di" bpmnElement="Activity_06uxbvp">
+        <dc:Bounds x="1180" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11i4d0d_di" bpmnElement="Activity_04kwyv5">
+        <dc:Bounds x="240" y="277" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1790dts_di" bpmnElement="Gateway_1790dts" isMarkerVisible="true">
+        <dc:Bounds x="945" y="105" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_145x4m1_di" bpmnElement="Activity_0c4ke0f">
+        <dc:Bounds x="920" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ry3htp_di" bpmnElement="Event_1h2jgek">
+        <dc:Bounds x="272" y="339" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0l82kyx_di" bpmnElement="Event_1kl6sed">
+        <dc:Bounds x="792" y="152" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

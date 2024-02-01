@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0t1b7vo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="processor-bank-transactions" name="(Main) Processor bank transactions" isExecutable="true" camunda:versionTag="1.3.4" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_096init</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1nvgd4y" sourceRef="Task_139oimm" targetRef="Task_13pah87" />
+    <bpmn:sequenceFlow id="SequenceFlow_096init" sourceRef="StartEvent_1" targetRef="Task_139oimm" />
+    <bpmn:boundaryEvent id="BoundaryEvent_16jwoih" attachedToRef="Task_13pah87">
+      <bpmn:outgoing>Flow_104trv1</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_0uann40" />
+    </bpmn:boundaryEvent>
+    <bpmn:callActivity id="Task_13pah87" name="Process bank transactions" camunda:asyncBefore="true" camunda:asyncAfter="true" calledElement="sub-processor-bank-transactions" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="transactionDate" target="transactionDate" />
+        <camunda:in source="bankTransactions" target="bankTransactions" />
+        <camunda:in source="requestId" target="requestId" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="result" target="result" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1nvgd4y</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ujvsr5</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:serviceTask id="Task_139oimm" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_096init</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1nvgd4y</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0269c8w">
+      <bpmn:incoming>Flow_0ujvsr5</bpmn:incoming>
+      <bpmn:incoming>Flow_104trv1</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1c3xd02" camunda:type="external" camunda:topic="end-processor-bank-transactions" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0ujvsr5" sourceRef="Task_13pah87" targetRef="Event_0269c8w" />
+    <bpmn:sequenceFlow id="Flow_104trv1" sourceRef="BoundaryEvent_16jwoih" targetRef="Event_0269c8w" />
+  </bpmn:process>
+  <bpmn:error id="Error_0uann40" name="Processor bank transactions error" errorCode="ERROR_PROCESSOR_BANK_TRANSACTIONS" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="processor-bank-transactions">
+      <bpmndi:BPMNEdge id="Flow_104trv1_di" bpmnElement="Flow_104trv1">
+        <di:waypoint x="490" y="99" />
+        <di:waypoint x="490" y="79" />
+        <di:waypoint x="670" y="79" />
+        <di:waypoint x="670" y="139" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ujvsr5_di" bpmnElement="Flow_0ujvsr5">
+        <di:waypoint x="540" y="157" />
+        <di:waypoint x="652" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_096init_di" bpmnElement="SequenceFlow_096init">
+        <di:waypoint x="215" y="157" />
+        <di:waypoint x="260" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1nvgd4y_di" bpmnElement="SequenceFlow_1nvgd4y">
+        <di:waypoint x="360" y="157" />
+        <di:waypoint x="440" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="139" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_1ql7i3s_di" bpmnElement="Task_13pah87">
+        <dc:Bounds x="440" y="117" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0s3nl2f_di" bpmnElement="Task_139oimm">
+        <dc:Bounds x="260" y="117" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0novqqt_di" bpmnElement="Event_0269c8w">
+        <dc:Bounds x="652" y="139" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1h44d35_di" bpmnElement="BoundaryEvent_16jwoih">
+        <dc:Bounds x="472" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

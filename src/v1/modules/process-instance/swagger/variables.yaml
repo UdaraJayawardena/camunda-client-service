@@ -1,0 +1,51 @@
+paths:
+  /process-instances/{id}/variables:
+    post:
+      tags:
+        - Process Instances
+      name: Update/Delete Process Variables
+      summary: Updates or deletes the variables of a process instance by id. Updates precede deletions. So, if a variable is updated AND deleted, the deletion overrides the update.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: The id of the process instance to set variables for.
+          required: true
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              modifications:
+                type: object
+                properties:
+                  variableName:
+                    type: object
+                    properties:
+                        value:
+                          type: string
+                        type:
+                          type: string
+              deletions:
+                type: array
+                items:
+                  type: string
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

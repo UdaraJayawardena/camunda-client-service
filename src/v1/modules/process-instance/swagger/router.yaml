@@ -1,0 +1,44 @@
+paths:
+  /process-instances:
+    get:
+      tags:
+        - Process Instances
+      name: Get Instances
+      summary: Queries for process instances that fulfill given parameters.
+      operationId: getInstancesList
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: businessKey
+          type: string
+          description: Filter by process instance business key.
+          required: false
+        - in: query
+          name: processDefinitionKey
+          type: string
+          description: Filter by the key of the process definition the instances run on.
+          required: false
+        - in: query
+          name: active
+          type: boolean
+          description: Only include active process instances. Value may only be true, as false is the default behavior.
+          required: false
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              data:
+                type: number
+                example: 90
+              success:
+                type: boolean
+                example: true
+              

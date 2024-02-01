@@ -1,0 +1,75 @@
+components:
+  responses:
+    401:
+      description: Unautherized Access
+      schema:
+        $ref: "#/components/responseSchemas/unautherized"
+    200:
+      description: Request Completed Successfully
+      schema:
+        $ref: "#/components/responseSchemas/success"
+    500:
+      description: Unexpected Error
+      schema:
+        $ref: "#/components/responseSchemas/unexpected"
+  responseSchemas:
+    unautherized:
+      type: "object"
+      properties:
+        httpCode:
+          type: integer
+          example: 401
+        type:
+          type: string
+          example: UNAUTHERIZED
+        code:
+          type: integer
+          example: 25401
+        message:
+          type: string
+          example: "unauthorized request"
+        success:
+          type: "boolean"
+          example: false
+    success:
+      type: "object"
+      properties:
+        httpCode:
+          type: integer
+          example: 200
+        type:
+          type: string
+          example: SUCCESS
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "ok"
+        success:
+          type: "boolean"
+          example: true
+        data:
+          oneOf:
+            - type: "string"
+            - type: "boolean"
+            - type: "object"
+            - type: "array"
+    unexpected:
+      type: "object"
+      properties:
+        httpCode:
+          type: integer
+          example: 500
+        type:
+          type: string
+          example: INTERNAL_SERVER_ERROR
+        code:
+          type: integer
+          example: 25500
+        message:
+          type: string
+          example: "unexpected error occured"
+        success:
+          type: "boolean"
+          example: false

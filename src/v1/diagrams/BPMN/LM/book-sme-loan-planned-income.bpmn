@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1vk6qvi" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="book-sme-loan-planned-income" name="(Main) Book Sme Loan Planned Income" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1c2fq0w</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1c2fq0w" sourceRef="StartEvent_1" targetRef="Activity_1maefek" />
+    <bpmn:serviceTask id="Activity_1maefek" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_1c2fq0w</bpmn:incoming>
+      <bpmn:outgoing>Flow_1io5ik2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1ksznjd" name="get sme loans for book income" camunda:type="external" camunda:topic="get-sme-loans-for-book-planned-income">
+      <bpmn:incoming>Flow_1io5ik2</bpmn:incoming>
+      <bpmn:outgoing>Flow_14a8z1k</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1io5ik2" sourceRef="Activity_1maefek" targetRef="Activity_1ksznjd" />
+    <bpmn:serviceTask id="Activity_0sle44r" name="process book sme loan planned income" camunda:type="external" camunda:topic="process-book-sme-loan-planned-income">
+      <bpmn:incoming>Flow_1igi56t</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nl9i59</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1nl9i59" sourceRef="Activity_0sle44r" targetRef="Event_17wqcw2" />
+    <bpmn:endEvent id="Event_17wqcw2">
+      <bpmn:incoming>Flow_04r82kj</bpmn:incoming>
+      <bpmn:incoming>Flow_08zobu4</bpmn:incoming>
+      <bpmn:incoming>Flow_1nl9i59</bpmn:incoming>
+      <bpmn:incoming>Flow_1nk97zp</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0jvu84w" camunda:type="external" camunda:topic="end-book-sme-loan-planned-income" />
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="Event_1c3yfco" attachedToRef="Activity_1ksznjd">
+      <bpmn:outgoing>Flow_04r82kj</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_00l7cu4" errorRef="Error_0zhlbe2" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_04r82kj" sourceRef="Event_1c3yfco" targetRef="Event_17wqcw2" />
+    <bpmn:boundaryEvent id="Event_02lachj" attachedToRef="Activity_0sle44r">
+      <bpmn:outgoing>Flow_08zobu4</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1e61f2u" errorRef="Error_0h8g6af" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_08zobu4" sourceRef="Event_02lachj" targetRef="Event_17wqcw2" />
+    <bpmn:sequenceFlow id="Flow_14a8z1k" sourceRef="Activity_1ksznjd" targetRef="Activity_0kcipw7" />
+    <bpmn:sequenceFlow id="Flow_1igi56t" sourceRef="Activity_0kcipw7" targetRef="Activity_0sle44r" />
+    <bpmn:serviceTask id="Activity_0kcipw7" name="get sme company names according to loans" camunda:type="external" camunda:topic="get-sme-company-names-according-to-loans">
+      <bpmn:incoming>Flow_14a8z1k</bpmn:incoming>
+      <bpmn:outgoing>Flow_1igi56t</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1e5oc6i" attachedToRef="Activity_0kcipw7">
+      <bpmn:outgoing>Flow_1nk97zp</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0mekbmz" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1nk97zp" sourceRef="Event_1e5oc6i" targetRef="Event_17wqcw2" />
+  </bpmn:process>
+  <bpmn:error id="Error_0zhlbe2" name="Get loans for book income" errorCode="ERROR_GET_LOANS_PER_DATE_RANGE" />
+  <bpmn:error id="Error_0h8g6af" name="Process book sme loan planned income error" errorCode="ERROR_PROCESS_BOOK_SME_LOAN_PLANNED_INCOME" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="book-sme-loan-planned-income">
+      <bpmndi:BPMNEdge id="Flow_1nk97zp_di" bpmnElement="Flow_1nk97zp">
+        <di:waypoint x="650" y="229" />
+        <di:waypoint x="650" y="110" />
+        <di:waypoint x="1000" y="110" />
+        <di:waypoint x="1000" y="280" />
+        <di:waypoint x="980" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1igi56t_di" bpmnElement="Flow_1igi56t">
+        <di:waypoint x="700" y="287" />
+        <di:waypoint x="770" y="287" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14a8z1k_di" bpmnElement="Flow_14a8z1k">
+        <di:waypoint x="510" y="287" />
+        <di:waypoint x="600" y="287" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08zobu4_di" bpmnElement="Flow_08zobu4">
+        <di:waypoint x="820" y="229" />
+        <di:waypoint x="820" y="140" />
+        <di:waypoint x="960" y="140" />
+        <di:waypoint x="960" y="269" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04r82kj_di" bpmnElement="Flow_04r82kj">
+        <di:waypoint x="460" y="229" />
+        <di:waypoint x="460" y="80" />
+        <di:waypoint x="1020" y="80" />
+        <di:waypoint x="1020" y="330" />
+        <di:waypoint x="960" y="330" />
+        <di:waypoint x="960" y="305" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nl9i59_di" bpmnElement="Flow_1nl9i59">
+        <di:waypoint x="870" y="287" />
+        <di:waypoint x="942" y="287" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1io5ik2_di" bpmnElement="Flow_1io5ik2">
+        <di:waypoint x="360" y="287" />
+        <di:waypoint x="410" y="287" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1c2fq0w_di" bpmnElement="Flow_1c2fq0w">
+        <di:waypoint x="188" y="287" />
+        <di:waypoint x="260" y="287" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="269" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0i2ed0t_di" bpmnElement="Activity_1maefek">
+        <dc:Bounds x="260" y="247" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0o4rtc0_di" bpmnElement="Activity_1ksznjd">
+        <dc:Bounds x="410" y="247" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wdwyvn_di" bpmnElement="Activity_0sle44r">
+        <dc:Bounds x="770" y="247" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ett0gj_di" bpmnElement="Event_17wqcw2">
+        <dc:Bounds x="942" y="269" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0twzrw0_di" bpmnElement="Activity_0kcipw7">
+        <dc:Bounds x="600" y="247" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rdnhk2_di" bpmnElement="Event_1e5oc6i">
+        <dc:Bounds x="632" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0au3tlb_di" bpmnElement="Event_02lachj">
+        <dc:Bounds x="802" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1mwki10_di" bpmnElement="Event_1c3yfco">
+        <dc:Bounds x="442" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

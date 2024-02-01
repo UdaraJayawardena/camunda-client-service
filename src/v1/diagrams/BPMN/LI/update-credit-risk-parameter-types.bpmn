@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0d2h52z" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="update-credit-risk-parameter-types" name="Update credit risk parameter types" isExecutable="true" camunda:historyTimeToLive="P5D">
+    <bpmn:serviceTask id="ServiceTask_0hzlwf8" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_0ca4hzd</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1aah6q5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_18whvva">
+      <bpmn:incoming>SequenceFlow_1aah6q5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1fynajp</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_197japk</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1189gz4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ServiceTask_0usa1pa" name="Update credit risk parameter types" camunda:type="external" camunda:topic="update-credit-risk-parameter-types">
+      <bpmn:incoming>SequenceFlow_197japk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_181sg20</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_1471acx" attachedToRef="ServiceTask_0usa1pa">
+      <bpmn:outgoing>SequenceFlow_0vg9g4m</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1o5e8kj" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="ServiceTask_1hy8lcl" name="Create credit risk parameter types" camunda:type="external" camunda:topic="create-credit-risk-parameter-types">
+      <bpmn:incoming>SequenceFlow_1189gz4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1wradyp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_1cbefp3" attachedToRef="ServiceTask_1hy8lcl">
+      <bpmn:outgoing>SequenceFlow_1dsr8ib</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_09015y4" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="ServiceTask_1ctbkx1" name="Delete credit risk parameter types" camunda:type="external" camunda:topic="delete-credit-risk-parameter-types">
+      <bpmn:incoming>SequenceFlow_1fynajp</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1pzl7kw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_0hxucgd" attachedToRef="ServiceTask_1ctbkx1">
+      <bpmn:outgoing>SequenceFlow_0p5g8yx</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1wlc28e" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1aah6q5" sourceRef="ServiceTask_0hzlwf8" targetRef="ExclusiveGateway_18whvva" />
+    <bpmn:sequenceFlow id="SequenceFlow_1fynajp" sourceRef="ExclusiveGateway_18whvva" targetRef="ServiceTask_1ctbkx1">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'delete'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_197japk" sourceRef="ExclusiveGateway_18whvva" targetRef="ServiceTask_0usa1pa">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'update'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1189gz4" sourceRef="ExclusiveGateway_18whvva" targetRef="ServiceTask_1hy8lcl">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'create'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_03iczbu" name="End">
+      <bpmn:incoming>SequenceFlow_1dsr8ib</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0p5g8yx</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0vg9g4m</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1wradyp</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_181sg20</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1pzl7kw</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_07poxy9" camunda:type="external" camunda:topic="end-update-credit-risk-parameter-types" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1dsr8ib" sourceRef="BoundaryEvent_1cbefp3" targetRef="EndEvent_03iczbu" />
+    <bpmn:sequenceFlow id="SequenceFlow_0p5g8yx" sourceRef="BoundaryEvent_0hxucgd" targetRef="EndEvent_03iczbu" />
+    <bpmn:sequenceFlow id="SequenceFlow_0vg9g4m" sourceRef="BoundaryEvent_1471acx" targetRef="EndEvent_03iczbu" />
+    <bpmn:sequenceFlow id="SequenceFlow_1wradyp" sourceRef="ServiceTask_1hy8lcl" targetRef="EndEvent_03iczbu" />
+    <bpmn:sequenceFlow id="SequenceFlow_181sg20" sourceRef="ServiceTask_0usa1pa" targetRef="EndEvent_03iczbu" />
+    <bpmn:sequenceFlow id="SequenceFlow_1pzl7kw" sourceRef="ServiceTask_1ctbkx1" targetRef="EndEvent_03iczbu" />
+    <bpmn:startEvent id="StartEvent_1lc0ozz" name="Start">
+      <bpmn:outgoing>SequenceFlow_0ca4hzd</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0ca4hzd" sourceRef="StartEvent_1lc0ozz" targetRef="ServiceTask_0hzlwf8" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="update-credit-risk-parameter-types">
+      <bpmndi:BPMNEdge id="SequenceFlow_0ca4hzd_di" bpmnElement="SequenceFlow_0ca4hzd">
+        <di:waypoint x="215" y="297" />
+        <di:waypoint x="290" y="297" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1pzl7kw_di" bpmnElement="SequenceFlow_1pzl7kw">
+        <di:waypoint x="720" y="410" />
+        <di:waypoint x="776" y="410" />
+        <di:waypoint x="776" y="297" />
+        <di:waypoint x="832" y="297" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_181sg20_di" bpmnElement="SequenceFlow_181sg20">
+        <di:waypoint x="720" y="160" />
+        <di:waypoint x="776" y="160" />
+        <di:waypoint x="776" y="297" />
+        <di:waypoint x="832" y="297" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wradyp_di" bpmnElement="SequenceFlow_1wradyp">
+        <di:waypoint x="720" y="297" />
+        <di:waypoint x="832" y="297" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0vg9g4m_di" bpmnElement="SequenceFlow_0vg9g4m">
+        <di:waypoint x="670" y="102" />
+        <di:waypoint x="670" y="82" />
+        <di:waypoint x="940" y="82" />
+        <di:waypoint x="940" y="297" />
+        <di:waypoint x="868" y="297" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0p5g8yx_di" bpmnElement="SequenceFlow_0p5g8yx">
+        <di:waypoint x="670" y="468" />
+        <di:waypoint x="670" y="488" />
+        <di:waypoint x="940" y="488" />
+        <di:waypoint x="940" y="297" />
+        <di:waypoint x="868" y="297" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1dsr8ib_di" bpmnElement="SequenceFlow_1dsr8ib">
+        <di:waypoint x="670" y="239" />
+        <di:waypoint x="670" y="219" />
+        <di:waypoint x="850" y="219" />
+        <di:waypoint x="850" y="279" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1189gz4_di" bpmnElement="SequenceFlow_1189gz4">
+        <di:waypoint x="535" y="297" />
+        <di:waypoint x="620" y="297" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_197japk_di" bpmnElement="SequenceFlow_197japk">
+        <di:waypoint x="510" y="272" />
+        <di:waypoint x="510" y="160" />
+        <di:waypoint x="620" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1fynajp_di" bpmnElement="SequenceFlow_1fynajp">
+        <di:waypoint x="510" y="322" />
+        <di:waypoint x="510" y="410" />
+        <di:waypoint x="620" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1aah6q5_di" bpmnElement="SequenceFlow_1aah6q5">
+        <di:waypoint x="390" y="297" />
+        <di:waypoint x="485" y="297" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0hzlwf8_di" bpmnElement="ServiceTask_0hzlwf8">
+        <dc:Bounds x="290" y="257" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_18whvva_di" bpmnElement="ExclusiveGateway_18whvva" isMarkerVisible="true">
+        <dc:Bounds x="485" y="272" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0usa1pa_di" bpmnElement="ServiceTask_0usa1pa">
+        <dc:Bounds x="620" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1hy8lcl_di" bpmnElement="ServiceTask_1hy8lcl">
+        <dc:Bounds x="620" y="257" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1ctbkx1_di" bpmnElement="ServiceTask_1ctbkx1">
+        <dc:Bounds x="620" y="370" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_03iczbu_di" bpmnElement="EndEvent_03iczbu">
+        <dc:Bounds x="832" y="279" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="840" y="325" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1lc0ozz_di" bpmnElement="StartEvent_1lc0ozz">
+        <dc:Bounds x="179" y="279" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="186" y="322" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0hxucgd_di" bpmnElement="BoundaryEvent_0hxucgd">
+        <dc:Bounds x="652" y="432" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1cbefp3_di" bpmnElement="BoundaryEvent_1cbefp3">
+        <dc:Bounds x="652" y="239" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1471acx_di" bpmnElement="BoundaryEvent_1471acx">
+        <dc:Bounds x="652" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

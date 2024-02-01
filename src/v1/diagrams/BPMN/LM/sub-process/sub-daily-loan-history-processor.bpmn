@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0ym1r1n" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="daily-loan-history-processor" name="(Sub) Daily loan history processor" isExecutable="true" camunda:versionTag="1.3.4" camunda:historyTimeToLive="P5D">
+    <bpmn:callActivity id="CallActivity_0mqivah" name="Daily loan history generator" camunda:asyncBefore="true" camunda:asyncAfter="true" calledElement="daily-loan-history-generator" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="processingDate" target="processingDate" />
+        <camunda:out source="processingDate" target="processingDate" />
+        <camunda:in source="smeLoanHistoryLogs" target="smeLoanHistoryLogs" />
+        <camunda:out source="result" target="result" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0xkd4wk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1o1vqrl</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:callActivity id="CallActivity_06f0vw2" name="Generate loan recovery message" calledElement="generate-loan-recovery-message" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="processingDate" target="processingDate" />
+        <camunda:out source="result" target="result" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:in source="result" target="result" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1o1vqrl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1v3dol4</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="EndEvent_1wci9jj">
+      <bpmn:incoming>SequenceFlow_1v3dol4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_1fbxtkg" name="Init sme-loan-history" camunda:type="external" camunda:topic="init-sme-loan-history-scheduler">
+      <bpmn:incoming>SequenceFlow_1qaxffm</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0xkd4wk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0xkd4wk" sourceRef="ServiceTask_1fbxtkg" targetRef="CallActivity_0mqivah" />
+    <bpmn:sequenceFlow id="SequenceFlow_1o1vqrl" sourceRef="CallActivity_0mqivah" targetRef="CallActivity_06f0vw2" />
+    <bpmn:sequenceFlow id="SequenceFlow_1v3dol4" sourceRef="CallActivity_06f0vw2" targetRef="EndEvent_1wci9jj" />
+    <bpmn:startEvent id="StartEvent_0zuskjy">
+      <bpmn:outgoing>SequenceFlow_1qaxffm</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1qaxffm" sourceRef="StartEvent_0zuskjy" targetRef="ServiceTask_1fbxtkg" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="daily-loan-history-processor">
+      <bpmndi:BPMNEdge id="SequenceFlow_1qaxffm_di" bpmnElement="SequenceFlow_1qaxffm">
+        <di:waypoint x="228" y="140" />
+        <di:waypoint x="260" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1v3dol4_di" bpmnElement="SequenceFlow_1v3dol4">
+        <di:waypoint x="640" y="140" />
+        <di:waypoint x="682" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1o1vqrl_di" bpmnElement="SequenceFlow_1o1vqrl">
+        <di:waypoint x="500" y="140" />
+        <di:waypoint x="540" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0xkd4wk_di" bpmnElement="SequenceFlow_0xkd4wk">
+        <di:waypoint x="360" y="140" />
+        <di:waypoint x="400" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="CallActivity_0mqivah_di" bpmnElement="CallActivity_0mqivah">
+        <dc:Bounds x="400" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_06f0vw2_di" bpmnElement="CallActivity_06f0vw2">
+        <dc:Bounds x="540" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1wci9jj_di" bpmnElement="EndEvent_1wci9jj">
+        <dc:Bounds x="682" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1fbxtkg_di" bpmnElement="ServiceTask_1fbxtkg">
+        <dc:Bounds x="260" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_14v63om_di" bpmnElement="StartEvent_0zuskjy">
+        <dc:Bounds x="192" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

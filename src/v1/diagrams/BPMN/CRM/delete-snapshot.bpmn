@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1cdj6yl" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="delete-snapshot" name="(Main) delete-snapshot" isExecutable="true" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_001z48m</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_027g8bx" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_001z48m</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0thnud1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_001z48m" sourceRef="StartEvent_1" targetRef="Task_027g8bx" />
+    <bpmn:serviceTask id="Task_05q8h0c" name="delete crm snapshot folder" camunda:type="external" camunda:topic="delete-crm-snapshot-folder">
+      <bpmn:incoming>SequenceFlow_0thnud1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0kpl68o</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0thnud1" sourceRef="Task_027g8bx" targetRef="Task_05q8h0c" />
+    <bpmn:endEvent id="EndEvent_08rw584">
+      <bpmn:incoming>SequenceFlow_03p61mh</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0njpf81</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1pg7hhc</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0jepxzr</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_14nffj4" messageRef="Message_063go60" camunda:type="external" camunda:topic="end-delete-snapshot" />
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0w1ecm5" attachedToRef="Task_05q8h0c">
+      <bpmn:outgoing>SequenceFlow_03p61mh</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0xufil4" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0mriju8" attachedToRef="Task_1rv8gsw">
+      <bpmn:outgoing>SequenceFlow_0njpf81</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0i6i5w3" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_03p61mh" sourceRef="IntermediateThrowEvent_0w1ecm5" targetRef="EndEvent_08rw584" />
+    <bpmn:sequenceFlow id="SequenceFlow_0njpf81" sourceRef="IntermediateThrowEvent_0mriju8" targetRef="EndEvent_08rw584" />
+    <bpmn:serviceTask id="Task_1rv8gsw" name="delete crm snapshot" camunda:type="external" camunda:topic="delete-crm-snapshot">
+      <bpmn:incoming>SequenceFlow_02lmste</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0jepxzr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_13xqbso" name="delete initiation snapshot folder" camunda:type="external" camunda:topic="delete-initiation-snapshot-folder">
+      <bpmn:incoming>SequenceFlow_0kpl68o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02lmste</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_14a285n" attachedToRef="Task_13xqbso">
+      <bpmn:outgoing>SequenceFlow_1pg7hhc</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0iijowp" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1pg7hhc" sourceRef="IntermediateThrowEvent_14a285n" targetRef="EndEvent_08rw584" />
+    <bpmn:sequenceFlow id="SequenceFlow_0kpl68o" sourceRef="Task_05q8h0c" targetRef="Task_13xqbso" />
+    <bpmn:sequenceFlow id="SequenceFlow_02lmste" sourceRef="Task_13xqbso" targetRef="Task_1rv8gsw" />
+    <bpmn:sequenceFlow id="SequenceFlow_0jepxzr" sourceRef="Task_1rv8gsw" targetRef="EndEvent_08rw584" />
+  </bpmn:process>
+  <bpmn:message id="Message_063go60" name="Message_3rcgb3g" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="delete-snapshot">
+      <bpmndi:BPMNEdge id="SequenceFlow_0jepxzr_di" bpmnElement="SequenceFlow_0jepxzr">
+        <di:waypoint x="980" y="250" />
+        <di:waypoint x="1182" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_02lmste_di" bpmnElement="SequenceFlow_02lmste">
+        <di:waypoint x="730" y="250" />
+        <di:waypoint x="880" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0kpl68o_di" bpmnElement="SequenceFlow_0kpl68o">
+        <di:waypoint x="460" y="250" />
+        <di:waypoint x="630" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1pg7hhc_di" bpmnElement="SequenceFlow_1pg7hhc">
+        <di:waypoint x="680" y="308" />
+        <di:waypoint x="680" y="430" />
+        <di:waypoint x="1200" y="430" />
+        <di:waypoint x="1200" y="268" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0njpf81_di" bpmnElement="SequenceFlow_0njpf81">
+        <di:waypoint x="930" y="308" />
+        <di:waypoint x="930" y="430" />
+        <di:waypoint x="1200" y="430" />
+        <di:waypoint x="1200" y="268" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_03p61mh_di" bpmnElement="SequenceFlow_03p61mh">
+        <di:waypoint x="410" y="308" />
+        <di:waypoint x="410" y="430" />
+        <di:waypoint x="1200" y="430" />
+        <di:waypoint x="1200" y="268" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0thnud1_di" bpmnElement="SequenceFlow_0thnud1">
+        <di:waypoint x="247" y="250" />
+        <di:waypoint x="360" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_001z48m_di" bpmnElement="SequenceFlow_001z48m">
+        <di:waypoint x="197" y="115" />
+        <di:waypoint x="197" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0a3pyij_di" bpmnElement="Task_027g8bx">
+        <dc:Bounds x="147" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1q26wsh_di" bpmnElement="Task_05q8h0c">
+        <dc:Bounds x="360" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_172jyd0_di" bpmnElement="EndEvent_08rw584">
+        <dc:Bounds x="1182" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0zd3ps9_di" bpmnElement="Task_1rv8gsw">
+        <dc:Bounds x="880" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_10zwnx7_di" bpmnElement="Task_13xqbso">
+        <dc:Bounds x="630" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1iutdw4_di" bpmnElement="IntermediateThrowEvent_14a285n">
+        <dc:Bounds x="662" y="272" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_13394e9_di" bpmnElement="IntermediateThrowEvent_0mriju8">
+        <dc:Bounds x="912" y="272" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_084r1pj_di" bpmnElement="IntermediateThrowEvent_0w1ecm5">
+        <dc:Bounds x="392" y="272" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

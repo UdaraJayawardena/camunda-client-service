@@ -1,0 +1,179 @@
+paths:
+  /process-definitions:
+    get:
+      tags:
+        - Process Definitions
+      name: Process Definitions
+      summary: Queries for process definitions that fulfill given parameters.
+      operationId: getDefinitionsList
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: latestVersion
+          type: boolean
+          description: Only include those process definitions that are latest versions. Value may only be true, as false is the default behavior.
+          required: true
+        - in: query
+          name: keysIn
+          type: string
+          description: Filter by process definition keys.
+          required: false
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 200
+              data:
+                type: "object"
+                properties:
+                  businessKey:
+                    type: string
+                  caseInstanceId:
+                    type: string
+                  definitionId:
+                    type: string
+                  ended:
+                    type: boolean
+                  id:
+                    type: string
+                  suspended:
+                    type: string
+                  tenantId:
+                    type: string
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+  /process-definitions/key/{key}/start:
+    post:
+      tags:
+        - Process Definitions
+      summary: "start process instance by key for tenant"
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: key
+          type: string
+          description: The key of the process definition (the latest version thereof) to be retrieved.
+          required: false
+        - in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              variables:
+                type: object
+                example:
+                  {
+                    contractId: "SBF43681",
+                    smeLoanRequest: {},
+                    smeLoanRequestProposal: {},
+                  }
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 200
+              data:
+                type: "object"
+                properties:
+                  businessKey:
+                    type: string
+                  caseInstanceId:
+                    type: string
+                  definitionId:
+                    type: string
+                  ended:
+                    type: boolean
+                  id:
+                    type: string
+                  suspended:
+                    type: string
+                  tenantId:
+                    type: string
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+  /process-definitions/key/{key}/tenant-id/{tenantId}/start:
+    post:
+      tags:
+        - Process Definitions
+      summary: "start process instance by key"
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: key
+          type: string
+          description: The key of the process definition (the latest version thereof) to be retrieved.
+          required: false
+        - in: path
+          name: tenantId
+          type: string
+          description: The id of the tenant the process definition belongs to.
+          required: false
+        - in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              variables:
+                type: object
+                example:
+                  {
+                    contractId: "SBF43681",
+                    smeLoanRequest: {},
+                    smeLoanRequestProposal: {},
+                  }
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 200
+              data:
+                type: "object"
+                properties:
+                  businessKey:
+                    type: string
+                  caseInstanceId:
+                    type: string
+                  definitionId:
+                    type: string
+                  ended:
+                    type: boolean
+                  id:
+                    type: string
+                  suspended:
+                    type: string
+                  tenantId:
+                    type: string
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

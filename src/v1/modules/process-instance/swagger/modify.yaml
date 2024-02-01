@@ -1,0 +1,61 @@
+paths:
+  /process-instances/{id}/modification:
+    post:
+      tags:
+        - Process Instances
+      name: Modify Process Instance Execution State
+      summary: Submits a list of modification instructions to change a process instance's execution state.
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              skipCustomListeners:
+                type: boolean
+              skipIoMappings:
+                type: boolean
+              instructions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type: 
+                      type: string
+                    activityId:
+                      type: string
+                    transitionId:
+                      type: string
+                    activityInstanceId:
+                      type: string
+                    ancestorActivityInstanceId:
+                      type: string
+                    variables:
+                      type: object
+                      properties:
+                        variableName:
+                          type: object
+                          properties:
+                              value:
+                                type: string
+                              type:
+                                type: string 
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

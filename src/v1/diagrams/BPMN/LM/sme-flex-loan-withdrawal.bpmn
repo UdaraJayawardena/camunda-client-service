@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1xlle0x" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="sme-flex-loan-withdrawal-process" name="(Main) SME Flex Loan Withdrawal" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1fpjzll</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1yy011p" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_1fpjzll</bpmn:incoming>
+      <bpmn:outgoing>Flow_0srwy3s</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1fpjzll" sourceRef="StartEvent_1" targetRef="Activity_1yy011p" />
+    <bpmn:endEvent id="Event_182msfn">
+      <bpmn:incoming>Flow_18xy4cu</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_19gymxl</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0nqobsi</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0le1x5h</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0w8xbmq</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0cagfpx</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0ttx40e" camunda:type="external" camunda:topic="end-sme-flex-loan-withdrawal-process" />
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_0c4yij6" name="Create Sme Loan Withdrawal Order" camunda:type="external" camunda:topic="create-sme-loan-withdrawal-order">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">c2e1a7d2-5d29-4fbc-a183-656539f155b4</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1u4ua92</bpmn:incoming>
+      <bpmn:outgoing>Flow_0k6ui1u</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_18akesm" attachedToRef="Activity_0c4yij6">
+      <bpmn:outgoing>SequenceFlow_18kb966</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1bni4uz" errorRef="Error_1do0p2o" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_0929t1l" name="Get System Date" camunda:type="external" camunda:topic="get-simulation-date">
+      <bpmn:incoming>Flow_0srwy3s</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14eb6sm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0srwy3s" sourceRef="Activity_1yy011p" targetRef="Activity_0929t1l" />
+    <bpmn:boundaryEvent id="Event_0o9el0j" attachedToRef="Activity_0929t1l">
+      <bpmn:outgoing>Flow_18xy4cu</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_04gs2tt" errorRef="Error_05u9yw4" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_18xy4cu" sourceRef="Event_0o9el0j" targetRef="Event_182msfn" />
+    <bpmn:serviceTask id="Activity_0l120xj" name="PayOut And Withdrawal Fee Transactions" camunda:type="external" camunda:topic="create-pay-out-and-withdrawal-fee-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">2ed11a05-042a-4baf-a765-5d7aee432391</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0k6ui1u</bpmn:incoming>
+      <bpmn:outgoing>Flow_046ahav</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0rm6mqd" attachedToRef="Activity_0l120xj">
+      <bpmn:outgoing>SequenceFlow_1xa7d4v</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0jzt45v" errorRef="Error_1wgox61" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0k6ui1u" sourceRef="Activity_0c4yij6" targetRef="Activity_0l120xj" />
+    <bpmn:serviceTask id="Activity_0mdmbfw" name="Repayment for Withdrawal Costs" camunda:type="external" camunda:topic="create-repayment-transaction-for-withdrawal-costs">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">dcb4d2a7-84ae-4db2-b46c-84c4284c9d3f</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_046ahav</bpmn:incoming>
+      <bpmn:outgoing>Flow_001spi6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_046ahav" sourceRef="Activity_0l120xj" targetRef="Activity_0mdmbfw" />
+    <bpmn:boundaryEvent id="Event_1xfimra" attachedToRef="Activity_0mdmbfw">
+      <bpmn:outgoing>SequenceFlow_032n7qk</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1f5pn9k" errorRef="Error_19wq4ck" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_159yfh7" name="Transactions for withdraw claim" camunda:type="external" camunda:topic="create-transactions-for-withdraw-claim">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">08bc21ab-2def-4863-bc68-02840ea89784</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_001spi6</bpmn:incoming>
+      <bpmn:outgoing>Flow_17zef49</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_001spi6" sourceRef="Activity_0mdmbfw" targetRef="Activity_159yfh7" />
+    <bpmn:boundaryEvent id="Event_1c2k7s7" attachedToRef="Activity_159yfh7">
+      <bpmn:outgoing>SequenceFlow_1ii31pp</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0poersc" errorRef="Error_0vyz4vx" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_1fv31dt" name="Data for Outgoing Payment Order" camunda:type="external" camunda:topic="create-data-for-outgoing-payment-order">
+      <bpmn:incoming>Flow_17zef49</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13hpuo0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_17zef49" sourceRef="Activity_159yfh7" targetRef="Activity_1fv31dt" />
+    <bpmn:boundaryEvent id="Event_1hi8g1e" attachedToRef="Activity_1fv31dt">
+      <bpmn:outgoing>SequenceFlow_0lpcpba</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_03q582j" errorRef="Error_18x2yy7" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_0efqpag" name="Delete Paid Transactions" camunda:type="external" camunda:topic="delete-sme-flex-loan-paid-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">8674a38d-98e6-437b-896e-f2dbae2c56ac</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_14eb6sm</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1u4ua92</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1u4ua92" sourceRef="Task_0efqpag" targetRef="Activity_0c4yij6" />
+    <bpmn:sequenceFlow id="SequenceFlow_14eb6sm" sourceRef="Activity_0929t1l" targetRef="Task_0efqpag" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_06pzykj" attachedToRef="Task_0efqpag">
+      <bpmn:outgoing>SequenceFlow_19gymxl</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_070hbfq" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_19gymxl" sourceRef="IntermediateThrowEvent_06pzykj" targetRef="Event_182msfn" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_1xaqye5" attachedToRef="Activity_1fv31dt">
+      <bpmn:outgoing>SequenceFlow_0nqobsi</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition>
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">${instantPayment == true}</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0nqobsi" sourceRef="IntermediateThrowEvent_1xaqye5" targetRef="Event_182msfn" />
+    <bpmn:callActivity id="Task_1mw11li" name="Create Payment Order" calledElement="create-outgoing-payment-order" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="paymentOrders" target="paymentOrders" />
+        <camunda:in source="rollbackData" target="rollbackData" />
+        <camunda:out source="rollbackData" target="rollbackData" />
+        <camunda:out source="error" target="error" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_13hpuo0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0le1x5h</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0a0rb07" attachedToRef="Task_1mw11li">
+      <bpmn:outgoing>SequenceFlow_1h4xap4</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_1oyuran" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0le1x5h" sourceRef="Task_1mw11li" targetRef="Event_182msfn" />
+    <bpmn:sequenceFlow id="SequenceFlow_13hpuo0" sourceRef="Activity_1fv31dt" targetRef="Task_1mw11li" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_056dsw9" attachedToRef="Task_0efqpag">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_12zeyrd" name="Rollback Delete Paid Transactions" isForCompensation="true" camunda:type="external" camunda:topic="rollback-delete-sme-flex-loan-paid-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">8674a38d-98e6-437b-896e-f2dbae2c56ac</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0kwm41n">
+      <bpmn:incoming>SequenceFlow_18kb966</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1vcttea</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0w8xbmq</bpmn:outgoing>
+      <bpmn:compensateEventDefinition activityRef="Task_0efqpag" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_18kb966" sourceRef="Event_18akesm" targetRef="IntermediateThrowEvent_0kwm41n" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0klxr0x" attachedToRef="Activity_0c4yij6">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_15sfyis" name="Rollback Withdrawal Order" isForCompensation="true" camunda:type="external" camunda:topic="rollback-create-sme-loan-withdrawal-order">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">c2e1a7d2-5d29-4fbc-a183-656539f155b4</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_11k6ypx">
+      <bpmn:incoming>SequenceFlow_1xa7d4v</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0hkbyjq</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1vcttea</bpmn:outgoing>
+      <bpmn:compensateEventDefinition activityRef="Activity_0c4yij6" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1xa7d4v" sourceRef="Event_0rm6mqd" targetRef="IntermediateThrowEvent_11k6ypx" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0ad2fbf" attachedToRef="Activity_0l120xj">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_0ahzt3l" name="Rollback PayOut And Withdrawal Fee" isForCompensation="true" camunda:type="external" camunda:topic="rollback-create-pay-out-and-withdrawal-fee-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">2ed11a05-042a-4baf-a765-5d7aee432391</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_1w15j9y" attachedToRef="Activity_0mdmbfw">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_1tecvg8" name="Rollback Repayment for Withdrawal Costs" isForCompensation="true" camunda:type="external" camunda:topic="rollback-create-repayment-transaction-for-withdrawal-costs">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">dcb4d2a7-84ae-4db2-b46c-84c4284c9d3f</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_18agy61" attachedToRef="Activity_159yfh7">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_0okqmap" name="Rollback Transactions for withdraw claim" isForCompensation="true" camunda:type="external" camunda:topic="rollback-create-transactions-for-withdraw-claim">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">08bc21ab-2def-4863-bc68-02840ea89784</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0547u7r">
+      <bpmn:incoming>SequenceFlow_032n7qk</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0cm15x8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0hkbyjq</bpmn:outgoing>
+      <bpmn:compensateEventDefinition activityRef="Activity_0l120xj" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_032n7qk" sourceRef="Event_1xfimra" targetRef="IntermediateThrowEvent_0547u7r" />
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_04w9s7o">
+      <bpmn:incoming>SequenceFlow_1ii31pp</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1ovoa60</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0cm15x8</bpmn:outgoing>
+      <bpmn:compensateEventDefinition activityRef="Activity_0mdmbfw" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1ii31pp" sourceRef="Event_1c2k7s7" targetRef="IntermediateThrowEvent_04w9s7o" />
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1sksarf">
+      <bpmn:incoming>SequenceFlow_0lpcpba</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1h4xap4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ovoa60</bpmn:outgoing>
+      <bpmn:compensateEventDefinition activityRef="Activity_159yfh7" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0lpcpba" sourceRef="Event_1hi8g1e" targetRef="IntermediateThrowEvent_1sksarf" />
+    <bpmn:sequenceFlow id="SequenceFlow_1h4xap4" sourceRef="IntermediateThrowEvent_0a0rb07" targetRef="IntermediateThrowEvent_1sksarf" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ovoa60" sourceRef="IntermediateThrowEvent_1sksarf" targetRef="IntermediateThrowEvent_04w9s7o" />
+    <bpmn:sequenceFlow id="SequenceFlow_0cm15x8" sourceRef="IntermediateThrowEvent_04w9s7o" targetRef="IntermediateThrowEvent_0547u7r" />
+    <bpmn:sequenceFlow id="SequenceFlow_0hkbyjq" sourceRef="IntermediateThrowEvent_0547u7r" targetRef="IntermediateThrowEvent_11k6ypx" />
+    <bpmn:sequenceFlow id="SequenceFlow_1vcttea" sourceRef="IntermediateThrowEvent_11k6ypx" targetRef="IntermediateThrowEvent_0kwm41n" />
+    <bpmn:sequenceFlow id="SequenceFlow_0w8xbmq" sourceRef="IntermediateThrowEvent_0kwm41n" targetRef="Event_182msfn" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0by32uh" attachedToRef="Task_1mw11li">
+      <bpmn:outgoing>SequenceFlow_0cagfpx</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition>
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">${createPaymentOrders == false}</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0cagfpx" sourceRef="IntermediateThrowEvent_0by32uh" targetRef="Event_182msfn" />
+    <bpmn:association id="Association_0zaxsyf" associationDirection="One" sourceRef="IntermediateThrowEvent_056dsw9" targetRef="Task_12zeyrd" />
+    <bpmn:textAnnotation id="TextAnnotation_03ai2n6">
+      <bpmn:text>Rollback Delete Paid Transactions</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_01tkpnw" sourceRef="IntermediateThrowEvent_0kwm41n" targetRef="TextAnnotation_03ai2n6" />
+    <bpmn:association id="Association_1azq4at" associationDirection="One" sourceRef="IntermediateThrowEvent_0klxr0x" targetRef="Task_15sfyis" />
+    <bpmn:textAnnotation id="TextAnnotation_103fhri">
+      <bpmn:text>Rollback Withdrawal Order</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1t36osv" sourceRef="IntermediateThrowEvent_11k6ypx" targetRef="TextAnnotation_103fhri" />
+    <bpmn:association id="Association_16em10l" associationDirection="One" sourceRef="IntermediateThrowEvent_0ad2fbf" targetRef="Task_0ahzt3l" />
+    <bpmn:association id="Association_06ivgdu" associationDirection="One" sourceRef="IntermediateThrowEvent_1w15j9y" targetRef="Task_1tecvg8" />
+    <bpmn:association id="Association_0mz3pva" associationDirection="One" sourceRef="IntermediateThrowEvent_18agy61" targetRef="Task_0okqmap" />
+    <bpmn:textAnnotation id="TextAnnotation_14gpsyl">
+      <bpmn:text>Rollback PayOut And Withdrawal Fee</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0u764fb" sourceRef="IntermediateThrowEvent_0547u7r" targetRef="TextAnnotation_14gpsyl" />
+    <bpmn:textAnnotation id="TextAnnotation_0iahcg6">
+      <bpmn:text>Rollback Repayment for Withdrawal Costs</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_179f5ku" sourceRef="IntermediateThrowEvent_04w9s7o" targetRef="TextAnnotation_0iahcg6" />
+    <bpmn:textAnnotation id="TextAnnotation_124rfe6">
+      <bpmn:text>Rollback Transactions for withdraw claim</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0myxrng" sourceRef="IntermediateThrowEvent_1sksarf" targetRef="TextAnnotation_124rfe6" />
+  </bpmn:process>
+  <bpmn:error id="Error_1do0p2o" name="ERROR_CREATE_SME_LOAN_WITHDRAWAL_ORDER" camunda:errorMessage="Unexpected Error Occurred while creating the SME Loan Withdrawal Order" />
+  <bpmn:error id="Error_05u9yw4" name="ERROR_GET_SIMULATION_DATE" camunda:errorMessage="Unexpected Error Occurred while getting simulation date" />
+  <bpmn:error id="Error_1wgox61" name="ERROR_CREATE_PAYOUT_AND_WITHDRAWAL_FEE" camunda:errorMessage="Unexpected Error Occurred while creating the Pay Out and Withdrawal Fee" />
+  <bpmn:error id="Error_19wq4ck" name="ERROR_CREATE_REPAYMENT_FOR_WITHDRAWAL_COSTS" camunda:errorMessage="Unexpected Error Occurred while creating the Repayment transaction for withdrawal costs" />
+  <bpmn:error id="Error_0vyz4vx" name="ERROR_CREATE_TRANSACTIONS_FOR_WITHDRAW_CLAIM" camunda:errorMessage="Unexpected Error Occurred while creating transactions for withdraw claim" />
+  <bpmn:error id="Error_18x2yy7" name="ERROR_CREATE_DATA_FOR_OUTGOING_PAYMENT_ORDER" camunda:errorMessage="Unexpected Error Occurred while creating the data for outgoing payment order" />
+  <bpmn:error id="Error_070hbfq" name="ERROR_DELETE_SME_FLEX_LOAN_PAID_TRANSACTIONS" camunda:errorMessage="Unexpected Error Occurred while deleting the SME Flex Loan Paid Transactions" />
+  <bpmn:error id="Error_0krqgbs" name="ERROR_CREATE_PAYMENT_ORDER" camunda:errorMessage="Unexpected Error Occured while creating the payment orders" />
+  <bpmn:error id="Error_1oyuran" name="ERROR_CREATE_PAYMENT_ORDER" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sme-flex-loan-withdrawal-process">
+      <bpmndi:BPMNEdge id="SequenceFlow_0cagfpx_di" bpmnElement="SequenceFlow_0cagfpx">
+        <di:waypoint x="1510" y="522" />
+        <di:waypoint x="1510" y="590" />
+        <di:waypoint x="1720" y="590" />
+        <di:waypoint x="1720" y="482" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0w8xbmq_di" bpmnElement="SequenceFlow_0w8xbmq">
+        <di:waypoint x="760" y="302" />
+        <di:waypoint x="760" y="120" />
+        <di:waypoint x="1720" y="120" />
+        <di:waypoint x="1720" y="446" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1vcttea_di" bpmnElement="SequenceFlow_1vcttea">
+        <di:waypoint x="892" y="320" />
+        <di:waypoint x="778" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0hkbyjq_di" bpmnElement="SequenceFlow_0hkbyjq">
+        <di:waypoint x="1052" y="320" />
+        <di:waypoint x="928" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0cm15x8_di" bpmnElement="SequenceFlow_0cm15x8">
+        <di:waypoint x="1212" y="320" />
+        <di:waypoint x="1088" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ovoa60_di" bpmnElement="SequenceFlow_1ovoa60">
+        <di:waypoint x="1372" y="320" />
+        <di:waypoint x="1248" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1h4xap4_di" bpmnElement="SequenceFlow_1h4xap4">
+        <di:waypoint x="1590" y="406" />
+        <di:waypoint x="1590" y="320" />
+        <di:waypoint x="1408" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0lpcpba_di" bpmnElement="SequenceFlow_0lpcpba">
+        <di:waypoint x="1390" y="409" />
+        <di:waypoint x="1390" y="338" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ii31pp_di" bpmnElement="SequenceFlow_1ii31pp">
+        <di:waypoint x="1230" y="409" />
+        <di:waypoint x="1230" y="338" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_032n7qk_di" bpmnElement="SequenceFlow_032n7qk">
+        <di:waypoint x="1070" y="409" />
+        <di:waypoint x="1070" y="338" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1xa7d4v_di" bpmnElement="SequenceFlow_1xa7d4v">
+        <di:waypoint x="910" y="409" />
+        <di:waypoint x="910" y="338" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_18kb966_di" bpmnElement="SequenceFlow_18kb966">
+        <di:waypoint x="760" y="409" />
+        <di:waypoint x="760" y="338" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13hpuo0_di" bpmnElement="SequenceFlow_13hpuo0">
+        <di:waypoint x="1410" y="467" />
+        <di:waypoint x="1510" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0le1x5h_di" bpmnElement="SequenceFlow_0le1x5h">
+        <di:waypoint x="1610" y="464" />
+        <di:waypoint x="1702" y="464" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0nqobsi_di" bpmnElement="SequenceFlow_0nqobsi">
+        <di:waypoint x="1330" y="525" />
+        <di:waypoint x="1330" y="590" />
+        <di:waypoint x="1720" y="590" />
+        <di:waypoint x="1720" y="482" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_19gymxl_di" bpmnElement="SequenceFlow_19gymxl">
+        <di:waypoint x="620" y="409" />
+        <di:waypoint x="620" y="120" />
+        <di:waypoint x="1720" y="120" />
+        <di:waypoint x="1720" y="446" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_14eb6sm_di" bpmnElement="SequenceFlow_14eb6sm">
+        <di:waypoint x="500" y="467" />
+        <di:waypoint x="540" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1u4ua92_di" bpmnElement="SequenceFlow_1u4ua92">
+        <di:waypoint x="640" y="467" />
+        <di:waypoint x="680" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17zef49_di" bpmnElement="Flow_17zef49">
+        <di:waypoint x="1250" y="467" />
+        <di:waypoint x="1310" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_001spi6_di" bpmnElement="Flow_001spi6">
+        <di:waypoint x="1090" y="467" />
+        <di:waypoint x="1150" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_046ahav_di" bpmnElement="Flow_046ahav">
+        <di:waypoint x="930" y="467" />
+        <di:waypoint x="990" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0k6ui1u_di" bpmnElement="Flow_0k6ui1u">
+        <di:waypoint x="780" y="467" />
+        <di:waypoint x="830" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18xy4cu_di" bpmnElement="Flow_18xy4cu">
+        <di:waypoint x="480" y="409" />
+        <di:waypoint x="480" y="120" />
+        <di:waypoint x="1720" y="120" />
+        <di:waypoint x="1720" y="446" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0srwy3s_di" bpmnElement="Flow_0srwy3s">
+        <di:waypoint x="360" y="467" />
+        <di:waypoint x="400" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fpjzll_di" bpmnElement="Flow_1fpjzll">
+        <di:waypoint x="195" y="467" />
+        <di:waypoint x="260" y="467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="159" y="449" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_01cl366_di" bpmnElement="Activity_1yy011p">
+        <dc:Bounds x="260" y="427" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_02zgot7_di" bpmnElement="Event_182msfn">
+        <dc:Bounds x="1702" y="446" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1yliung_di" bpmnElement="Activity_0c4yij6">
+        <dc:Bounds x="680" y="427" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0oh8e99_di" bpmnElement="Activity_0929t1l">
+        <dc:Bounds x="400" y="427" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hqubzo_di" bpmnElement="Activity_0l120xj">
+        <dc:Bounds x="830" y="427" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lmcues_di" bpmnElement="Activity_0mdmbfw">
+        <dc:Bounds x="990" y="427" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1gaxqkn_di" bpmnElement="Activity_159yfh7">
+        <dc:Bounds x="1150" y="427" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_056oc84_di" bpmnElement="Activity_1fv31dt">
+        <dc:Bounds x="1310" y="427" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_13w26c0_di" bpmnElement="Task_0efqpag">
+        <dc:Bounds x="540" y="427" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_0rnggoq_di" bpmnElement="Task_1mw11li">
+        <dc:Bounds x="1510" y="424" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_12sgyda_di" bpmnElement="Task_12zeyrd">
+        <dc:Bounds x="540" y="600" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_0nk5zxg_di" bpmnElement="IntermediateThrowEvent_0kwm41n">
+        <dc:Bounds x="742" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0anb7qw_di" bpmnElement="Task_15sfyis">
+        <dc:Bounds x="680" y="600" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_03oyqnv_di" bpmnElement="IntermediateThrowEvent_11k6ypx">
+        <dc:Bounds x="892" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0ymmoqa_di" bpmnElement="Task_0ahzt3l">
+        <dc:Bounds x="830" y="600" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1hrrbac_di" bpmnElement="Task_1tecvg8">
+        <dc:Bounds x="990" y="600" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_09apzvg_di" bpmnElement="Task_0okqmap">
+        <dc:Bounds x="1150" y="600" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_1tarfme_di" bpmnElement="IntermediateThrowEvent_0547u7r">
+        <dc:Bounds x="1052" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_1pvye1b_di" bpmnElement="IntermediateThrowEvent_04w9s7o">
+        <dc:Bounds x="1212" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_16jmobb_di" bpmnElement="IntermediateThrowEvent_1sksarf">
+        <dc:Bounds x="1372" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_03ai2n6_di" bpmnElement="TextAnnotation_03ai2n6">
+        <dc:Bounds x="640" y="293" width="100" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_103fhri_di" bpmnElement="TextAnnotation_103fhri">
+        <dc:Bounds x="860" y="227" width="99.99156545209178" height="52.631578947368425" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_14gpsyl_di" bpmnElement="TextAnnotation_14gpsyl">
+        <dc:Bounds x="1020" y="220" width="99.99156545209178" height="66.12685560053981" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0iahcg6_di" bpmnElement="TextAnnotation_0iahcg6">
+        <dc:Bounds x="1180" y="220" width="99.99156545209178" height="66.12685560053981" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_124rfe6_di" bpmnElement="TextAnnotation_124rfe6">
+        <dc:Bounds x="1340" y="220" width="99.99156545209178" height="66.12685560053981" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_08cdd7e_di" bpmnElement="IntermediateThrowEvent_0by32uh">
+        <dc:Bounds x="1492" y="486" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_197os3r_di" bpmnElement="IntermediateThrowEvent_18agy61">
+        <dc:Bounds x="1182" y="489" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1eh813a_di" bpmnElement="IntermediateThrowEvent_1w15j9y">
+        <dc:Bounds x="1022" y="489" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1hop235_di" bpmnElement="IntermediateThrowEvent_0ad2fbf">
+        <dc:Bounds x="862" y="489" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_18mqifc_di" bpmnElement="IntermediateThrowEvent_0klxr0x">
+        <dc:Bounds x="712" y="489" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_04fuamy_di" bpmnElement="IntermediateThrowEvent_056dsw9">
+        <dc:Bounds x="572" y="489" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_137lgsc_di" bpmnElement="IntermediateThrowEvent_0a0rb07">
+        <dc:Bounds x="1572" y="406" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_04ua05y_di" bpmnElement="IntermediateThrowEvent_1xaqye5">
+        <dc:Bounds x="1312" y="489" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_161fho9_di" bpmnElement="IntermediateThrowEvent_06pzykj">
+        <dc:Bounds x="602" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_119ysb4_di" bpmnElement="Event_1hi8g1e">
+        <dc:Bounds x="1372" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0loktfn_di" bpmnElement="Event_1c2k7s7">
+        <dc:Bounds x="1212" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1fjkjkw_di" bpmnElement="Event_1xfimra">
+        <dc:Bounds x="1052" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1enmhs9_di" bpmnElement="Event_0rm6mqd">
+        <dc:Bounds x="892" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1vvhj7e_di" bpmnElement="Event_0o9el0j">
+        <dc:Bounds x="462" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0dak0xc_di" bpmnElement="Event_18akesm">
+        <dc:Bounds x="742" y="409" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0zaxsyf_di" bpmnElement="Association_0zaxsyf">
+        <di:waypoint x="590" y="525" />
+        <di:waypoint x="590" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_01tkpnw_di" bpmnElement="Association_01tkpnw">
+        <di:waypoint x="742" y="320" />
+        <di:waypoint x="740" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1azq4at_di" bpmnElement="Association_1azq4at">
+        <di:waypoint x="730" y="525" />
+        <di:waypoint x="730" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1t36osv_di" bpmnElement="Association_1t36osv">
+        <di:waypoint x="910" y="302" />
+        <di:waypoint x="910" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_16em10l_di" bpmnElement="Association_16em10l">
+        <di:waypoint x="880" y="525" />
+        <di:waypoint x="880" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_06ivgdu_di" bpmnElement="Association_06ivgdu">
+        <di:waypoint x="1040" y="525" />
+        <di:waypoint x="1040" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0mz3pva_di" bpmnElement="Association_0mz3pva">
+        <di:waypoint x="1200" y="525" />
+        <di:waypoint x="1200" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0u764fb_di" bpmnElement="Association_0u764fb">
+        <di:waypoint x="1070" y="302" />
+        <di:waypoint x="1070" y="286" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_179f5ku_di" bpmnElement="Association_179f5ku">
+        <di:waypoint x="1230" y="302" />
+        <di:waypoint x="1230" y="286" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0myxrng_di" bpmnElement="Association_0myxrng">
+        <di:waypoint x="1390" y="302" />
+        <di:waypoint x="1390" y="286" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

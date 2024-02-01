@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_14gmd9s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="sme-loan-set-in-default" name="(Main) Set Sme Loan Status in-Default" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1wlb9yl</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_1kzxipg" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_1wlb9yl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_146arm9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1wlb9yl" sourceRef="StartEvent_1" targetRef="Task_1kzxipg" />
+    <bpmn:serviceTask id="Task_1hdzh7i" name="Update Sme Loan" camunda:type="external" camunda:topic="update-sme-loan">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">62a3d125-4de4-400e-9e65-d7ab996af8bf</camunda:inputParameter>
+          <camunda:inputParameter name="status">loan-in-default</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1d8kjng</bpmn:incoming>
+      <bpmn:outgoing>Flow_04f82ep</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_146arm9" sourceRef="Task_1kzxipg" targetRef="Activity_0rx5y0g" />
+    <bpmn:endEvent id="EndEvent_0mgsokc">
+      <bpmn:incoming>Flow_04f82ep</bpmn:incoming>
+      <bpmn:incoming>Flow_1s7p8f4</bpmn:incoming>
+      <bpmn:incoming>Flow_17labgj</bpmn:incoming>
+      <bpmn:messageEventDefinition camunda:type="external" camunda:topic="end-sme-loan-set-in-default" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_04f82ep" sourceRef="Task_1hdzh7i" targetRef="EndEvent_0mgsokc" />
+    <bpmn:sequenceFlow id="Flow_1d8kjng" sourceRef="Activity_1lhsp58" targetRef="Task_1hdzh7i" />
+    <bpmn:serviceTask id="Activity_1lhsp58" name="Update Sme Loan Transactions Status" camunda:type="external" camunda:topic="update-sme-loan-transactions-status">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">13542218-9884-43c7-b795-28b9228d7be9</camunda:inputParameter>
+          <camunda:inputParameter name="status">frequently-failed</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0h4klha</bpmn:incoming>
+      <bpmn:outgoing>Flow_1d8kjng</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_13s2i52" attachedToRef="Activity_1lhsp58">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_1q2alno" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_07u36rg" name="Rollback Update Transaction Status" isForCompensation="true" camunda:type="external" camunda:topic="rollback-update-sme-loan-transactions-status">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">13542218-9884-43c7-b795-28b9228d7be9</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1uyxtcl" attachedToRef="Activity_1lhsp58">
+      <bpmn:outgoing>Flow_1s7p8f4</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1jjqpsd" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1s7p8f4" sourceRef="Event_1uyxtcl" targetRef="EndEvent_0mgsokc" />
+    <bpmn:sequenceFlow id="Flow_0h4klha" sourceRef="Activity_0rx5y0g" targetRef="Activity_1lhsp58" />
+    <bpmn:serviceTask id="Activity_0rx5y0g" name="Set Sme Loan status In-Default" camunda:type="external" camunda:topic="sme-loan-status-set-default">
+      <bpmn:incoming>SequenceFlow_146arm9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h4klha</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1qi2484" attachedToRef="Task_1hdzh7i">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_1wd0l3b" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_1s74e1c" name="Rollback Update Sme Loan Status" isForCompensation="true" camunda:type="external" camunda:topic="rollback-update-sme-loan-status" />
+    <bpmn:boundaryEvent id="Event_1augrs7" attachedToRef="Task_1hdzh7i">
+      <bpmn:outgoing>Flow_17labgj</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1fca64r" errorRef="Error_00t3urh" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_17labgj" sourceRef="Event_1augrs7" targetRef="EndEvent_0mgsokc" />
+    <bpmn:association id="Association_1ewijta" associationDirection="One" sourceRef="Event_13s2i52" targetRef="Activity_07u36rg" />
+    <bpmn:association id="Association_0hzykuy" associationDirection="One" sourceRef="Event_1qi2484" targetRef="Activity_1s74e1c" />
+  </bpmn:process>
+  <bpmn:error id="Error_0v5c953" name="Error sme loan set default" errorCode="ERROR_SME_LOAN_SET_DEFAULT" />
+  <bpmn:error id="Error_0lw6sid" name="Error get loan data for set default" errorCode="ERROR_GET_LOAN_DATA_FOR_SET_DEFAULT" />
+  <bpmn:error id="Error_00t3urh" name="update sme loan error" errorCode="ERROR_UPDATE_SME_LOAN_DATA" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sme-loan-set-in-default">
+      <bpmndi:BPMNEdge id="Flow_17labgj_di" bpmnElement="Flow_17labgj">
+        <di:waypoint x="900" y="169" />
+        <di:waypoint x="900" y="100" />
+        <di:waypoint x="1010" y="100" />
+        <di:waypoint x="1010" y="209" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h4klha_di" bpmnElement="Flow_0h4klha">
+        <di:waypoint x="540" y="227" />
+        <di:waypoint x="620" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1s7p8f4_di" bpmnElement="Flow_1s7p8f4">
+        <di:waypoint x="700" y="169" />
+        <di:waypoint x="700" y="80" />
+        <di:waypoint x="1010" y="80" />
+        <di:waypoint x="1010" y="209" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1d8kjng_di" bpmnElement="Flow_1d8kjng">
+        <di:waypoint x="720" y="227" />
+        <di:waypoint x="820" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04f82ep_di" bpmnElement="Flow_04f82ep">
+        <di:waypoint x="920" y="227" />
+        <di:waypoint x="992" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_146arm9_di" bpmnElement="SequenceFlow_146arm9">
+        <di:waypoint x="360" y="227" />
+        <di:waypoint x="440" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wlb9yl_di" bpmnElement="SequenceFlow_1wlb9yl">
+        <di:waypoint x="195" y="227" />
+        <di:waypoint x="260" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="159" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_111msko_di" bpmnElement="Task_1kzxipg">
+        <dc:Bounds x="260" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0zzk17b_di" bpmnElement="Task_1hdzh7i">
+        <dc:Bounds x="820" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0vytozm_di" bpmnElement="EndEvent_0mgsokc">
+        <dc:Bounds x="992" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_138sdsf_di" bpmnElement="Activity_1lhsp58">
+        <dc:Bounds x="620" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kp0s8k_di" bpmnElement="Activity_07u36rg">
+        <dc:Bounds x="620" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0d8asje_di" bpmnElement="Activity_0rx5y0g">
+        <dc:Bounds x="440" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0iw5i78_di" bpmnElement="Activity_1s74e1c">
+        <dc:Bounds x="820" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1m0ye1g_di" bpmnElement="Event_1augrs7">
+        <dc:Bounds x="882" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_04ul5if_di" bpmnElement="Event_1qi2484">
+        <dc:Bounds x="882" y="249" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_062sm6j_di" bpmnElement="Event_1uyxtcl">
+        <dc:Bounds x="682" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_00uaj63_di" bpmnElement="Event_13s2i52">
+        <dc:Bounds x="682" y="249" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1ewijta_di" bpmnElement="Association_1ewijta">
+        <di:waypoint x="700" y="285" />
+        <di:waypoint x="700" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0hzykuy_di" bpmnElement="Association_0hzykuy">
+        <di:waypoint x="900" y="285" />
+        <di:waypoint x="900" y="350" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

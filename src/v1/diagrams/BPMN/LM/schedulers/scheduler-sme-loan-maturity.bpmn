@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_09up8qy" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="scheduler-sme-loan-maturity" name="(Scheduler) SME Loan Maturity" isExecutable="true" camunda:versionTag="1.3.4" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="Event_0itbset">
+      <bpmn:outgoing>Flow_1573ot2</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_00oa5ij">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 05 0 * * ?</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1573ot2" sourceRef="Event_0itbset" targetRef="Activity_0thn9af" />
+    <bpmn:callActivity id="Activity_0thn9af" name="SME Loan Maturity" calledElement="sub-sme-loan-maturiry-process" camunda:calledElementTenantId="LM">
+      <bpmn:incoming>Flow_1573ot2</bpmn:incoming>
+      <bpmn:outgoing>Flow_056cjfv</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_1rwikpn">
+      <bpmn:incoming>Flow_056cjfv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_056cjfv" sourceRef="Activity_0thn9af" targetRef="Event_1rwikpn" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="scheduler-sme-loan-maturity">
+      <bpmndi:BPMNEdge id="Flow_056cjfv_di" bpmnElement="Flow_056cjfv">
+        <di:waypoint x="380" y="120" />
+        <di:waypoint x="492" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1573ot2_di" bpmnElement="Flow_1573ot2">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="280" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_15hrgol_di" bpmnElement="Event_0itbset">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_086oimt_di" bpmnElement="Activity_0thn9af">
+        <dc:Bounds x="280" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rwikpn_di" bpmnElement="Event_1rwikpn">
+        <dc:Bounds x="492" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

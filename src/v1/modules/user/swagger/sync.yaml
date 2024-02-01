@@ -1,0 +1,21 @@
+paths:
+  /users/sync:
+    post:
+      tags:
+        - User
+      summary: "Sync All Jump cloud users to camunda."
+      produces:
+        - application/json
+      responses:
+        204:
+          description: No content.
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

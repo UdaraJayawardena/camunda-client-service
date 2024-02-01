@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1ngvbm9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="daily-update-psd2-data-simulation" name="Daily Update PSD2 Data (Simulation)" isExecutable="true" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="Event_0enjxcr" name="Start">
+      <bpmn:outgoing>Flow_05jomx9</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:scriptTask id="Activity_1m3her6" name="Set business key" scriptFormat="javascript">
+      <bpmn:incoming>Flow_05jomx9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vru8p7</bpmn:outgoing>
+      <bpmn:script>date = new java.util.Date;
+//id = new java.util.Random().toString(36).substr(2, 9);
+execution.setProcessBusinessKey(date.getTime());</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:callActivity id="Activity_02qpcav" name="Daily update PSD2 data Processor" calledElement="daily-update-psd2-data-processor">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0vru8p7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hafknz</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_1lusac5" name="End">
+      <bpmn:incoming>Flow_1hafknz</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_05jomx9" sourceRef="Event_0enjxcr" targetRef="Activity_1m3her6" />
+    <bpmn:sequenceFlow id="Flow_0vru8p7" sourceRef="Activity_1m3her6" targetRef="Activity_02qpcav" />
+    <bpmn:sequenceFlow id="Flow_1hafknz" sourceRef="Activity_02qpcav" targetRef="Event_1lusac5" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="daily-update-psd2-data-simulation">
+      <bpmndi:BPMNEdge id="Flow_1hafknz_di" bpmnElement="Flow_1hafknz">
+        <di:waypoint x="473" y="120" />
+        <di:waypoint x="515" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vru8p7_di" bpmnElement="Flow_0vru8p7">
+        <di:waypoint x="333" y="120" />
+        <di:waypoint x="373" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05jomx9_di" bpmnElement="Flow_05jomx9">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="233" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0enjxcr_di" bpmnElement="Event_0enjxcr">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="145" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1m3her6_di" bpmnElement="Activity_1m3her6">
+        <dc:Bounds x="233" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02qpcav_di" bpmnElement="Activity_02qpcav">
+        <dc:Bounds x="373" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1lusac5_di" bpmnElement="Event_1lusac5">
+        <dc:Bounds x="515" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="523" y="145" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

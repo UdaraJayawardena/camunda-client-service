@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1k56608" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="scheduler-generate-direct-debits-batch" name="(Scheduler) Generate Direct Debits Batch" isExecutable="true" camunda:versionTag="1.3.2" camunda:historyTimeToLive="P5D">
+    <bpmn:endEvent id="Event_0a2k31e">
+      <bpmn:incoming>Flow_1s40jkv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:callActivity id="Activity_0a2d1ud" name="Generate Direct Debits Batch" calledElement="generate-direct-debits-batch" camunda:calledElementTenantId="LM">
+      <bpmn:incoming>Flow_03ke2jg</bpmn:incoming>
+      <bpmn:outgoing>Flow_1s40jkv</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_1s40jkv" sourceRef="Activity_0a2d1ud" targetRef="Event_0a2k31e" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_03ke2jg</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0ggth2k">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 30 1 * * ?</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_03ke2jg" sourceRef="StartEvent_1" targetRef="Activity_0a2d1ud" />
+  </bpmn:process>
+  <bpmn:error id="Error_0pwgqpe" name="ERROR_CHECKING_WORKING_DAY" camunda:errorMessage="Unexpected Error Occurred while checking is the date a working date" />
+  <bpmn:error id="Error_0rb0d5h" name="ERROR_COLLECTING_MANDATE_TYPES" camunda:errorMessage="Unexpected Error Occurred while collecting mandate types" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="scheduler-generate-direct-debits-batch">
+      <bpmndi:BPMNEdge id="Flow_03ke2jg_di" bpmnElement="Flow_03ke2jg">
+        <di:waypoint x="188" y="117" />
+        <di:waypoint x="250" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1s40jkv_di" bpmnElement="Flow_1s40jkv">
+        <di:waypoint x="350" y="117" />
+        <di:waypoint x="412" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0a2k31e_di" bpmnElement="Event_0a2k31e">
+        <dc:Bounds x="412" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09y0tap_di" bpmnElement="Activity_0a2d1ud">
+        <dc:Bounds x="250" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14pldxm_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

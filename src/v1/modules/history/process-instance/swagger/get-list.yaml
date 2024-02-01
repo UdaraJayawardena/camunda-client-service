@@ -1,0 +1,108 @@
+paths:
+  /history/process-instances:
+    get:
+      tags:
+        - Process Instances (history)
+      name: Get Process Instances
+      summary: Queries for historic process instances that fulfill the given parameters.
+      operationId: getProcessInstanceList
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: processInstanceId
+          type: string
+          description: Filter by process instance id.
+          required: false
+        - in: query
+          name: processInstanceBusinessKey
+          type: string
+          description: Filter by process instance business key.
+          required: false
+        - in: query
+          name: processDefinitionKey
+          type: string
+          description: Filter by the key of the process definition the instances run on.
+          required: false
+        - in: query
+          name: processDefinitionKeyIn
+          type: string
+          description: Filter by a comma-separated list of process definition keys. A process instance must have one of the given process definition keys.
+          required: false
+        - in: query
+          name: variables
+          type: string
+          description: A valid parameter value has the form key_operator_value.
+          required: false
+        - in: query
+          name: active
+          type: boolean
+          description: Restrict to instances that are active
+          required: false
+        - in: query
+          name: suspended
+          type: boolean
+          description: Restrict to instances that are suspended
+          required: false
+        - in: query
+          name: completed
+          type: boolean
+          description: Restrict to instances that are completed
+          required: false
+        - in: query
+          name: externallyTerminated
+          type: boolean
+          description: Restrict to instances that are externally terminated
+          required: false
+        - in: query
+          name: internallyTerminated
+          type: boolean
+          description: Restrict to instances that are internally terminated
+          required: false
+        - in: query
+          name: startedBefore
+          type: string
+          description: Restrict to instances that were started before the given date. By default*.(yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g., 2013-01-23T14:42:45.000+0200.)
+          required: false
+        - in: query
+          name: startedAfter
+          type: string
+          description: Restrict to instances that were started after the given date. By default*,(yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g., 2013-01-23T14:42:45.000+0200.)
+          required: false
+        - in: query
+          name: sortBy
+          type: string
+          description: Valid values are instanceId, definitionId, definitionKey, definitionName, definitionVersion, businessKey, startTime, endTime, duration and tenantId. Must be used in conjunction with the sortOrder parameter.
+          required: false
+        - in: query
+          name: sortOrder
+          type: string
+          description: Values may be asc for ascending order or desc for descending order. Must be used in conjunction with the sortBy parameter.
+          required: false
+        - in: query
+          name: firstResult
+          type: string
+          description: Pagination of results. Specifies the index of the first result to return.
+          required: false
+        - in: query
+          name: maxResults
+          type: string
+          description: Pagination of results. Specifies the maximum number of results to return. Will return less results if there are no more results left.
+          required: false
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              data:
+                type: number
+                example: 90
+              success:
+                type: boolean
+                example: true

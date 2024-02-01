@@ -1,0 +1,35 @@
+paths:
+  /groups/{id}/members/{userId}:
+    put:
+      tags:
+        - Group
+      summary: "Add a member to a group."
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: The id of the group
+          required: true
+        - in: path
+          name: userId
+          type: string
+          description: The id of user to add to the group
+          required: true
+      responses:
+        204:
+          description: No content.
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1s8k9h2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.3.4">
+  <bpmn:process id="sme-loans-migrations" name="(Migrations) Sme loans migrations" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_11to01i</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_11to01i" sourceRef="StartEvent_1" targetRef="Task_0wldx8w" />
+    <bpmn:sequenceFlow id="SequenceFlow_0cbjjg4" sourceRef="Task_0wldx8w" targetRef="Task_0jdo7oy" />
+    <bpmn:boundaryEvent id="BoundaryEvent_068gtfk" attachedToRef="Task_0jdo7oy">
+      <bpmn:compensateEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_0wldx8w" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_11to01i</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0cbjjg4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_0jdo7oy" name="Migrate sme loan" camunda:type="external" camunda:topic="migrate-sme-loans">
+      <bpmn:incoming>SequenceFlow_0cbjjg4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1s5dzs5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_1hstags" attachedToRef="Task_0jdo7oy">
+      <bpmn:outgoing>SequenceFlow_0du7hg6</bpmn:outgoing>
+      <bpmn:errorEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1s5dzs5" sourceRef="Task_0jdo7oy" targetRef="Task_13lhjda" />
+    <bpmn:sequenceFlow id="SequenceFlow_0z3zti9" sourceRef="Task_13lhjda" targetRef="Task_1pj5mr2" />
+    <bpmn:endEvent id="EndEvent_1ka8g9w">
+      <bpmn:incoming>SequenceFlow_1v8flx3</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0du7hg6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_029cs3a</bpmn:incoming>
+      <bpmn:messageEventDefinition camunda:type="external" camunda:topic="end-sme-loans-migrations" />
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="BoundaryEvent_1nswfkw" attachedToRef="Task_13lhjda">
+      <bpmn:outgoing>SequenceFlow_0g2i6xd</bpmn:outgoing>
+      <bpmn:errorEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_19a49ok">
+      <bpmn:incoming>SequenceFlow_0g2i6xd</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1hlw9gc</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1v8flx3</bpmn:outgoing>
+      <bpmn:compensateEventDefinition />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0g2i6xd" sourceRef="BoundaryEvent_1nswfkw" targetRef="IntermediateThrowEvent_19a49ok" />
+    <bpmn:sequenceFlow id="SequenceFlow_1v8flx3" sourceRef="IntermediateThrowEvent_19a49ok" targetRef="EndEvent_1ka8g9w" />
+    <bpmn:serviceTask id="Task_13lhjda" name="Update sme-loan history" camunda:type="external" camunda:topic="update-sme-loans-status-history">
+      <bpmn:incoming>SequenceFlow_1s5dzs5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0z3zti9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_0wwyz5j" name="Roll back sme-loan migrations" isForCompensation="true" camunda:type="external" camunda:topic="rollback-migrated-sme-loans" />
+    <bpmn:sequenceFlow id="SequenceFlow_0du7hg6" sourceRef="BoundaryEvent_1hstags" targetRef="EndEvent_1ka8g9w" />
+    <bpmn:sequenceFlow id="SequenceFlow_029cs3a" sourceRef="Task_1pj5mr2" targetRef="EndEvent_1ka8g9w" />
+    <bpmn:serviceTask id="Task_1pj5mr2" name="Migrate temporary loan stops" camunda:type="external" camunda:topic="migrate-sme-loan-temporary-stops">
+      <bpmn:incoming>SequenceFlow_0z3zti9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_029cs3a</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0fu8w2m" attachedToRef="Task_1pj5mr2">
+      <bpmn:outgoing>SequenceFlow_1hlw9gc</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1pp8a7i" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1hlw9gc" sourceRef="IntermediateThrowEvent_0fu8w2m" targetRef="IntermediateThrowEvent_19a49ok" />
+    <bpmn:association id="Association_1apjrga" associationDirection="One" sourceRef="BoundaryEvent_068gtfk" targetRef="Task_0wwyz5j" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sme-loans-migrations">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="122" y="249" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_11to01i_di" bpmnElement="SequenceFlow_11to01i">
+        <di:waypoint x="158" y="267" />
+        <di:waypoint x="190" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0cbjjg4_di" bpmnElement="SequenceFlow_0cbjjg4">
+        <di:waypoint x="290" y="267" />
+        <di:waypoint x="330" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BoundaryEvent_0uxspwp_di" bpmnElement="BoundaryEvent_068gtfk">
+        <dc:Bounds x="362" y="289" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1apjrga_di" bpmnElement="Association_1apjrga">
+        <di:waypoint x="380" y="325" />
+        <di:waypoint x="380" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0bnb3ml_di" bpmnElement="Task_0wldx8w">
+        <dc:Bounds x="190" y="227" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0t445c2_di" bpmnElement="Task_0jdo7oy">
+        <dc:Bounds x="330" y="227" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1fbnrky_di" bpmnElement="BoundaryEvent_1hstags">
+        <dc:Bounds x="362" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1s5dzs5_di" bpmnElement="SequenceFlow_1s5dzs5">
+        <di:waypoint x="430" y="267" />
+        <di:waypoint x="480" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0z3zti9_di" bpmnElement="SequenceFlow_0z3zti9">
+        <di:waypoint x="580" y="267" />
+        <di:waypoint x="650" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_04ll1wm_di" bpmnElement="EndEvent_1ka8g9w">
+        <dc:Bounds x="812" y="249" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0y1ij8q_di" bpmnElement="BoundaryEvent_1nswfkw">
+        <dc:Bounds x="512" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateThrowEvent_1rgrh92_di" bpmnElement="IntermediateThrowEvent_19a49ok">
+        <dc:Bounds x="682" y="112" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0g2i6xd_di" bpmnElement="SequenceFlow_0g2i6xd">
+        <di:waypoint x="530" y="209" />
+        <di:waypoint x="530" y="130" />
+        <di:waypoint x="682" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1v8flx3_di" bpmnElement="SequenceFlow_1v8flx3">
+        <di:waypoint x="718" y="130" />
+        <di:waypoint x="830" y="130" />
+        <di:waypoint x="830" y="249" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_15mal3c_di" bpmnElement="Task_13lhjda">
+        <dc:Bounds x="480" y="227" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_11kgj8s_di" bpmnElement="Task_0wwyz5j">
+        <dc:Bounds x="330" y="380" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0du7hg6_di" bpmnElement="SequenceFlow_0du7hg6">
+        <di:waypoint x="380" y="209" />
+        <di:waypoint x="380" y="70" />
+        <di:waypoint x="830" y="70" />
+        <di:waypoint x="830" y="249" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_029cs3a_di" bpmnElement="SequenceFlow_029cs3a">
+        <di:waypoint x="750" y="267" />
+        <di:waypoint x="812" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_18cqn1e_di" bpmnElement="Task_1pj5mr2">
+        <dc:Bounds x="650" y="227" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0x6v3ff_di" bpmnElement="IntermediateThrowEvent_0fu8w2m">
+        <dc:Bounds x="682" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1hlw9gc_di" bpmnElement="SequenceFlow_1hlw9gc">
+        <di:waypoint x="700" y="209" />
+        <di:waypoint x="700" y="148" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

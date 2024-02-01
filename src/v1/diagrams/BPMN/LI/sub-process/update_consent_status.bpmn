@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0j6bjsn" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="update_consent_status" name="Update Consent Status" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0jhaocr</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0jhaocr" sourceRef="StartEvent_1" targetRef="check-flex-loans_or_loan_requests" />
+    <bpmn:sequenceFlow id="Flow_16t7xsr" sourceRef="check-flex-loans_or_loan_requests" targetRef="Activity_1330c9o" />
+    <bpmn:endEvent id="Event_1imifaa">
+      <bpmn:incoming>Flow_1vyp7wq</bpmn:incoming>
+      <bpmn:incoming>Flow_0qrqgoy</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="check-flex-loans_or_loan_requests" name="Check available Flex-loan or loan-request" camunda:type="external" camunda:topic="check-flex-loans_or_loan_requests">
+      <bpmn:incoming>Flow_0jhaocr</bpmn:incoming>
+      <bpmn:outgoing>Flow_16t7xsr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1330c9o" name="Update Consent Status" camunda:type="external" camunda:topic="update-consent-status">
+      <bpmn:incoming>Flow_16t7xsr</bpmn:incoming>
+      <bpmn:outgoing>Flow_02bflal</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1vyp7wq" sourceRef="Activity_0cmrb94" targetRef="Event_1imifaa" />
+    <bpmn:serviceTask id="Activity_0cmrb94" name="Send Notifications" camunda:type="external" camunda:topic="send-notification">
+      <bpmn:incoming>Flow_132ag05</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vyp7wq</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_024x1iq" attachedToRef="check-flex-loans_or_loan_requests">
+      <bpmn:outgoing>Flow_0wxuzba</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_07ws7tn" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0c4mib4" attachedToRef="Activity_1330c9o">
+      <bpmn:outgoing>Flow_0e1k0ml</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_10gq8fw" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0rebnpj" attachedToRef="Activity_0cmrb94">
+      <bpmn:outgoing>Flow_1wdm25r</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1abdiue" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1wdm25r" sourceRef="Event_0rebnpj" targetRef="Event_16n3qok" />
+    <bpmn:endEvent id="Event_16n3qok" name="Error">
+      <bpmn:incoming>Flow_1wdm25r</bpmn:incoming>
+      <bpmn:incoming>Flow_0e1k0ml</bpmn:incoming>
+      <bpmn:incoming>Flow_0wxuzba</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1bsq6ek" errorRef="Error_1herz34" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0e1k0ml" sourceRef="Event_0c4mib4" targetRef="Event_16n3qok" />
+    <bpmn:sequenceFlow id="Flow_0wxuzba" sourceRef="Event_024x1iq" targetRef="Event_16n3qok" />
+    <bpmn:exclusiveGateway id="Gateway_0b07npk">
+      <bpmn:incoming>Flow_02bflal</bpmn:incoming>
+      <bpmn:outgoing>Flow_132ag05</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0qrqgoy</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_02bflal" sourceRef="Activity_1330c9o" targetRef="Gateway_0b07npk" />
+    <bpmn:sequenceFlow id="Flow_132ag05" sourceRef="Gateway_0b07npk" targetRef="Activity_0cmrb94">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${doNeedGenerateEmails == 'yes'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0qrqgoy" sourceRef="Gateway_0b07npk" targetRef="Event_1imifaa">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${doNeedGenerateEmails == 'no'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmn:error id="Error_1herz34" name="update_consent_error" errorCode="ERROR_UPDATE_CONSENT_STATUS" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="update_consent_status">
+      <bpmndi:BPMNEdge id="Flow_0wxuzba_di" bpmnElement="Flow_0wxuzba">
+        <di:waypoint x="320" y="169" />
+        <di:waypoint x="320" y="100" />
+        <di:waypoint x="842" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e1k0ml_di" bpmnElement="Flow_0e1k0ml">
+        <di:waypoint x="480" y="169" />
+        <di:waypoint x="480" y="100" />
+        <di:waypoint x="842" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wdm25r_di" bpmnElement="Flow_1wdm25r">
+        <di:waypoint x="750" y="169" />
+        <di:waypoint x="750" y="100" />
+        <di:waypoint x="842" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vyp7wq_di" bpmnElement="Flow_1vyp7wq">
+        <di:waypoint x="800" y="227" />
+        <di:waypoint x="842" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16t7xsr_di" bpmnElement="Flow_16t7xsr">
+        <di:waypoint x="370" y="227" />
+        <di:waypoint x="430" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jhaocr_di" bpmnElement="Flow_0jhaocr">
+        <di:waypoint x="215" y="227" />
+        <di:waypoint x="270" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02bflal_di" bpmnElement="Flow_02bflal">
+        <di:waypoint x="530" y="227" />
+        <di:waypoint x="595" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_132ag05_di" bpmnElement="Flow_132ag05">
+        <di:waypoint x="645" y="227" />
+        <di:waypoint x="700" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qrqgoy_di" bpmnElement="Flow_0qrqgoy">
+        <di:waypoint x="620" y="252" />
+        <di:waypoint x="620" y="350" />
+        <di:waypoint x="860" y="350" />
+        <di:waypoint x="860" y="245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1tqzzxk_di" bpmnElement="check-flex-loans_or_loan_requests">
+        <dc:Bounds x="270" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18l5ko1_di" bpmnElement="Activity_1330c9o">
+        <dc:Bounds x="430" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0paakyv_di" bpmnElement="Event_16n3qok">
+        <dc:Bounds x="842" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="849" y="125" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1imifaa_di" bpmnElement="Event_1imifaa">
+        <dc:Bounds x="842" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xegvzw_di" bpmnElement="Activity_0cmrb94">
+        <dc:Bounds x="700" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0b07npk_di" bpmnElement="Gateway_0b07npk" isMarkerVisible="true">
+        <dc:Bounds x="595" y="202" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0570y3z_di" bpmnElement="Event_0c4mib4">
+        <dc:Bounds x="462" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1nvr90j_di" bpmnElement="Event_024x1iq">
+        <dc:Bounds x="302" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rzi1ud_di" bpmnElement="Event_0rebnpj">
+        <dc:Bounds x="732" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

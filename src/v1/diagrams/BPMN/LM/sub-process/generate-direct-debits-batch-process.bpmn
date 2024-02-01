@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1w2lpis" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
+  <bpmn:process id="generate-direct-debits-batch" name="(Sub) Generate Direct Debits Batch" isExecutable="true" camunda:versionTag="2.4/1.5.0" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1b64zsf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_1jlcq44" name="Check if Batch Already Submitted" camunda:type="external" camunda:topic="is-batch-already-submitted">
+      <bpmn:incoming>Flow_00ij8yf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xytx1g</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_0yrmq43">
+      <bpmn:incoming>SequenceFlow_1hax4y5</bpmn:incoming>
+      <bpmn:incoming>Flow_1k7ljgc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_1v2rdyu" attachedToRef="Task_1jlcq44">
+      <bpmn:outgoing>Flow_0328ues</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_017w9nx" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Task_1en6m3g" name="Generate Data for Batch Process" camunda:type="external" camunda:topic="generate-batch-data">
+      <bpmn:incoming>Flow_0xytx1g</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1hax4y5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_11a4q28" attachedToRef="Task_1en6m3g">
+      <bpmn:outgoing>Flow_0qcmedp</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_0z7xsvi" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1hax4y5" sourceRef="Task_1en6m3g" targetRef="EndEvent_0yrmq43" />
+    <bpmn:serviceTask id="Activity_0hivt4z" name="Is This a Working Day" camunda:type="external" camunda:topic="is-this-is-a-working-day">
+      <bpmn:incoming>Flow_1b64zsf</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i9slvn</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0f0eyhl" attachedToRef="Activity_0hivt4z">
+      <bpmn:outgoing>Flow_1s36qkh</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0irmail" errorRef="Error_0nt8yju" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1b64zsf" sourceRef="StartEvent_1" targetRef="Activity_0hivt4z" />
+    <bpmn:serviceTask id="Activity_1j4i9s4" name="Collect Mandate Types" camunda:type="external" camunda:topic="collect-mandate-types">
+      <bpmn:incoming>Flow_1i9slvn</bpmn:incoming>
+      <bpmn:outgoing>Flow_00ij8yf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1f562lg" attachedToRef="Activity_1j4i9s4">
+      <bpmn:outgoing>Flow_0mhec8d</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_19gjd1y" errorRef="Error_0savv6e" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_00ij8yf" sourceRef="Activity_1j4i9s4" targetRef="Task_1jlcq44" />
+    <bpmn:boundaryEvent id="Event_0ci8o39" attachedToRef="Activity_1j4i9s4">
+      <bpmn:outgoing>Flow_1k7ljgc</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_19pmnnz">
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">${processBatchGenerate == false}</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1k7ljgc" sourceRef="Event_0ci8o39" targetRef="EndEvent_0yrmq43" />
+    <bpmn:sequenceFlow id="Flow_1i9slvn" sourceRef="Activity_0hivt4z" targetRef="Activity_1j4i9s4" />
+    <bpmn:sequenceFlow id="Flow_0xytx1g" sourceRef="Task_1jlcq44" targetRef="Task_1en6m3g" />
+    <bpmn:sequenceFlow id="Flow_1s36qkh" sourceRef="Event_0f0eyhl" targetRef="Activity_03ylcfh" />
+    <bpmn:sequenceFlow id="Flow_0mhec8d" sourceRef="Event_1f562lg" targetRef="Activity_03ylcfh" />
+    <bpmn:sequenceFlow id="Flow_0328ues" sourceRef="IntermediateThrowEvent_1v2rdyu" targetRef="Activity_03ylcfh" />
+    <bpmn:sequenceFlow id="Flow_0qcmedp" sourceRef="IntermediateThrowEvent_11a4q28" targetRef="Activity_03ylcfh" />
+    <bpmn:sequenceFlow id="Flow_0i5a22n" sourceRef="Activity_03ylcfh" targetRef="Activity_0uuot4z" />
+    <bpmn:scriptTask id="Activity_03ylcfh" name="Prepare error notification" camunda:asyncBefore="true" scriptFormat="Javascript">
+      <bpmn:incoming>Flow_1s36qkh</bpmn:incoming>
+      <bpmn:incoming>Flow_0mhec8d</bpmn:incoming>
+      <bpmn:incoming>Flow_0328ues</bpmn:incoming>
+      <bpmn:incoming>Flow_0qcmedp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0i5a22n</bpmn:outgoing>
+      <bpmn:script>metaData = JSON.parse(execution.getVariable("metaData"));
+
+emailList = [{
+    cluster: 'loan-management',
+    type: 'generate-direct-debit-batch',
+    recipientType: 'admin',
+    metaData: {
+       errorStack: metaData.errorStack,
+       infoStack: metaData.infoStack,
+       templateType: 'ADMIN_EMAIL_GENERATE_BATCH_DD_SYSTEM_ERROR'
+    }
+}]
+
+execution.setVariable('emailList',  JSON.stringify(emailList));</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_07gqg72" sourceRef="Activity_0uuot4z" targetRef="Activity_0si4srj" />
+    <bpmn:serviceTask id="Activity_0uuot4z" name="Create emails" camunda:type="external" camunda:topic="create-emails">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">generate-direct-debit-batch</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0i5a22n</bpmn:incoming>
+      <bpmn:outgoing>Flow_07gqg72</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0n8w8dv">
+      <bpmn:incoming>Flow_0m5uuj1</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0s5etet" errorRef="Error_1urg16w" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0m5uuj1" sourceRef="Activity_0si4srj" targetRef="Event_0n8w8dv" />
+    <bpmn:scriptTask id="Activity_0si4srj" name="Map Result" scriptFormat="Javascript">
+      <bpmn:incoming>Flow_07gqg72</bpmn:incoming>
+      <bpmn:outgoing>Flow_0m5uuj1</bpmn:outgoing>
+      <bpmn:script>execution.setVariable('success', false);</bpmn:script>
+    </bpmn:scriptTask>
+  </bpmn:process>
+  <bpmn:error id="Error_017w9nx" name="ERROR_CHECK_IF_BATCH_SUBMITTED" camunda:errorMessage="Unexpected Error Occurred while checking if batch already submitted" />
+  <bpmn:error id="Error_0skahvc" name="ERROR_CALCULATE_NEXT_EXECUTION_DATE" camunda:errorMessage="Unexpected Error Occurred while calculating next batch execution date" />
+  <bpmn:error id="Error_0z7xsvi" name="ERROR_GENERATE_BATCH_DATA" camunda:errorMessage="Unexpected Error Occurred while generating batch data" />
+  <bpmn:error id="Error_0nt8yju" name="ERROR_CHECKING_WORKING_DAY" camunda:errorMessage="Unexpected Error Occurred while checking is the date a working date" />
+  <bpmn:error id="Error_0savv6e" name="ERROR_COLLECTING_MANDATE_TYPES" camunda:errorMessage="Unexpected Error Occurred while collecting mandate types" />
+  <bpmn:error id="Error_10fzfif" name="ERROR_GENERATE_BATCH_PROCESS" errorCode="500" camunda:errorMessage="Error while generating batch process" />
+  <bpmn:signal id="Signal_16kb1nu" name="start-email-queue" />
+  <bpmn:error id="Error_1urg16w" name="ERROR_GENERATE_BATCH" errorCode="ERROR_GENERATE_BATCH" camunda:errorMessage="Unexpected Error Occurred while generating batch" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="generate-direct-debits-batch">
+      <bpmndi:BPMNEdge id="Flow_0m5uuj1_di" bpmnElement="Flow_0m5uuj1">
+        <di:waypoint x="1020" y="120" />
+        <di:waypoint x="1072" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07gqg72_di" bpmnElement="Flow_07gqg72">
+        <di:waypoint x="810" y="120" />
+        <di:waypoint x="920" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i5a22n_di" bpmnElement="Flow_0i5a22n">
+        <di:waypoint x="660" y="120" />
+        <di:waypoint x="710" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qcmedp_di" bpmnElement="Flow_0qcmedp">
+        <di:waypoint x="770" y="289" />
+        <di:waypoint x="770" y="260" />
+        <di:waypoint x="650" y="260" />
+        <di:waypoint x="650" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0328ues_di" bpmnElement="Flow_0328ues">
+        <di:waypoint x="610" y="289" />
+        <di:waypoint x="610" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mhec8d_di" bpmnElement="Flow_0mhec8d">
+        <di:waypoint x="460" y="289" />
+        <di:waypoint x="460" y="120" />
+        <di:waypoint x="560" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1s36qkh_di" bpmnElement="Flow_1s36qkh">
+        <di:waypoint x="310" y="289" />
+        <di:waypoint x="310" y="100" />
+        <di:waypoint x="560" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xytx1g_di" bpmnElement="Flow_0xytx1g">
+        <di:waypoint x="630" y="347" />
+        <di:waypoint x="690" y="347" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i9slvn_di" bpmnElement="Flow_1i9slvn">
+        <di:waypoint x="330" y="347" />
+        <di:waypoint x="380" y="347" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1k7ljgc_di" bpmnElement="Flow_1k7ljgc">
+        <di:waypoint x="460" y="405" />
+        <di:waypoint x="460" y="425" />
+        <di:waypoint x="1090" y="425" />
+        <di:waypoint x="1090" y="365" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00ij8yf_di" bpmnElement="Flow_00ij8yf">
+        <di:waypoint x="480" y="347" />
+        <di:waypoint x="530" y="347" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b64zsf_di" bpmnElement="Flow_1b64zsf">
+        <di:waypoint x="188" y="347" />
+        <di:waypoint x="230" y="347" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1hax4y5_di" bpmnElement="SequenceFlow_1hax4y5">
+        <di:waypoint x="790" y="347" />
+        <di:waypoint x="1072" y="347" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="329" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_041ul2k_di" bpmnElement="Task_1jlcq44">
+        <dc:Bounds x="530" y="307" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0yrmq43_di" bpmnElement="EndEvent_0yrmq43">
+        <dc:Bounds x="1072" y="329" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1ersb3c_di" bpmnElement="Task_1en6m3g">
+        <dc:Bounds x="690" y="307" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1dl34bx_di" bpmnElement="Activity_0hivt4z">
+        <dc:Bounds x="230" y="307" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0fml3w7_di" bpmnElement="Activity_1j4i9s4">
+        <dc:Bounds x="380" y="307" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0bqne7c_di" bpmnElement="Activity_03ylcfh">
+        <dc:Bounds x="560" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ftok54_di" bpmnElement="Activity_0uuot4z">
+        <dc:Bounds x="710" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1gv1qkv_di" bpmnElement="Event_0n8w8dv">
+        <dc:Bounds x="1072" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02bgqx5_di" bpmnElement="Activity_0si4srj">
+        <dc:Bounds x="920" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0zlpcyx_di" bpmnElement="Event_0ci8o39">
+        <dc:Bounds x="442" y="369" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ac55sb_di" bpmnElement="Event_1f562lg">
+        <dc:Bounds x="442" y="289" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1nwxel7_di" bpmnElement="Event_0f0eyhl">
+        <dc:Bounds x="292" y="289" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1pxw4ck_di" bpmnElement="IntermediateThrowEvent_11a4q28">
+        <dc:Bounds x="752" y="289" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1v6kb5l_di" bpmnElement="IntermediateThrowEvent_1v2rdyu">
+        <dc:Bounds x="592" y="289" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

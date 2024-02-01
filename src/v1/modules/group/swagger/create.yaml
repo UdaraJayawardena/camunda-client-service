@@ -1,0 +1,39 @@
+paths:
+  /groups:
+    post:
+      tags:
+        - Group
+      summary: "Create a new group."
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+                example: demo
+              type:
+                type: string
+                example: demo
+      responses:
+        204:
+          description: No content.
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

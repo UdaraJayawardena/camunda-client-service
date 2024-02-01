@@ -1,0 +1,74 @@
+paths:
+  /migrations/:
+    post:
+      tags:
+        - Migration
+      summary: "Camunda workflow migration"
+      produces:
+        - application/json  
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties: 
+              keys:
+                type: array
+                example: ['invoice', 'update-bank-transaction-types']                                            
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+  /migration/v1:
+    post:
+      tags:
+        - Migration
+      summary: "Camunda workflow migration version 1"
+      produces:
+        - application/json  
+      parameters:
+        - in: body
+          required: true
+          name: body
+          schema:
+            type: object
+            properties: 
+              sourceProcessDefinitionId:
+                type: string
+                example: invoice:1:85d5bc83-3e68-11eb-bebd-24b6fd1a8af5
+              targetProcessDefinitionId:
+                type: string   
+                example: invoice:2:86b8063d-3e68-11eb-bebd-24b6fd1a8af5
+              updateEventTriggers:
+                type: boolean               
+                example: true                       
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+

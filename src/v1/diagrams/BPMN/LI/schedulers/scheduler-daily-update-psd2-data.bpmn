@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1goe3wf" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="daily-update-psd2-data-scheduler" name="Daily Update PSD2 Data (Scheduler)" isExecutable="true" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="Event_13job3a" name="Timer (Start) At 01:00:00am every day">
+      <bpmn:outgoing>Flow_0x9812w</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_10gza92">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 00 1 * * ?</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:scriptTask id="Activity_10v54xv" name="Set business key" scriptFormat="javascript">
+      <bpmn:incoming>Flow_0x9812w</bpmn:incoming>
+      <bpmn:outgoing>Flow_09pom7g</bpmn:outgoing>
+      <bpmn:script>date = new java.util.Date;
+//id = new java.util.Random().toString(36).substr(2, 9);
+execution.setProcessBusinessKey(date.getTime());</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:callActivity id="Activity_03m402z" name="Daily update PSD2 data Processor" calledElement="daily-update-psd2-data-processor">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_09pom7g</bpmn:incoming>
+      <bpmn:outgoing>Flow_16i0pny</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_1r7zvu1" name="End">
+      <bpmn:incoming>Flow_16i0pny</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_09pom7g" sourceRef="Activity_10v54xv" targetRef="Activity_03m402z" />
+    <bpmn:sequenceFlow id="Flow_16i0pny" sourceRef="Activity_03m402z" targetRef="Event_1r7zvu1" />
+    <bpmn:sequenceFlow id="Flow_0x9812w" sourceRef="Event_13job3a" targetRef="Activity_10v54xv" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="daily-update-psd2-data-scheduler">
+      <bpmndi:BPMNEdge id="Flow_0x9812w_di" bpmnElement="Flow_0x9812w">
+        <di:waypoint x="248" y="120" />
+        <di:waypoint x="300" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16i0pny_di" bpmnElement="Flow_16i0pny">
+        <di:waypoint x="540" y="120" />
+        <di:waypoint x="592" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09pom7g_di" bpmnElement="Flow_09pom7g">
+        <di:waypoint x="400" y="120" />
+        <di:waypoint x="440" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_13job3a_di" bpmnElement="Event_13job3a">
+        <dc:Bounds x="212" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="186" y="145" width="89" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_10v54xv_di" bpmnElement="Activity_10v54xv">
+        <dc:Bounds x="300" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03m402z_di" bpmnElement="Activity_03m402z">
+        <dc:Bounds x="440" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1r7zvu1_di" bpmnElement="Event_1r7zvu1">
+        <dc:Bounds x="592" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="600" y="145" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_08m5yeo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="start-stop-sme-loan-interest-penalty" name="(Main) Start/Stop sme loan interest penalty" isExecutable="true" camunda:versionTag="1.0/1.4.0" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0d6ecdj</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_0u31uvv" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_0d6ecdj</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hz1pzx</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0d6ecdj" sourceRef="StartEvent_1" targetRef="Activity_0u31uvv" />
+    <bpmn:serviceTask id="Activity_0weib4r" name="Update sme loan" camunda:type="external" camunda:topic="update-sme-loan-interest-penalty-status">
+      <bpmn:incoming>Flow_1hz1pzx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ellmo6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1hz1pzx" sourceRef="Activity_0u31uvv" targetRef="Activity_0weib4r" />
+    <bpmn:exclusiveGateway id="Gateway_03jrn0w">
+      <bpmn:incoming>Flow_1ellmo6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hmntdx</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ft2kyw</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1ellmo6" sourceRef="Activity_0weib4r" targetRef="Gateway_03jrn0w" />
+    <bpmn:sequenceFlow id="Flow_1hmntdx" sourceRef="Gateway_03jrn0w" targetRef="Event_0d30lkf">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sendMessage== "no"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:scriptTask id="Activity_0zmqorr" name="get start stop loan interest penalty notification details" camunda:asyncBefore="true" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_1ft2kyw</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rqvukk</bpmn:outgoing>
+      <bpmn:script>contractId = execution.getVariable("contractId");
+
+loanId = execution.getVariable("loanId");
+
+sme = JSON.parse(execution.getVariable("smeDetail"));
+
+interestPenaltyIndicator = JSON.parse(execution.getVariable("data"));
+
+amount= JSON.parse(execution.getVariable("dailyInterestPenaltyAmount"));
+
+dailyInterestPenaltyAmount = Math.abs(amount);
+
+contact = execution.getVariable("contact");
+
+language = execution.getVariable("language");
+
+currencySymbol = execution.getVariable("currencySymbol");
+
+dataList = []
+dataList.push({"contractId": contractId,"loanId": loanId,"sme":sme,"interestPenaltyIndicator": interestPenaltyIndicator,"dailyInterestPenaltyAmount":dailyInterestPenaltyAmount, "contact": contact, "language": language, "currencySymbol" : currencySymbol});
+
+execution.setVariable('dataList',JSON.stringify(dataList));</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_1ft2kyw" sourceRef="Gateway_03jrn0w" targetRef="Activity_0zmqorr">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sendMessage== "yes"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:callActivity id="Activity_1t63snt" name="Prepare emails" calledElement="prepare-emails" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">start-stop-sme-loan-interest-penalty-email</camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:in source="dataList" target="dataList" />
+        <camunda:in variables="all" />
+        <camunda:in source="metaData" target="metaData" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="result" target="result" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1rqvukk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0kcuhq7</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_0kcuhq7" sourceRef="Activity_1t63snt" targetRef="Event_0d30lkf" />
+    <bpmn:endEvent id="Event_08xniwl">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">start-stop-sme-loan-interest-penalty-email</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_01oiaoh</bpmn:incoming>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_1vgd43p" signalRef="Signal_1wospm0">
+        <bpmn:extensionElements>
+          <camunda:in local="true" variables="all" />
+          <camunda:in source="newEmailList" target="emailList" />
+        </bpmn:extensionElements>
+      </bpmn:signalEventDefinition>
+    </bpmn:endEvent>
+    <bpmn:intermediateThrowEvent id="Event_0d30lkf">
+      <bpmn:incoming>Flow_1hmntdx</bpmn:incoming>
+      <bpmn:incoming>Flow_0kcuhq7</bpmn:incoming>
+      <bpmn:outgoing>Flow_01oiaoh</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0jcgyml" camunda:type="external" camunda:topic="end-start-stop-sme-loan-interest-penalty" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_01oiaoh" sourceRef="Event_0d30lkf" targetRef="Event_08xniwl" />
+    <bpmn:sequenceFlow id="Flow_1rqvukk" sourceRef="Activity_0zmqorr" targetRef="Activity_1t63snt" />
+  </bpmn:process>
+  <bpmn:signal id="Signal_1wospm0" name="start-email-queue" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="start-stop-sme-loan-interest-penalty">
+      <bpmndi:BPMNEdge id="Flow_1rqvukk_di" bpmnElement="Flow_1rqvukk">
+        <di:waypoint x="890" y="100" />
+        <di:waypoint x="970" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01oiaoh_di" bpmnElement="Flow_01oiaoh">
+        <di:waypoint x="1198" y="100" />
+        <di:waypoint x="1292" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kcuhq7_di" bpmnElement="Flow_0kcuhq7">
+        <di:waypoint x="1070" y="100" />
+        <di:waypoint x="1162" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ft2kyw_di" bpmnElement="Flow_1ft2kyw">
+        <di:waypoint x="705" y="100" />
+        <di:waypoint x="790" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hmntdx_di" bpmnElement="Flow_1hmntdx">
+        <di:waypoint x="680" y="125" />
+        <di:waypoint x="680" y="210" />
+        <di:waypoint x="1180" y="210" />
+        <di:waypoint x="1180" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ellmo6_di" bpmnElement="Flow_1ellmo6">
+        <di:waypoint x="560" y="100" />
+        <di:waypoint x="655" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hz1pzx_di" bpmnElement="Flow_1hz1pzx">
+        <di:waypoint x="390" y="100" />
+        <di:waypoint x="460" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d6ecdj_di" bpmnElement="Flow_0d6ecdj">
+        <di:waypoint x="188" y="100" />
+        <di:waypoint x="290" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1rh2fzx_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02kq5i2_di" bpmnElement="Activity_0u31uvv">
+        <dc:Bounds x="290" y="60" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pnff20_di" bpmnElement="Activity_0weib4r">
+        <dc:Bounds x="460" y="60" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_03jrn0w_di" bpmnElement="Gateway_03jrn0w" isMarkerVisible="true">
+        <dc:Bounds x="655" y="75" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0m2jr8t_di" bpmnElement="Activity_0zmqorr">
+        <dc:Bounds x="790" y="60" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1t63snt_di" bpmnElement="Activity_1t63snt">
+        <dc:Bounds x="970" y="60" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08xniwl_di" bpmnElement="Event_08xniwl">
+        <dc:Bounds x="1292" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_16tbbes_di" bpmnElement="Event_0d30lkf">
+        <dc:Bounds x="1162" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

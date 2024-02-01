@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0ofczuh" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0">
+  <bpmn:process id="send-revision-announcement" name="(Main) Send revision announcement" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0lkqp09</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0lkqp09" sourceRef="StartEvent_1" targetRef="Activity_0870501" />
+    <bpmn:serviceTask id="Activity_0870501" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_0lkqp09</bpmn:incoming>
+      <bpmn:outgoing>Flow_13z20uq</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_13z20uq" sourceRef="Activity_0870501" targetRef="Activity_0uhc89y" />
+    <bpmn:callActivity id="Activity_0uhc89y" name="send revision announcement" calledElement="send-revision-announcement-sub" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:out source="result" target="result" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="success" target="success" />
+        <camunda:in source="authToken" target="authToken" />
+        <camunda:in source="contractId" target="contractId" />
+        <camunda:in source="customerId" target="customerId" />
+        <camunda:in source="messageType" target="messageType" />
+        <camunda:in source="riskAnalysisSequenceNumber" target="riskAnalysisSequenceNumber" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_13z20uq</bpmn:incoming>
+      <bpmn:outgoing>Flow_15wbieq</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_0t92sgk">
+      <bpmn:incoming>Flow_02zb3jf</bpmn:incoming>
+      <bpmn:incoming>Flow_15wbieq</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0a8dv3y" camunda:type="external" camunda:topic="end-send-revision-announcement" />
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="Event_0faq643" attachedToRef="Activity_0uhc89y">
+      <bpmn:outgoing>Flow_02zb3jf</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1x9o93p" errorRef="Error_1yympt4" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_02zb3jf" sourceRef="Event_0faq643" targetRef="Event_0t92sgk" />
+    <bpmn:sequenceFlow id="Flow_15wbieq" sourceRef="Activity_0uhc89y" targetRef="Event_0t92sgk" />
+  </bpmn:process>
+  <bpmn:error id="Error_1yympt4" name="ERROR_SEND_REVISION_ANNOUNCEMENT_EMAILS" errorCode="500" camunda:errorMessage="Unexpected Error Occured while Generating Revision Announcement" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="send-revision-announcement">
+      <bpmndi:BPMNEdge id="Flow_15wbieq_di" bpmnElement="Flow_15wbieq">
+        <di:waypoint x="530" y="157" />
+        <di:waypoint x="642" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02zb3jf_di" bpmnElement="Flow_02zb3jf">
+        <di:waypoint x="480" y="99" />
+        <di:waypoint x="480" y="79" />
+        <di:waypoint x="660" y="79" />
+        <di:waypoint x="660" y="139" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13z20uq_di" bpmnElement="Flow_13z20uq">
+        <di:waypoint x="370" y="157" />
+        <di:waypoint x="430" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lkqp09_di" bpmnElement="Flow_0lkqp09">
+        <di:waypoint x="215" y="157" />
+        <di:waypoint x="270" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="139" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0cinbtl_di" bpmnElement="Activity_0870501">
+        <dc:Bounds x="270" y="117" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0cpbmp1_di" bpmnElement="Activity_0uhc89y">
+        <dc:Bounds x="430" y="117" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1b01x56_di" bpmnElement="Event_0t92sgk">
+        <dc:Bounds x="642" y="139" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1fgag9b_di" bpmnElement="Event_0faq643">
+        <dc:Bounds x="462" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

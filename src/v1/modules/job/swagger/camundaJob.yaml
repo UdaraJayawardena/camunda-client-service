@@ -1,0 +1,108 @@
+paths:
+  /jobs:
+    get:
+      tags:
+        - Camunda Jobs
+      name: Camunda Jobs
+      summary: Camunda Jobs.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:      
+        - in: query
+          name: jobDefinitionId
+          type: string
+          description: Filter by process job definition id.
+          required: false                                            
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+  /jobs/{jobId}/due-date:
+    put:
+      tags:
+        - Camunda Jobs
+      summary: "Camunda Jobs"
+      produces:
+        - application/json     
+      parameters:
+        - in: path
+          name: jobId
+          type: string
+          description: Filter by process job definition id.
+          required: true 
+        - in: body
+          required: true
+          name: body
+          schema:
+            type: object
+            properties:             
+              duedate:
+                type: string                                             
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+  /jobs/{jobId}/execute:
+    post:
+      tags:
+        - Camunda Jobs
+      summary: "Camunda Jobs"
+      produces:
+        - application/json  
+      parameters:
+        - in: path
+          name: jobId
+          type: string
+          description: Filter by process job definition id.
+          required: true
+        - in: body
+          required: true
+          name: body
+          schema:
+            type: object
+            properties: 
+              jobId:
+                type: string                                                    
+      responses:
+        200:
+          description: success
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+          404:
+            description: Not Found
+          500:
+            description: Internal Server Error
+

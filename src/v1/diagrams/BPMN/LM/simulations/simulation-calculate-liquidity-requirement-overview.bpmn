@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_13sw5vu" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="simulation-liquidity-overview-generate" name="(Simulations) simulation-liquidity-overview-generate" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1iquhdv</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_0d0v2tq" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_1iquhdv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1egm520</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1iquhdv" sourceRef="StartEvent_1" targetRef="Task_0d0v2tq" />
+    <bpmn:callActivity id="Task_16vzn38" name="Calculate Liquidity Requirements" calledElement="calculate-liquidity-requirement-overview" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="systemDate" target="systemDate" />
+        <camunda:out source="result" target="result" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1py3jid</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0luhazt</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="EndEvent_18jpvbz">
+      <bpmn:incoming>SequenceFlow_0luhazt</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1wzvcsc</bpmn:incoming>
+      <bpmn:messageEventDefinition camunda:type="external" camunda:topic="end-simulation-liquidity-overview-generate" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0luhazt" sourceRef="Task_16vzn38" targetRef="EndEvent_18jpvbz" />
+    <bpmn:serviceTask id="Task_1v3sy1d" name="Get Simulation Date" camunda:type="external" camunda:topic="get-simulation-date">
+      <bpmn:incoming>SequenceFlow_1egm520</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1py3jid</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_08umn5u" attachedToRef="Task_1v3sy1d">
+      <bpmn:outgoing>SequenceFlow_1wzvcsc</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_0wpvbpe" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1wzvcsc" sourceRef="IntermediateThrowEvent_08umn5u" targetRef="EndEvent_18jpvbz" />
+    <bpmn:sequenceFlow id="SequenceFlow_1egm520" sourceRef="Task_0d0v2tq" targetRef="Task_1v3sy1d" />
+    <bpmn:sequenceFlow id="SequenceFlow_1py3jid" sourceRef="Task_1v3sy1d" targetRef="Task_16vzn38" />
+  </bpmn:process>
+  <bpmn:message id="Message_071tup8" name="Message_2dj7ll0" />
+  <bpmn:error id="Error_0wpvbpe" name="ERROR_GET_SIMULATION_DATE" camunda:errorMessage="Unexpected Error Occurred while getting simulation date" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="simulation-liquidity-overview-generate">
+      <bpmndi:BPMNEdge id="SequenceFlow_1py3jid_di" bpmnElement="SequenceFlow_1py3jid">
+        <di:waypoint x="540" y="190" />
+        <di:waypoint x="620" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1egm520_di" bpmnElement="SequenceFlow_1egm520">
+        <di:waypoint x="350" y="190" />
+        <di:waypoint x="440" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wzvcsc_di" bpmnElement="SequenceFlow_1wzvcsc">
+        <di:waypoint x="520" y="132" />
+        <di:waypoint x="520" y="80" />
+        <di:waypoint x="800" y="80" />
+        <di:waypoint x="800" y="169" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0luhazt_di" bpmnElement="SequenceFlow_0luhazt">
+        <di:waypoint x="720" y="187" />
+        <di:waypoint x="782" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1iquhdv_di" bpmnElement="SequenceFlow_1iquhdv">
+        <di:waypoint x="188" y="190" />
+        <di:waypoint x="250" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1qvc66h_di" bpmnElement="Task_0d0v2tq">
+        <dc:Bounds x="250" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_0crfs7k_di" bpmnElement="Task_16vzn38">
+        <dc:Bounds x="620" y="147" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1tag312_di" bpmnElement="EndEvent_18jpvbz">
+        <dc:Bounds x="782" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_13d7upb_di" bpmnElement="Task_1v3sy1d">
+        <dc:Bounds x="440" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0aohvyi_di" bpmnElement="IntermediateThrowEvent_08umn5u">
+        <dc:Bounds x="502" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,130 @@
+paths:
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      name: Get Tasks
+      summary: Queries for tasks that fulfill a given filter.
+      operationId: getTaskList
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: processInstanceBusinessKey
+          type: string
+          description: Restrict to tasks that belong to process instances with the given business key.
+          required: false
+        - in: query
+          name: processDefinitionKey
+          type: string
+          description: Restrict to tasks that belong to a process definition with the given key.
+          required: false
+        - in: query
+          name: taskDefinitionKey
+          type: string
+          description: Restrict to tasks that have the given key.
+          required: false
+        - in: query
+          name: taskDefinitionKeyLike
+          type: string
+          description: Restrict to tasks that have a key that has the parameter value as a substring.
+          required: false
+        - in: query
+          name: assignee
+          type: string
+          description: Restrict to tasks that the given user is assigned to.
+          required: false
+        - in: query
+          name: assigneeLike
+          type: string
+          description: Restrict to tasks that have an assignee that has the parameter value as a substring.
+          required: false
+        - in: query
+          name: assigneeIn
+          type: string
+          description: Only include tasks which are assigned to one of the passed and comma-separated user ids.
+          required: false
+        - in: query
+          name: candidateGroup
+          type: string
+          description: Only include tasks that are offered to the given group.
+          required: false
+        - in: query
+          name: candidateUser
+          type: string
+          description: Only include tasks that are offered to the given user or to one of his groups.
+          required: false
+        - in: query
+          name: includeAssignedTasks
+          type: string
+          description: Also include tasks that are assigned to users in candidate queries. Default is to only include tasks that are not assigned to any user if you query by candidate user or group(s).
+          required: false
+        - in: query
+          name: involvedUser
+          type: string
+          description: Only include tasks that the given user is involved in. A user is involved in a task if an identity link exists between task and user (e.g., the user is the assignee).
+          required: false
+        - in: query
+          name: firstResult
+          type: string
+          description: Pagination of results. Specifies the index of the first result to return.
+          required: false
+        - in: query
+          name: maxResults
+          type: string
+          description: Pagination of results. Specifies the maximum number of results to return. Will return less results if there are no more results left.
+          required: false
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              data:
+                type: number
+                example: 90
+              success:
+                type: boolean
+                example: true
+  /tasks/{taskId}/variables:
+    get:
+      tags:
+        - Tasks
+      name: Get Tasks Variables
+      summary: Queries for tasks-variables that fulfill a given filter.
+      operationId: getTaskVariableList
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: taskId
+          type: string
+          description: The id of the task to retrieve the variables from.
+          required: false
+        - in: query
+          name: deserializeValues
+          type: boolean
+          description: Determines whether serialize variable values .
+          required: false
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              data:
+                type: number
+                example: 90
+              success:
+                type: boolean
+                example: true

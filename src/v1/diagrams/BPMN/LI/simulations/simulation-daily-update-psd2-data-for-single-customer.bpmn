@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1240kwk" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="daily-update-psd2-data-for-single-customer-simulation" name="Daily Update PSD2 Data For Single Customer (Simulation)" isExecutable="true" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="Event_00a9db7" name="Start">
+      <bpmn:outgoing>Flow_18wg9ap</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0w22m05" name="End">
+      <bpmn:incoming>Flow_0xrn1z5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="validate-input-customer-id" name="validate-input-customer-id" camunda:type="external" camunda:topic="validate-customer-id">
+      <bpmn:incoming>Flow_0mus003</bpmn:incoming>
+      <bpmn:outgoing>Flow_007ugwd</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0ug30r8" attachedToRef="validate-input-customer-id">
+      <bpmn:outgoing>Flow_1ljvhxk</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0gt8dzn" errorRef="Error_1x9qmvs" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="Event_0gvfy3p" name="Terminate">
+      <bpmn:incoming>Flow_1ljvhxk</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_159hxb1" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ljvhxk" sourceRef="Event_0ug30r8" targetRef="Event_0gvfy3p" />
+    <bpmn:sequenceFlow id="Flow_18wg9ap" sourceRef="Event_00a9db7" targetRef="Activity_06brk2h" />
+    <bpmn:sequenceFlow id="Flow_0mus003" sourceRef="Activity_06brk2h" targetRef="validate-input-customer-id" />
+    <bpmn:serviceTask id="Activity_06brk2h" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_18wg9ap</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mus003</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_007ugwd" sourceRef="validate-input-customer-id" targetRef="Activity_0wl8up8" />
+    <bpmn:callActivity id="Activity_0wl8up8" name="Daily update PSD2 data Processor" calledElement="daily-update-psd2-data-processor">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+        <camunda:in source="inputCustomerId" target="inputCustomerId" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_007ugwd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xrn1z5</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_0xrn1z5" sourceRef="Activity_0wl8up8" targetRef="Event_0w22m05" />
+  </bpmn:process>
+  <bpmn:error id="Error_1x9qmvs" name="validate customer id error" errorCode="ERROR_VALIDATE_CUSTOMER_ID" camunda:errorMessage="Unexpected Error Occurred while validating customerId" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="daily-update-psd2-data-for-single-customer-simulation">
+      <bpmndi:BPMNEdge id="Flow_0xrn1z5_di" bpmnElement="Flow_0xrn1z5">
+        <di:waypoint x="610" y="120" />
+        <di:waypoint x="702" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_007ugwd_di" bpmnElement="Flow_007ugwd">
+        <di:waypoint x="470" y="120" />
+        <di:waypoint x="510" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mus003_di" bpmnElement="Flow_0mus003">
+        <di:waypoint x="330" y="120" />
+        <di:waypoint x="370" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18wg9ap_di" bpmnElement="Flow_18wg9ap">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="230" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ljvhxk_di" bpmnElement="Flow_1ljvhxk">
+        <di:waypoint x="420" y="178" />
+        <di:waypoint x="420" y="280" />
+        <di:waypoint x="702" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_00a9db7_di" bpmnElement="Event_00a9db7">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="159" y="145" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0w22m05_di" bpmnElement="Event_0w22m05">
+        <dc:Bounds x="702" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="710" y="78" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hoxif5_di" bpmnElement="validate-input-customer-id">
+        <dc:Bounds x="370" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1o919x1_di" bpmnElement="Event_0gvfy3p">
+        <dc:Bounds x="702" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="697" y="305" width="49" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0g1izkm_di" bpmnElement="Activity_06brk2h">
+        <dc:Bounds x="230" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ar7gyz_di" bpmnElement="Activity_0wl8up8">
+        <dc:Bounds x="510" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0wgb15o_di" bpmnElement="Event_0ug30r8">
+        <dc:Bounds x="402" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

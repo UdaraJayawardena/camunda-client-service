@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0lf6pss" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="add-bank-tranasction" name="(Sub) Add bank transaction" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:sequenceFlow id="Flow_0bfrckr" sourceRef="StartEvent_1" targetRef="Activity_1vxe6f5" />
+    <bpmn:serviceTask id="Activity_1vxe6f5" name="Get payout transaction by loan id" camunda:type="external" camunda:topic="get-payout-transaction-by-loan-id">
+      <bpmn:incoming>Flow_0bfrckr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0goowti</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0goowti" sourceRef="Activity_1vxe6f5" targetRef="Activity_1ivb3ed" />
+    <bpmn:endEvent id="Event_1bg2v81">
+      <bpmn:incoming>Flow_0373uqw</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0373uqw" sourceRef="Activity_1ivb3ed" targetRef="Event_1bg2v81" />
+    <bpmn:serviceTask id="Activity_1ivb3ed" name="Create bank trancation" camunda:type="external" camunda:topic="create-twinfield-bank-transaction">
+      <bpmn:incoming>Flow_0goowti</bpmn:incoming>
+      <bpmn:outgoing>Flow_0373uqw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1" camunda:initiator="start-add-bank-tranasction">
+      <bpmn:outgoing>Flow_0bfrckr</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_13mk68e" signalRef="Signal_0mlntcs" />
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmn:signal id="Signal_0mlntcs" name="start-add-bank-tranasction" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="add-bank-tranasction">
+      <bpmndi:BPMNEdge id="Flow_0373uqw_di" bpmnElement="Flow_0373uqw">
+        <di:waypoint x="580" y="120" />
+        <di:waypoint x="652" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0goowti_di" bpmnElement="Flow_0goowti">
+        <di:waypoint x="390" y="120" />
+        <di:waypoint x="480" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bfrckr_di" bpmnElement="Flow_0bfrckr">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="290" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1p0k5rr_di" bpmnElement="Activity_1vxe6f5">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1bg2v81_di" bpmnElement="Event_1bg2v81">
+        <dc:Bounds x="652" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wfp761_di" bpmnElement="Activity_1ivb3ed">
+        <dc:Bounds x="480" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_176rd9c_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

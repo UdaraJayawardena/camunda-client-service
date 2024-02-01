@@ -1,0 +1,43 @@
+{
+  "cSpell.words": [
+    "CAMUNDA",
+    "Gefeliciteerd",
+    "Rente",
+    "TWIKEY",
+    "TWINAPPS",
+    "TWINFIELD",
+    "Termijn",
+    "Validators",
+    "asmx",
+    "counterparty",
+    "errmsg",
+    "iban",
+    "lasanthaslakmal",
+    "organisation",
+    "smes",
+    "soapenv",
+    "upsert",
+    "webservices",
+    "xmlns"
+  ],
+  "eslint.alwaysShowStatus": true,
+  "editor.autoIndent": "full",
+  "editor.tabSize": 2,
+  "debug.node.autoAttach": "on",
+  "editor.formatOnSave": true,
+  "files.eol": "\n",
+  "editor.detectIndentation": false,
+  "[yaml]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "full"
+  },
+  "[html]": {
+    "editor.formatOnSave": false
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#2C2951",
+    "titleBar.activeBackground": "#3D3971",
+    "titleBar.activeForeground": "#F9F9FC"
+  }
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0sxqjcq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="update-company-structure" name="(Main) Update company-structure" isExecutable="true" camunda:historyTimeToLive="P5D">
+    <bpmn:sequenceFlow id="SequenceFlow_1b8fzq1" sourceRef="Task_1dgmqmk" targetRef="EndEvent_0qtankr" />
+    <bpmn:sequenceFlow id="SequenceFlow_1h2c4qv" sourceRef="Task_0knhi4h" targetRef="Task_1dgmqmk" />
+    <bpmn:startEvent id="StartEvent_0knlx2t">
+      <bpmn:outgoing>SequenceFlow_0v5621g</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0v5621g" sourceRef="StartEvent_0knlx2t" targetRef="Task_17kjfzj" />
+    <bpmn:sequenceFlow id="SequenceFlow_0van59h" sourceRef="Task_17kjfzj" targetRef="Task_0knhi4h" />
+    <bpmn:scriptTask id="Task_1dgmqmk" name="create result" scriptFormat="JavaScript">
+      <bpmn:incoming>SequenceFlow_1h2c4qv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1b8fzq1</bpmn:outgoing>
+      <bpmn:script>var companyStructures = JSON.parse(execution.getVariable("results"));
+var errors = JSON.parse(execution.getVariable("errors"));
+
+var response = {
+   "companyStructures": companyStructures,
+   "errors": errors
+};
+
+execution.setVariable("success",true);
+execution.setVariable("result",JSON.stringify(response));</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:serviceTask id="Task_0knhi4h" name="update company-structure" camunda:type="external" camunda:topic="update-company-structure">
+      <bpmn:incoming>SequenceFlow_0van59h</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1h2c4qv</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_17kjfzj" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_0v5621g</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0van59h</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_0qtankr">
+      <bpmn:incoming>SequenceFlow_1b8fzq1</bpmn:incoming>
+      <bpmn:messageEventDefinition camunda:type="external" camunda:topic="end-update-company-structure" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="update-company-structure">
+      <bpmndi:BPMNEdge id="SequenceFlow_0van59h_di" bpmnElement="SequenceFlow_0van59h">
+        <di:waypoint x="340" y="117" />
+        <di:waypoint x="410" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0v5621g_di" bpmnElement="SequenceFlow_0v5621g">
+        <di:waypoint x="188" y="117" />
+        <di:waypoint x="240" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1h2c4qv_di" bpmnElement="SequenceFlow_1h2c4qv">
+        <di:waypoint x="510" y="117" />
+        <di:waypoint x="580" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1b8fzq1_di" bpmnElement="SequenceFlow_1b8fzq1">
+        <di:waypoint x="680" y="117" />
+        <di:waypoint x="742" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_0knlx2t_di" bpmnElement="StartEvent_0knlx2t">
+        <dc:Bounds x="152" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_1h8xpuy_di" bpmnElement="Task_1dgmqmk">
+        <dc:Bounds x="580" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1ujdg4r_di" bpmnElement="Task_0knhi4h">
+        <dc:Bounds x="410" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0k253z6_di" bpmnElement="Task_17kjfzj">
+        <dc:Bounds x="240" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0apxd1n_di" bpmnElement="EndEvent_0qtankr">
+        <dc:Bounds x="742" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

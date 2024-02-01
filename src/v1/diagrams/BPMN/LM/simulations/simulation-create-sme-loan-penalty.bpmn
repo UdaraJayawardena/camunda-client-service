@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0rtkl1w" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="simulation-create-sme-loan-penalty" name="simulation create sme loan penalty" isExecutable="true" camunda:versionTag="1.3.4" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_00hvt87</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_0igl8hr" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_00hvt87</bpmn:incoming>
+      <bpmn:outgoing>Flow_1jo3s73</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_00hvt87" sourceRef="StartEvent_1" targetRef="Activity_0igl8hr" />
+    <bpmn:endEvent id="Event_0q4l2oy">
+      <bpmn:incoming>Flow_0tnvay6</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1ih15fe" camunda:type="external" camunda:topic="end-simulation-create-sme-loan-penalty" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1jo3s73" sourceRef="Activity_0igl8hr" targetRef="Activity_0b840u2" />
+    <bpmn:callActivity id="Activity_0b840u2" name="SME Loan Pelanty" calledElement="sub-create-sme-loan-penalty-process" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="startDate" target="startDate" />
+        <camunda:out source="result" target="result" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1jo3s73</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tnvay6</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_0tnvay6" sourceRef="Activity_0b840u2" targetRef="Event_0q4l2oy" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="simulation-create-sme-loan-penalty">
+      <bpmndi:BPMNEdge id="Flow_0tnvay6_di" bpmnElement="Flow_0tnvay6">
+        <di:waypoint x="510" y="117" />
+        <di:waypoint x="582" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jo3s73_di" bpmnElement="Flow_1jo3s73">
+        <di:waypoint x="350" y="117" />
+        <di:waypoint x="410" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00hvt87_di" bpmnElement="Flow_00hvt87">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="250" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0c8owcx_di" bpmnElement="Activity_0igl8hr">
+        <dc:Bounds x="250" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_040jo1v_di" bpmnElement="Event_0q4l2oy">
+        <dc:Bounds x="582" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0t8mdfi_di" bpmnElement="Activity_0b840u2">
+        <dc:Bounds x="410" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

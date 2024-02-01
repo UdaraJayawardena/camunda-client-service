@@ -1,0 +1,28 @@
+PORT = 8005
+HOST = localhost
+NODE_ENV = development
+
+APP_NAME = Camunda Rest API
+APP_KEY = C_REST_API
+APP_CLUSTER = GENERAL
+APP_URL = localhost:8005
+APP_ENV = localhost
+APP_VERSION = V1
+
+JAEGER_HOST = localhost
+JAEGER_PORT = 6832
+
+API_VERSIONS = V1
+
+ENV_FILE_PATH = ./env
+
+NODE_TLS_REJECT_UNAUTHORIZED = 0
+
+CAMUNDA_GRANT_NAME = default 
+#default or admin
+
+SENTRY_DSN=
+SENTRY_ENVIRONMENT=
+SENTRY_SAMPLERATE=
+
+# dev, prod, staging, uat

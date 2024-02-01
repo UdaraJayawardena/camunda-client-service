@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0athz0i" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="tempory-loan-stop" name="(Main) Tempory loan stop" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1womev5</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_19oxwov" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_1womev5</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fpoflg</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1womev5" sourceRef="StartEvent_1" targetRef="Activity_19oxwov" />
+    <bpmn:serviceTask id="Activity_0c3s87c" name="Check Previous Stop Loans Availability " camunda:type="external" camunda:topic="check-loan-stop-availability">
+      <bpmn:incoming>Flow_0fpoflg</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_18bxdjw" name="Update SME Loan Transaction Planned Date" camunda:type="external" camunda:topic="update-sme-loan-transactions-planneddate">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">13542218-9884-43c7-b795-28b9228d7be9</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ug7f1t</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lhhh6j</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0qyxw2i" name="Add SME LoanTransaction" camunda:type="external" camunda:topic="add-sme-loan-transaction">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">62a3d125-4de4-400e-9e65-d7ab996af8bf</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1lhhh6j</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cswsw0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1lhhh6j" sourceRef="Activity_18bxdjw" targetRef="Activity_0qyxw2i" />
+    <bpmn:boundaryEvent id="Event_0h2u30s" attachedToRef="Activity_18bxdjw">
+      <bpmn:outgoing>Flow_168p52y</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_177xtm9" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1uiap5h" attachedToRef="Activity_18bxdjw">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_0f8himo" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1043oqw" attachedToRef="Activity_0qyxw2i">
+      <bpmn:outgoing>Flow_0onzy7k</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0oz6c3u" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="Event_01f2l34" name="update-sme-loan-transactions-planneddate">
+      <bpmn:incoming>Flow_0onzy7k</bpmn:incoming>
+      <bpmn:incoming>Flow_0rs1vej</bpmn:incoming>
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_0d6cmfk" activityRef="Activity_18bxdjw" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_0onzy7k" sourceRef="Event_1043oqw" targetRef="Event_01f2l34" />
+    <bpmn:sequenceFlow id="Flow_168p52y" sourceRef="Event_0h2u30s" targetRef="Event_1ma303a" />
+    <bpmn:serviceTask id="Activity_0qv58g7" name="Rollback Update Transaction Planned Date" isForCompensation="true" camunda:type="external" camunda:topic="rollback-update-sme-loan-transactions-planneddate">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">13542218-9884-43c7-b795-28b9228d7be9</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_13781cp" name="Add Other Cost Transaction " camunda:type="external" camunda:topic="add-other-cost-transaction">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">13e97194-c9a0-4bd7-8c47-bfe90825527a</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0cswsw0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1b4jyww</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1gb2l15" attachedToRef="Activity_13781cp">
+      <bpmn:outgoing>Flow_0j4pdsh</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_00s8lme" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1td5jyr" attachedToRef="Activity_0qyxw2i">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_18ln0he" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_14rpx5s" name="Rollback interest transactions" isForCompensation="true" camunda:type="external" camunda:topic="rollback-create-sme-loan-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">62a3d125-4de4-400e-9e65-d7ab996af8bf</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:intermediateThrowEvent id="Event_1acbhck" name="add-sme-loan-transaction">
+      <bpmn:incoming>Flow_0j4pdsh</bpmn:incoming>
+      <bpmn:incoming>Flow_0a1mlmu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rs1vej</bpmn:outgoing>
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_0dah5ns" activityRef="Activity_0qyxw2i" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_0j4pdsh" sourceRef="Event_1gb2l15" targetRef="Event_1acbhck" />
+    <bpmn:sequenceFlow id="Flow_0rs1vej" sourceRef="Event_1acbhck" targetRef="Event_01f2l34" />
+    <bpmn:sequenceFlow id="Flow_0cswsw0" sourceRef="Activity_0qyxw2i" targetRef="Activity_13781cp" />
+    <bpmn:serviceTask id="Activity_1b7i4j5" name="Update Sme Loan Cost Amount" camunda:type="external" camunda:topic="update-sme-loan-cost-amount">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">9255550b-abcf-4f54-8498-bf97eb9ec194</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0wr8v9o</bpmn:incoming>
+      <bpmn:outgoing>Flow_13xyjef</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateThrowEvent id="Event_1ooxe0v" name="add-other-cost-transaction">
+      <bpmn:incoming>Flow_0w2b2s3</bpmn:incoming>
+      <bpmn:incoming>Flow_030zzhx</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a1mlmu</bpmn:outgoing>
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_1hc2h9u" activityRef="Activity_13781cp" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:boundaryEvent id="Event_00tsb0s" attachedToRef="Activity_13781cp">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_1xee1om" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_11l83ke" name="Rollback Other Cost Transaction" isForCompensation="true" camunda:type="external" camunda:topic="rollback-create-sme-loan-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">13e97194-c9a0-4bd7-8c47-bfe90825527a</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1k5srhe" name="Add SME Loan Tempory Loan Stop" camunda:type="external" camunda:topic="add-sme-tempory-loan-stop">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">308fbcb1-9b49-4a9f-8489-423c309441f1</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1b4jyww</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wr8v9o</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateThrowEvent id="Event_0ul7pja" name="update-sme-loan-cost-amount">
+      <bpmn:incoming>Flow_1f7q8k8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1li8598</bpmn:outgoing>
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_1nuol2e" activityRef="Activity_1b7i4j5" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:boundaryEvent id="Event_1lf12n5" attachedToRef="Activity_1b7i4j5">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_1xcxa5r" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_0g83tc6" name="Rollback update sme loan other cost" isForCompensation="true" camunda:type="external" camunda:topic="rollback-update-sme-loan-cost-amount">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">9255550b-abcf-4f54-8498-bf97eb9ec194</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:callActivity id="Activity_11wt35o" name="update sme loan maturity" calledElement="update-sme-loan-maturity" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="smeLoanContractId" target="contractId" />
+        <camunda:in source="smeLoanMaturityDate" target="maturityDate" />
+        <camunda:in source="rollbackData" target="rollbackData" />
+        <camunda:out source="rollbackData" target="rollbackData" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="smeLoan" target="smeLoan" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_13xyjef</bpmn:incoming>
+      <bpmn:outgoing>Flow_1s1l2lr</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:boundaryEvent id="Event_0ghy4r7" attachedToRef="Activity_1b7i4j5">
+      <bpmn:outgoing>Flow_0awukyp</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_15bqtrq" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1srh26z" attachedToRef="Activity_1k5srhe">
+      <bpmn:outgoing>Flow_0w2b2s3</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0wrvjim" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0820t7o" attachedToRef="Activity_11wt35o">
+      <bpmn:outgoing>Flow_1f7q8k8</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1i7ut0t" />
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="Event_08tu3v1" name="add-sme-tempory-loan-stop">
+      <bpmn:incoming>Flow_0awukyp</bpmn:incoming>
+      <bpmn:incoming>Flow_1li8598</bpmn:incoming>
+      <bpmn:outgoing>Flow_030zzhx</bpmn:outgoing>
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_0874iio" activityRef="Activity_1k5srhe" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:boundaryEvent id="Event_18uojv5" attachedToRef="Activity_1k5srhe">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_0bimcu8" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_14k1ae4" name="Rollback Add SME Tempory Loan Stop" isForCompensation="true" camunda:type="external" camunda:topic="rollback-add-sme-tempory-loan-stop">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="rollbackUniqueId">308fbcb1-9b49-4a9f-8489-423c309441f1</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0w2b2s3" sourceRef="Event_1srh26z" targetRef="Event_1ooxe0v" />
+    <bpmn:sequenceFlow id="Flow_0a1mlmu" sourceRef="Event_1ooxe0v" targetRef="Event_1acbhck" />
+    <bpmn:sequenceFlow id="Flow_1b4jyww" sourceRef="Activity_13781cp" targetRef="Activity_1k5srhe" />
+    <bpmn:sequenceFlow id="Flow_0wr8v9o" sourceRef="Activity_1k5srhe" targetRef="Activity_1b7i4j5" />
+    <bpmn:sequenceFlow id="Flow_0awukyp" sourceRef="Event_0ghy4r7" targetRef="Event_08tu3v1" />
+    <bpmn:sequenceFlow id="Flow_030zzhx" sourceRef="Event_08tu3v1" targetRef="Event_1ooxe0v" />
+    <bpmn:sequenceFlow id="Flow_1f7q8k8" sourceRef="Event_0820t7o" targetRef="Event_0ul7pja" />
+    <bpmn:sequenceFlow id="Flow_1li8598" sourceRef="Event_0ul7pja" targetRef="Event_08tu3v1" />
+    <bpmn:sequenceFlow id="Flow_13xyjef" sourceRef="Activity_1b7i4j5" targetRef="Activity_11wt35o" />
+    <bpmn:serviceTask id="Activity_143xvws" name="Get SME Details Notification" camunda:type="external" camunda:topic="get-sme-details-notification">
+      <bpmn:incoming>Flow_1s1l2lr</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ye54ky</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:callActivity id="Activity_188y3hj" name="Prepare emails" calledElement="prepare-emails" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="dataList" target="dataList" />
+        <camunda:in local="true" variables="all" />
+        <camunda:in source="metaData" target="metaData" />
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">temporary-loan-stop</camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="result" target="result" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ye54ky</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wexlhp</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_1ye54ky" sourceRef="Activity_143xvws" targetRef="Activity_188y3hj" />
+    <bpmn:intermediateThrowEvent id="Event_1ma303a">
+      <bpmn:incoming>Flow_168p52y</bpmn:incoming>
+      <bpmn:incoming>Flow_0rq3bff</bpmn:incoming>
+      <bpmn:incoming>Flow_1lqg0oy</bpmn:incoming>
+      <bpmn:incoming>Flow_09ne6pb</bpmn:incoming>
+      <bpmn:incoming>Flow_03gz5g6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1f9r3mb</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_09o7g3e" camunda:type="external" camunda:topic="end-tempory-loan-stop" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:endEvent id="Event_0tnurmf">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">temporary-loan-stop</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1f9r3mb</bpmn:incoming>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_0p5gci1" signalRef="Signal_0seo624">
+        <bpmn:extensionElements>
+          <camunda:in local="true" variables="all" />
+          <camunda:in source="newEmailList" target="emailList" />
+        </bpmn:extensionElements>
+      </bpmn:signalEventDefinition>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1f9r3mb" sourceRef="Event_1ma303a" targetRef="Event_0tnurmf" />
+    <bpmn:serviceTask id="Activity_1yh14ey" name="Get Holidays For Releted Year" camunda:type="external" camunda:topic="get-holidays-for-related-year">
+      <bpmn:incoming>Flow_0rrw4qx</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ug7f1t</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0ug7f1t" sourceRef="Activity_1yh14ey" targetRef="Activity_18bxdjw" />
+    <bpmn:boundaryEvent id="Event_1tqyeqq" attachedToRef="Activity_1yh14ey">
+      <bpmn:outgoing>Flow_0rq3bff</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0h3btk8" errorRef="Error_051mjoh" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0rq3bff" sourceRef="Event_1tqyeqq" targetRef="Event_1ma303a" />
+    <bpmn:boundaryEvent id="Event_10ivwet" attachedToRef="Activity_0c3s87c">
+      <bpmn:outgoing>Flow_1lqg0oy</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0lb99uc" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1lqg0oy" sourceRef="Event_10ivwet" targetRef="Event_1ma303a" />
+    <bpmn:serviceTask id="Activity_05tbryd" name="Get Direct Debits" camunda:type="external" camunda:topic="get-sme-loan-transactions">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="condition">
+            <camunda:script scriptFormat="JavaScript">var temporyLoanStop = JSON.parse(execution.getVariable("temporyLoanStopData"));
+
+var condition = {
+  "contractId": temporyLoanStop.loan.contractId,  
+};
+
+JSON.stringify(condition)</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1cad7yq</bpmn:incoming>
+      <bpmn:incoming>Flow_1n3e8hs</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rrw4qx</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0eew7vk" sourceRef="Activity_0c3s87c" targetRef="Gateway_0zs4fvv" />
+    <bpmn:sequenceFlow id="Flow_0rrw4qx" sourceRef="Activity_05tbryd" targetRef="Activity_1yh14ey" />
+    <bpmn:boundaryEvent id="Event_0pgg1hp" attachedToRef="Activity_05tbryd">
+      <bpmn:outgoing>Flow_09ne6pb</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1kdcujo" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_09ne6pb" sourceRef="Event_0pgg1hp" targetRef="Event_1ma303a" />
+    <bpmn:scriptTask id="Activity_0osqrom" name="Create Result" scriptFormat="JavaScript" camunda:resultVariable="result">
+      <bpmn:incoming>Flow_1wexlhp</bpmn:incoming>
+      <bpmn:outgoing>Flow_03gz5g6</bpmn:outgoing>
+      <bpmn:script>var smeLoanTemporyLoanStop = JSON.parse(execution.getVariable("newTemporyLoanStop"));
+var updatedLoan = JSON.parse(execution.getVariable("updatedLoan"));
+
+
+var result = {
+  "updatedSmeLoan": updatedLoan,
+  "smeLoanTemporyLoanStop": smeLoanTemporyLoanStop,
+};
+
+execution.setVariable('result', JSON.stringify(result));</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_1wexlhp" sourceRef="Activity_188y3hj" targetRef="Activity_0osqrom" />
+    <bpmn:sequenceFlow id="Flow_03gz5g6" sourceRef="Activity_0osqrom" targetRef="Event_1ma303a" />
+    <bpmn:sequenceFlow id="Flow_1s1l2lr" sourceRef="Activity_11wt35o" targetRef="Activity_143xvws" />
+    <bpmn:sequenceFlow id="Flow_0fpoflg" sourceRef="Activity_19oxwov" targetRef="Activity_0c3s87c" />
+    <bpmn:exclusiveGateway id="Gateway_0zs4fvv">
+      <bpmn:incoming>Flow_0eew7vk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1crqljn</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1n3e8hs</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="Activity_0bj12lh" name="Prepare emails" calledElement="prepare-emails" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="emailType">temporary-loan-stop-manager-mail</camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:in source="dataList" target="dataList" />
+        <camunda:in variables="all" />
+        <camunda:in source="metaData" target="metaData" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="result" target="result" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1crqljn</bpmn:incoming>
+      <bpmn:outgoing>Flow_1cad7yq</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_1crqljn" sourceRef="Gateway_0zs4fvv" targetRef="Activity_0bj12lh">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${loanStopCountStatus== true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1cad7yq" sourceRef="Activity_0bj12lh" targetRef="Activity_05tbryd" />
+    <bpmn:sequenceFlow id="Flow_1n3e8hs" sourceRef="Gateway_0zs4fvv" targetRef="Activity_05tbryd">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${loanStopCountStatus== false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:association id="Association_1pqehbr" associationDirection="One" sourceRef="Event_1uiap5h" targetRef="Activity_0qv58g7" />
+    <bpmn:association id="Association_02v4pb7" associationDirection="One" sourceRef="Event_1td5jyr" targetRef="Activity_14rpx5s" />
+    <bpmn:association id="Association_0clc1pv" associationDirection="One" sourceRef="Event_00tsb0s" targetRef="Activity_11l83ke" />
+    <bpmn:association id="Association_1bx5f2q" associationDirection="One" sourceRef="Event_1lf12n5" targetRef="Activity_0g83tc6" />
+    <bpmn:association id="Association_10tejy2" associationDirection="One" sourceRef="Event_18uojv5" targetRef="Activity_14k1ae4" />
+  </bpmn:process>
+  <bpmn:signal id="Signal_0seo624" name="start-email-queue" />
+  <bpmn:error id="Error_051mjoh" name="get holidays error" errorCode="ERROR_GET_HOLIDAYS" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="tempory-loan-stop">
+      <bpmndi:BPMNEdge id="Flow_1n3e8hs_di" bpmnElement="Flow_1n3e8hs">
+        <di:waypoint x="530" y="295" />
+        <di:waypoint x="530" y="240" />
+        <di:waypoint x="780" y="240" />
+        <di:waypoint x="780" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1cad7yq_di" bpmnElement="Flow_1cad7yq">
+        <di:waypoint x="690" y="320" />
+        <di:waypoint x="760" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1crqljn_di" bpmnElement="Flow_1crqljn">
+        <di:waypoint x="555" y="320" />
+        <di:waypoint x="590" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fpoflg_di" bpmnElement="Flow_0fpoflg">
+        <di:waypoint x="330" y="320" />
+        <di:waypoint x="370" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1s1l2lr_di" bpmnElement="Flow_1s1l2lr">
+        <di:waypoint x="1880" y="320" />
+        <di:waypoint x="1930" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03gz5g6_di" bpmnElement="Flow_03gz5g6">
+        <di:waypoint x="2330" y="320" />
+        <di:waypoint x="2372" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wexlhp_di" bpmnElement="Flow_1wexlhp">
+        <di:waypoint x="2190" y="320" />
+        <di:waypoint x="2230" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09ne6pb_di" bpmnElement="Flow_09ne6pb">
+        <di:waypoint x="810" y="262" />
+        <di:waypoint x="810" y="80" />
+        <di:waypoint x="2390" y="80" />
+        <di:waypoint x="2390" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rrw4qx_di" bpmnElement="Flow_0rrw4qx">
+        <di:waypoint x="860" y="320" />
+        <di:waypoint x="920" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0eew7vk_di" bpmnElement="Flow_0eew7vk">
+        <di:waypoint x="470" y="320" />
+        <di:waypoint x="505" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lqg0oy_di" bpmnElement="Flow_1lqg0oy">
+        <di:waypoint x="414" y="265" />
+        <di:waypoint x="414" y="80" />
+        <di:waypoint x="2390" y="80" />
+        <di:waypoint x="2390" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rq3bff_di" bpmnElement="Flow_0rq3bff">
+        <di:waypoint x="966" y="262" />
+        <di:waypoint x="966" y="80" />
+        <di:waypoint x="2390" y="80" />
+        <di:waypoint x="2390" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ug7f1t_di" bpmnElement="Flow_0ug7f1t">
+        <di:waypoint x="1020" y="320" />
+        <di:waypoint x="1044" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1f9r3mb_di" bpmnElement="Flow_1f9r3mb">
+        <di:waypoint x="2408" y="320" />
+        <di:waypoint x="2442" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ye54ky_di" bpmnElement="Flow_1ye54ky">
+        <di:waypoint x="2030" y="320" />
+        <di:waypoint x="2090" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13xyjef_di" bpmnElement="Flow_13xyjef">
+        <di:waypoint x="1730" y="320" />
+        <di:waypoint x="1780" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1li8598_di" bpmnElement="Flow_1li8598">
+        <di:waypoint x="1812" y="170" />
+        <di:waypoint x="1698" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1f7q8k8_di" bpmnElement="Flow_1f7q8k8">
+        <di:waypoint x="1830" y="262" />
+        <di:waypoint x="1830" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_030zzhx_di" bpmnElement="Flow_030zzhx">
+        <di:waypoint x="1662" y="170" />
+        <di:waypoint x="1538" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0awukyp_di" bpmnElement="Flow_0awukyp">
+        <di:waypoint x="1680" y="262" />
+        <di:waypoint x="1680" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wr8v9o_di" bpmnElement="Flow_0wr8v9o">
+        <di:waypoint x="1570" y="320" />
+        <di:waypoint x="1630" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b4jyww_di" bpmnElement="Flow_1b4jyww">
+        <di:waypoint x="1420" y="320" />
+        <di:waypoint x="1470" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a1mlmu_di" bpmnElement="Flow_0a1mlmu">
+        <di:waypoint x="1502" y="170" />
+        <di:waypoint x="1388" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w2b2s3_di" bpmnElement="Flow_0w2b2s3">
+        <di:waypoint x="1520" y="262" />
+        <di:waypoint x="1520" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cswsw0_di" bpmnElement="Flow_0cswsw0">
+        <di:waypoint x="1280" y="320" />
+        <di:waypoint x="1320" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rs1vej_di" bpmnElement="Flow_0rs1vej">
+        <di:waypoint x="1352" y="170" />
+        <di:waypoint x="1248" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j4pdsh_di" bpmnElement="Flow_0j4pdsh">
+        <di:waypoint x="1370" y="262" />
+        <di:waypoint x="1370" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_168p52y_di" bpmnElement="Flow_168p52y">
+        <di:waypoint x="1094" y="262" />
+        <di:waypoint x="1094" y="80" />
+        <di:waypoint x="2390" y="80" />
+        <di:waypoint x="2390" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0onzy7k_di" bpmnElement="Flow_0onzy7k">
+        <di:waypoint x="1230" y="262" />
+        <di:waypoint x="1230" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lhhh6j_di" bpmnElement="Flow_1lhhh6j">
+        <di:waypoint x="1144" y="320" />
+        <di:waypoint x="1180" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1womev5_di" bpmnElement="Flow_1womev5">
+        <di:waypoint x="188" y="320" />
+        <di:waypoint x="230" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0r5j530_di" bpmnElement="Activity_19oxwov">
+        <dc:Bounds x="230" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_126rsmm_di" bpmnElement="Activity_0c3s87c">
+        <dc:Bounds x="370" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lkp0k6_di" bpmnElement="Activity_18bxdjw">
+        <dc:Bounds x="1044" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ppoqt1_di" bpmnElement="Activity_0qyxw2i">
+        <dc:Bounds x="1180" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qk3063_di" bpmnElement="Event_01f2l34">
+        <dc:Bounds x="1212" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1119" y="150" width="87" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_011vzqr_di" bpmnElement="Activity_0qv58g7">
+        <dc:Bounds x="1044" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qhvioz_di" bpmnElement="Activity_13781cp">
+        <dc:Bounds x="1320" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08qw25x_di" bpmnElement="Activity_14rpx5s">
+        <dc:Bounds x="1180" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1m8a1fo_di" bpmnElement="Event_1acbhck">
+        <dc:Bounds x="1352" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1334" y="122" width="72" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_086lh2b_di" bpmnElement="Activity_1b7i4j5">
+        <dc:Bounds x="1630" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1iwpvcn_di" bpmnElement="Event_1ooxe0v">
+        <dc:Bounds x="1502" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1483" y="122" width="75" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uhwusl_di" bpmnElement="Activity_11l83ke">
+        <dc:Bounds x="1320" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_021306k_di" bpmnElement="Activity_1k5srhe">
+        <dc:Bounds x="1470" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1st5k94_di" bpmnElement="Event_0ul7pja">
+        <dc:Bounds x="1812" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1787" y="122" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h6ag2b_di" bpmnElement="Activity_0g83tc6">
+        <dc:Bounds x="1630" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12vhy2q_di" bpmnElement="Activity_11wt35o">
+        <dc:Bounds x="1780" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1h41p4y_di" bpmnElement="Event_08tu3v1">
+        <dc:Bounds x="1662" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1636" y="122" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16p1lpy_di" bpmnElement="Activity_14k1ae4">
+        <dc:Bounds x="1470" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15mvtzl_di" bpmnElement="Activity_143xvws">
+        <dc:Bounds x="1930" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07k73a5_di" bpmnElement="Activity_188y3hj">
+        <dc:Bounds x="2090" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_05y5eb1_di" bpmnElement="Event_1ma303a">
+        <dc:Bounds x="2372" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1d0f88s_di" bpmnElement="Event_0tnurmf">
+        <dc:Bounds x="2442" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00edo2u_di" bpmnElement="Activity_1yh14ey">
+        <dc:Bounds x="920" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14ivdwq_di" bpmnElement="Activity_05tbryd">
+        <dc:Bounds x="760" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pz26f7_di" bpmnElement="Activity_0osqrom">
+        <dc:Bounds x="2230" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0zs4fvv_di" bpmnElement="Gateway_0zs4fvv" isMarkerVisible="true">
+        <dc:Bounds x="505" y="295" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0827kxt_di" bpmnElement="Activity_0bj12lh">
+        <dc:Bounds x="590" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0255p5x_di" bpmnElement="Event_0pgg1hp">
+        <dc:Bounds x="792" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_172wcdx_di" bpmnElement="Event_10ivwet">
+        <dc:Bounds x="406" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0jhmul6_di" bpmnElement="Event_1tqyeqq">
+        <dc:Bounds x="948" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08nm7cf_di" bpmnElement="Event_18uojv5">
+        <dc:Bounds x="1502" y="342" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1sc7q5i_di" bpmnElement="Event_0820t7o">
+        <dc:Bounds x="1812" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ro542h_di" bpmnElement="Event_1srh26z">
+        <dc:Bounds x="1502" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0res8sa_di" bpmnElement="Event_0ghy4r7">
+        <dc:Bounds x="1662" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0558trx_di" bpmnElement="Event_1lf12n5">
+        <dc:Bounds x="1662" y="342" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xt9903_di" bpmnElement="Event_00tsb0s">
+        <dc:Bounds x="1352" y="342" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0dmu6dy_di" bpmnElement="Event_1td5jyr">
+        <dc:Bounds x="1212" y="342" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ed0j4r_di" bpmnElement="Event_1gb2l15">
+        <dc:Bounds x="1352" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1cvqpm5_di" bpmnElement="Event_1043oqw">
+        <dc:Bounds x="1212" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_046z5r3_di" bpmnElement="Event_1uiap5h">
+        <dc:Bounds x="1076" y="342" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_11z83n3_di" bpmnElement="Event_0h2u30s">
+        <dc:Bounds x="1076" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1pqehbr_di" bpmnElement="Association_1pqehbr">
+        <di:waypoint x="1094" y="378" />
+        <di:waypoint x="1094" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_02v4pb7_di" bpmnElement="Association_02v4pb7">
+        <di:waypoint x="1230" y="378" />
+        <di:waypoint x="1230" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0clc1pv_di" bpmnElement="Association_0clc1pv">
+        <di:waypoint x="1370" y="378" />
+        <di:waypoint x="1370" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1bx5f2q_di" bpmnElement="Association_1bx5f2q">
+        <di:waypoint x="1680" y="378" />
+        <di:waypoint x="1680" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_10tejy2_di" bpmnElement="Association_10tejy2">
+        <di:waypoint x="1520" y="378" />
+        <di:waypoint x="1520" y="430" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1op9dhk" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="crm-create-update-person" name="(Main) crm-create-update-delete-person" isExecutable="true" camunda:versionTag="1" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0wd18yf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0wd18yf" sourceRef="StartEvent_1" targetRef="Activity_00bin9u" />
+    <bpmn:serviceTask id="Activity_00bin9u" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_0wd18yf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pb9ahz</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0pb9ahz" sourceRef="Activity_00bin9u" targetRef="Activity_0q2u8t0" />
+    <bpmn:sequenceFlow id="Flow_1g40czk" sourceRef="Activity_0q2u8t0" targetRef="Task_0pkpjyz" />
+    <bpmn:sequenceFlow id="Flow_0f42tw7" sourceRef="Activity_0wa4d4j" targetRef="Activity_1snbnv7" />
+    <bpmn:sequenceFlow id="Flow_19yyw4l" sourceRef="Activity_1snbnv7" targetRef="Activity_0edwd3r" />
+    <bpmn:sequenceFlow id="Flow_0e3raos" sourceRef="Activity_0zdfnbf" targetRef="Activity_1ripnw4" />
+    <bpmn:boundaryEvent id="Event_0kfp69m" attachedToRef="Activity_0q2u8t0">
+      <bpmn:outgoing>Flow_1ef44v9</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_140gbhu" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0ih51ls" sourceRef="Activity_1ripnw4" targetRef="Task_1xk8xf3" />
+    <bpmn:endEvent id="Event_0jh3dp1">
+      <bpmn:incoming>Flow_1ef44v9</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1ifnrpb</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1ao531s" camunda:type="external" camunda:topic="end-crm-create-update-person" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ef44v9" sourceRef="Event_0kfp69m" targetRef="Event_0jh3dp1" />
+    <bpmn:serviceTask id="Activity_0zdfnbf" name="update contact" camunda:type="external" camunda:topic="crm-action-contact">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="relation">person</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_11koymh</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e3raos</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0wa4d4j" name="update high risk register" camunda:type="external" camunda:topic="crm-update-high-risk-register">
+      <bpmn:incoming>SequenceFlow_1ic77by</bpmn:incoming>
+      <bpmn:outgoing>Flow_0f42tw7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1snbnv7" name="update cdd info" camunda:type="external" camunda:topic="crm-update-cdd-info">
+      <bpmn:incoming>Flow_0f42tw7</bpmn:incoming>
+      <bpmn:outgoing>Flow_19yyw4l</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_11koymh" sourceRef="Activity_0edwd3r" targetRef="Activity_0zdfnbf" />
+    <bpmn:serviceTask id="Activity_0edwd3r" name="update person identity" camunda:type="external" camunda:topic="crm-update-person-identity">
+      <bpmn:incoming>Flow_19yyw4l</bpmn:incoming>
+      <bpmn:outgoing>Flow_11koymh</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1ripnw4" name="update address" camunda:type="external" camunda:topic="crm-create-update-delete-address">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="relation">person</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0e3raos</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ih51ls</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0q2u8t0" name="update person" camunda:type="external" camunda:topic="crm-create-update-delete-person">
+      <bpmn:incoming>Flow_0pb9ahz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1g40czk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1ifnrpb" sourceRef="Task_1xk8xf3" targetRef="Event_0jh3dp1" />
+    <bpmn:scriptTask id="Task_1xk8xf3" name="create result" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_0ih51ls</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ifnrpb</bpmn:outgoing>
+      <bpmn:script>var person = JSON.parse(execution.getVariable("person"));
+var cddInfo = JSON.parse(execution.getVariable("cddInfo"));
+var contact = JSON.parse(execution.getVariable("contact"));
+var address = JSON.parse(execution.getVariable("address"));
+var stakeholder = JSON.parse(execution.getVariable("stakeholder"));
+var highRiskRegister = JSON.parse(execution.getVariable("highRiskRegister"));
+var personIdentity = JSON.parse(execution.getVariable("personIdentity"));
+var errors = JSON.parse(execution.getVariable("errorObject"));
+
+var response = {
+   "person": person,
+   "cddInfo" : cddInfo,
+   "contact": contact,
+   "address": address,
+   "stakeholder": stakeholder,
+   "highRiskRegister": highRiskRegister,
+   "personIdentity": personIdentity,
+   "errors": errors
+};
+
+var json = S(JSON.stringify(response));
+
+execution.setVariable("success",true);
+execution.setVariable("result",json);</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:serviceTask id="Task_0pkpjyz" name="update stakeholder" camunda:type="external" camunda:topic="crm-update-stakeholder">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="inputDataName">stakeholder</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1g40czk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ic77by</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1ic77by" sourceRef="Task_0pkpjyz" targetRef="Activity_0wa4d4j" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="crm-create-update-person">
+      <bpmndi:BPMNEdge id="SequenceFlow_1ic77by_di" bpmnElement="SequenceFlow_1ic77by">
+        <di:waypoint x="690" y="250" />
+        <di:waypoint x="753" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ifnrpb_di" bpmnElement="SequenceFlow_1ifnrpb">
+        <di:waypoint x="1640" y="250" />
+        <di:waypoint x="1682" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11koymh_di" bpmnElement="Flow_11koymh">
+        <di:waypoint x="1180" y="250" />
+        <di:waypoint x="1240" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ef44v9_di" bpmnElement="Flow_1ef44v9">
+        <di:waypoint x="480" y="192" />
+        <di:waypoint x="480" y="40" />
+        <di:waypoint x="1700" y="40" />
+        <di:waypoint x="1700" y="232" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ih51ls_di" bpmnElement="Flow_0ih51ls">
+        <di:waypoint x="1495" y="250" />
+        <di:waypoint x="1540" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e3raos_di" bpmnElement="Flow_0e3raos">
+        <di:waypoint x="1340" y="250" />
+        <di:waypoint x="1395" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19yyw4l_di" bpmnElement="Flow_19yyw4l">
+        <di:waypoint x="1017" y="250" />
+        <di:waypoint x="1080" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f42tw7_di" bpmnElement="Flow_0f42tw7">
+        <di:waypoint x="853" y="250" />
+        <di:waypoint x="917" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1g40czk_di" bpmnElement="Flow_1g40czk">
+        <di:waypoint x="530" y="250" />
+        <di:waypoint x="590" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pb9ahz_di" bpmnElement="Flow_0pb9ahz">
+        <di:waypoint x="370" y="250" />
+        <di:waypoint x="430" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wd18yf_di" bpmnElement="Flow_0wd18yf">
+        <di:waypoint x="218" y="250" />
+        <di:waypoint x="270" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="182" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13h1djx_di" bpmnElement="Activity_00bin9u">
+        <dc:Bounds x="270" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1lo9la7_di" bpmnElement="Event_0jh3dp1">
+        <dc:Bounds x="1682" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1k4175w_di" bpmnElement="Activity_0zdfnbf">
+        <dc:Bounds x="1240" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0vtebw7_di" bpmnElement="Activity_0wa4d4j">
+        <dc:Bounds x="753" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1may33m_di" bpmnElement="Activity_1snbnv7">
+        <dc:Bounds x="917" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_150m5vi_di" bpmnElement="Activity_0edwd3r">
+        <dc:Bounds x="1080" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0cuqf2q_di" bpmnElement="Activity_1ripnw4">
+        <dc:Bounds x="1395" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_105k0xr_di" bpmnElement="Activity_0q2u8t0">
+        <dc:Bounds x="430" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ScriptTask_1j4ffni_di" bpmnElement="Task_1xk8xf3">
+        <dc:Bounds x="1540" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1admc28_di" bpmnElement="Task_0pkpjyz">
+        <dc:Bounds x="590" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10i9c6n_di" bpmnElement="Event_0kfp69m">
+        <dc:Bounds x="462" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

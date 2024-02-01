@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0g6ohmo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+  <bpmn:process id="determine-credit-risk-parameter-sub" name="(Sub) Determine credit risk parameter" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>Flow_1cwau2f</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1cwau2f" sourceRef="StartEvent_1" targetRef="Activity_0dfwnu7" />
+    <bpmn:sequenceFlow id="Flow_09qvryj" sourceRef="Activity_0dfwnu7" targetRef="Activity_0ysquyq" />
+    <bpmn:endEvent id="Event_1wxlcov" name="End">
+      <bpmn:incoming>Flow_0uv0se2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0uv0se2" sourceRef="Activity_0ysquyq" targetRef="Event_1wxlcov" />
+    <bpmn:serviceTask id="Activity_0dfwnu7" name="Determine highest turnover bank-account" camunda:type="external" camunda:topic="determine-highest-turn-over-bank-account">
+      <bpmn:incoming>Flow_1cwau2f</bpmn:incoming>
+      <bpmn:outgoing>Flow_09qvryj</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0ysquyq" name="Create credit-risk-parameter" camunda:type="external" camunda:topic="create-risk-parameters">
+      <bpmn:incoming>Flow_09qvryj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0uv0se2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0ahff07" attachedToRef="Activity_0dfwnu7">
+      <bpmn:outgoing>Flow_0y1bgc9</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0j35dbd" errorRef="Error_05vt5re" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0c66vc1" attachedToRef="Activity_0ysquyq">
+      <bpmn:outgoing>Flow_1ojqcxb</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_07kvpjg" errorRef="Error_0y1d8zk" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0y1bgc9" sourceRef="Event_0ahff07" targetRef="Event_15kp9qi" />
+    <bpmn:sequenceFlow id="Flow_1ojqcxb" sourceRef="Event_0c66vc1" targetRef="Event_15kp9qi" />
+    <bpmn:endEvent id="Event_15kp9qi" name="Error">
+      <bpmn:incoming>Flow_0y1bgc9</bpmn:incoming>
+      <bpmn:incoming>Flow_1ojqcxb</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1gu71t9" errorRef="Error_1ih0b7h" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:error id="Error_05vt5re" name="Determine highest bank account error" errorCode="ERROR_DETERMINE_HIGHEST_BANK_ACCOUNT" camunda:errorMessage="Unexpected error occurred while determine highest turnover update failed" />
+  <bpmn:error id="Error_0y1d8zk" name="CRP create error" errorCode="ERROR_CREATE_CRP" camunda:errorMessage="Unexpected error occurred while creating credit-risk-parameters" />
+  <bpmn:error id="Error_1ih0b7h" name="CRP determine error" errorCode="ERROR_DETERMINE_CRP" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="determine-credit-risk-parameter-sub">
+      <bpmndi:BPMNEdge id="Flow_1ojqcxb_di" bpmnElement="Flow_1ojqcxb">
+        <di:waypoint x="440" y="178" />
+        <di:waypoint x="440" y="240" />
+        <di:waypoint x="542" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y1bgc9_di" bpmnElement="Flow_0y1bgc9">
+        <di:waypoint x="290" y="178" />
+        <di:waypoint x="290" y="240" />
+        <di:waypoint x="542" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uv0se2_di" bpmnElement="Flow_0uv0se2">
+        <di:waypoint x="490" y="120" />
+        <di:waypoint x="542" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09qvryj_di" bpmnElement="Flow_09qvryj">
+        <di:waypoint x="340" y="120" />
+        <di:waypoint x="390" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1cwau2f_di" bpmnElement="Flow_1cwau2f">
+        <di:waypoint x="198" y="120" />
+        <di:waypoint x="240" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="162" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="168" y="145" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1wxlcov_di" bpmnElement="Event_1wxlcov">
+        <dc:Bounds x="542" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="550" y="145" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0b96r5h_di" bpmnElement="Activity_0dfwnu7">
+        <dc:Bounds x="240" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wq8oks_di" bpmnElement="Activity_0ysquyq">
+        <dc:Bounds x="390" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_01jhllz_di" bpmnElement="Event_15kp9qi">
+        <dc:Bounds x="542" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="548" y="265" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1bcvjul_di" bpmnElement="Event_0c66vc1">
+        <dc:Bounds x="422" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_01yqsbh_di" bpmnElement="Event_0ahff07">
+        <dc:Bounds x="272" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

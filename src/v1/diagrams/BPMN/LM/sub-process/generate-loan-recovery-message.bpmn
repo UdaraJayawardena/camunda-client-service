@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1eb4vb9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="generate-loan-recovery-message" name="(Sub) Generate loan recovery message" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_14cflf1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_14cflf1" sourceRef="StartEvent_1" targetRef="Task_02bmaws" />
+    <bpmn:sequenceFlow id="SequenceFlow_0j8kug6" sourceRef="Task_02bmaws" targetRef="Task_1wpu5fv" />
+    <bpmn:serviceTask id="Task_02bmaws" name="Get sme-loan-history recovery messages" camunda:type="external" camunda:topic="get-sme-loan-history-recovery-message">
+      <bpmn:incoming>SequenceFlow_14cflf1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0j8kug6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:callActivity id="Task_1wpu5fv" name="Prepare emails" calledElement="prepare-emails" camunda:calledElementTenantId="LM">
+      <bpmn:extensionElements>
+        <camunda:in source="recoveryMessages" target="dataList" />
+        <camunda:inputOutput>
+          <camunda:inputParameter name="isSetSysIdList">YES</camunda:inputParameter>
+          <camunda:inputParameter name="emailType">sme-loan-history-recovery-message</camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:in local="true" variables="all" />
+        <camunda:out source="success" target="success" />
+        <camunda:out source="error" target="error" />
+        <camunda:out source="result" target="result" />
+        <camunda:in source="result" target="result" />
+        <camunda:out source="_idList" target="_idList" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0j8kug6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0n3nlfc</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="SequenceFlow_0n3nlfc" sourceRef="Task_1wpu5fv" targetRef="Activity_1jymo15" />
+    <bpmn:sequenceFlow id="Flow_111ccpz" sourceRef="Activity_1jymo15" targetRef="EndEvent_0v4mbe2" />
+    <bpmn:sendTask id="Activity_1jymo15" name="Send Emails" camunda:type="external" camunda:topic="send-loan-recovery-emails">
+      <bpmn:incoming>SequenceFlow_0n3nlfc</bpmn:incoming>
+      <bpmn:outgoing>Flow_111ccpz</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="EndEvent_0v4mbe2" name="Send emails">
+      <bpmn:incoming>Flow_111ccpz</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="Event_1iu4o6e" attachedToRef="Activity_1jymo15">
+      <bpmn:outgoing>Flow_0h7gkme</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0cn71v8" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0h7gkme" sourceRef="Event_1iu4o6e" targetRef="Event_1b0e0h6" />
+    <bpmn:endEvent id="Event_1b0e0h6">
+      <bpmn:incoming>Flow_0h7gkme</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1nd4nqs" errorRef="Error_0g5nusu" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:error id="Error_0g5nusu" name="Generate loan recovery message error" errorCode="ERROR_GENERATE_LOAN_RECOVERY_MESSAGE" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="generate-loan-recovery-message">
+      <bpmndi:BPMNEdge id="SequenceFlow_0n3nlfc_di" bpmnElement="SequenceFlow_0n3nlfc">
+        <di:waypoint x="500" y="227" />
+        <di:waypoint x="550" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0j8kug6_di" bpmnElement="SequenceFlow_0j8kug6">
+        <di:waypoint x="340" y="227" />
+        <di:waypoint x="400" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_14cflf1_di" bpmnElement="SequenceFlow_14cflf1">
+        <di:waypoint x="188" y="227" />
+        <di:waypoint x="240" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_111ccpz_di" bpmnElement="Flow_111ccpz">
+        <di:waypoint x="650" y="227" />
+        <di:waypoint x="722" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h7gkme_di" bpmnElement="Flow_0h7gkme">
+        <di:waypoint x="610" y="169" />
+        <di:waypoint x="610" y="100" />
+        <di:waypoint x="722" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1m9s73i_di" bpmnElement="Task_02bmaws">
+        <dc:Bounds x="240" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_0k6ubk6_di" bpmnElement="Task_1wpu5fv">
+        <dc:Bounds x="400" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13trfs9_di" bpmnElement="Activity_1jymo15">
+        <dc:Bounds x="550" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0agwwgm_di" bpmnElement="EndEvent_0v4mbe2">
+        <dc:Bounds x="722" y="209" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="709" y="252" width="62" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qzlo0n_di" bpmnElement="Event_1b0e0h6">
+        <dc:Bounds x="722" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0dwz8ld_di" bpmnElement="Event_1iu4o6e">
+        <dc:Bounds x="592" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

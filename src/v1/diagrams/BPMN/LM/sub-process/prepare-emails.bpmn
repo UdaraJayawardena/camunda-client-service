@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0a9l6no" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="prepare-emails" name="(Sub) Prepare emails" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>SequenceFlow_1o5m6hf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_0rtcwop" name="End">
+      <bpmn:incoming>SequenceFlow_1mmv266</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1o5m6hf" sourceRef="StartEvent_1" targetRef="Task_0iongdi" />
+    <bpmn:sequenceFlow id="SequenceFlow_1eg2isp" sourceRef="Task_0iongdi" targetRef="Task_18vc910" />
+    <bpmn:boundaryEvent id="BoundaryEvent_0kgw9xc" attachedToRef="Task_0iongdi">
+      <bpmn:outgoing>SequenceFlow_0c1pb7j</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_1yovd72" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="IntermediateThrowEvent_0i92660" name="Error end">
+      <bpmn:incoming>SequenceFlow_0c1pb7j</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0lkit9x</bpmn:incoming>
+      <bpmn:errorEventDefinition errorRef="Error_1t52fl1" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0c1pb7j" sourceRef="BoundaryEvent_0kgw9xc" targetRef="IntermediateThrowEvent_0i92660" />
+    <bpmn:serviceTask id="Task_0iongdi" name="Prepare Email List" camunda:type="external" camunda:topic="prepare-email-list">
+      <bpmn:incoming>SequenceFlow_1o5m6hf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1eg2isp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_18vc910" name="Create emails" camunda:type="external" camunda:topic="create-emails">
+      <bpmn:incoming>SequenceFlow_1eg2isp</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1mmv266</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1mmv266" sourceRef="Task_18vc910" targetRef="EndEvent_0rtcwop" />
+    <bpmn:boundaryEvent id="BoundaryEvent_1q4hvkt" attachedToRef="Task_18vc910">
+      <bpmn:outgoing>SequenceFlow_0lkit9x</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_0u3a0rl" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0lkit9x" sourceRef="BoundaryEvent_1q4hvkt" targetRef="IntermediateThrowEvent_0i92660" />
+  </bpmn:process>
+  <bpmn:error id="Error_1yovd72" name="Prepare email list error" errorCode="ERROR_PREPARE_EMAIL_LIST" />
+  <bpmn:error id="Error_0u3a0rl" name="Create emails error" errorCode="ERROR_CREATE_EMAILS" />
+  <bpmn:error id="Error_1t52fl1" name="Preparing emails error" errorCode="ERROR_PREPARING_EMAILS" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="prepare-emails">
+      <bpmndi:BPMNEdge id="SequenceFlow_0lkit9x_di" bpmnElement="SequenceFlow_0lkit9x">
+        <di:waypoint x="490" y="155" />
+        <di:waypoint x="490" y="230" />
+        <di:waypoint x="592" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1mmv266_di" bpmnElement="SequenceFlow_1mmv266">
+        <di:waypoint x="540" y="97" />
+        <di:waypoint x="592" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0c1pb7j_di" bpmnElement="SequenceFlow_0c1pb7j">
+        <di:waypoint x="320" y="155" />
+        <di:waypoint x="320" y="230" />
+        <di:waypoint x="592" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1eg2isp_di" bpmnElement="SequenceFlow_1eg2isp">
+        <di:waypoint x="370" y="97" />
+        <di:waypoint x="440" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1o5m6hf_di" bpmnElement="SequenceFlow_1o5m6hf">
+        <di:waypoint x="215" y="97" />
+        <di:waypoint x="270" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="185" y="122" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0rtcwop_di" bpmnElement="EndEvent_0rtcwop">
+        <dc:Bounds x="592" y="79" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="600" y="122" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1p1aj9l_di" bpmnElement="IntermediateThrowEvent_0i92660">
+        <dc:Bounds x="592" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="588" y="255" width="46" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1vr6eqb_di" bpmnElement="Task_0iongdi">
+        <dc:Bounds x="270" y="57" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0mwi92f_di" bpmnElement="Task_18vc910">
+        <dc:Bounds x="440" y="57" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0kktlew_di" bpmnElement="BoundaryEvent_1q4hvkt">
+        <dc:Bounds x="472" y="119" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1a0m7ed_di" bpmnElement="BoundaryEvent_0kgw9xc">
+        <dc:Bounds x="302" y="119" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

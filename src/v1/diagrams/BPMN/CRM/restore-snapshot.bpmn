@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_120sx41" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="restore-snapshot" name="(Main) restore-snapshot" isExecutable="true" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_10gv16a</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_0i4j7yo" name="init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>SequenceFlow_10gv16a</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0qlio46</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_10gv16a" sourceRef="StartEvent_1" targetRef="Task_0i4j7yo" />
+    <bpmn:serviceTask id="Task_01cyk0b" name="restore crm snapshot" camunda:type="external" camunda:topic="restore-crm-snapshot">
+      <bpmn:incoming>SequenceFlow_0qlio46</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0xd9adw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0qlio46" sourceRef="Task_0i4j7yo" targetRef="Task_01cyk0b" />
+    <bpmn:endEvent id="EndEvent_0l8wysu">
+      <bpmn:incoming>SequenceFlow_189wodv</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0duseyf</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1husgys</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0w7b6e8" messageRef="Message_1v428vx" camunda:type="external" camunda:topic="end-restore-snapshot" />
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_08jxaj7" attachedToRef="Task_01cyk0b">
+      <bpmn:outgoing>SequenceFlow_189wodv</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0yhvtyu" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_189wodv" sourceRef="IntermediateThrowEvent_08jxaj7" targetRef="EndEvent_0l8wysu" />
+    <bpmn:sequenceFlow id="SequenceFlow_1husgys" sourceRef="Task_0jxzpbg" targetRef="EndEvent_0l8wysu" />
+    <bpmn:sequenceFlow id="SequenceFlow_0xd9adw" sourceRef="Task_01cyk0b" targetRef="Task_0jxzpbg" />
+    <bpmn:serviceTask id="Task_0jxzpbg" name="restore initiation snapshot" camunda:type="external" camunda:topic="restore-initiation-snapshot">
+      <bpmn:incoming>SequenceFlow_0xd9adw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1husgys</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_1xslda2" attachedToRef="Task_0jxzpbg">
+      <bpmn:outgoing>SequenceFlow_0duseyf</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0od3ncc" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0duseyf" sourceRef="IntermediateThrowEvent_1xslda2" targetRef="EndEvent_0l8wysu" />
+  </bpmn:process>
+  <bpmn:message id="Message_1v428vx" name="Message_26h7d74" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="restore-snapshot">
+      <bpmndi:BPMNEdge id="SequenceFlow_0duseyf_di" bpmnElement="SequenceFlow_0duseyf">
+        <di:waypoint x="670" y="298" />
+        <di:waypoint x="670" y="390" />
+        <di:waypoint x="900" y="390" />
+        <di:waypoint x="900" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0xd9adw_di" bpmnElement="SequenceFlow_0xd9adw">
+        <di:waypoint x="470" y="240" />
+        <di:waypoint x="620" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1husgys_di" bpmnElement="SequenceFlow_1husgys">
+        <di:waypoint x="720" y="240" />
+        <di:waypoint x="882" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_189wodv_di" bpmnElement="SequenceFlow_189wodv">
+        <di:waypoint x="420" y="298" />
+        <di:waypoint x="420" y="390" />
+        <di:waypoint x="900" y="390" />
+        <di:waypoint x="900" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0qlio46_di" bpmnElement="SequenceFlow_0qlio46">
+        <di:waypoint x="247" y="240" />
+        <di:waypoint x="370" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_10gv16a_di" bpmnElement="SequenceFlow_10gv16a">
+        <di:waypoint x="197" y="115" />
+        <di:waypoint x="197" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0xfue9e_di" bpmnElement="Task_0i4j7yo">
+        <dc:Bounds x="147" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_13mizqg_di" bpmnElement="Task_01cyk0b">
+        <dc:Bounds x="370" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_01fspo9_di" bpmnElement="EndEvent_0l8wysu">
+        <dc:Bounds x="882" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0gpavfk_di" bpmnElement="Task_0jxzpbg">
+        <dc:Bounds x="620" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0r70um3_di" bpmnElement="IntermediateThrowEvent_1xslda2">
+        <dc:Bounds x="652" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1gprxpv_di" bpmnElement="IntermediateThrowEvent_08jxaj7">
+        <dc:Bounds x="402" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

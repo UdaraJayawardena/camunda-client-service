@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1xdd8ek" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="update-sme-loan-maturity" name="(Sub) Update sme loan maturity" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0oeu9lv</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0oeu9lv" sourceRef="StartEvent_1" targetRef="Task_0f4z55r" />
+    <bpmn:sequenceFlow id="SequenceFlow_1xw1jt2" sourceRef="Task_0f4z55r" targetRef="EndEvent_0pb97bh" />
+    <bpmn:endEvent id="EndEvent_0pb97bh">
+      <bpmn:incoming>SequenceFlow_1xw1jt2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_0f4z55r" name="Update SME Loan Maturity Date" camunda:type="external" camunda:topic="update-sme-loan-maturity-date">
+      <bpmn:incoming>SequenceFlow_0oeu9lv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1xw1jt2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_0t9foiv" attachedToRef="Task_0f4z55r">
+      <bpmn:outgoing>SequenceFlow_1hb08hb</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0ufqsdu" errorRef="Error_07okar6" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="EndEvent_0rtxmkh">
+      <bpmn:incoming>SequenceFlow_1hb08hb</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_11js8j0" errorRef="Error_07okar6" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1hb08hb" sourceRef="IntermediateThrowEvent_0t9foiv" targetRef="EndEvent_0rtxmkh" />
+  </bpmn:process>
+  <bpmn:error id="Error_07okar6" name="ERROR_UPDATE_SME_LOAN_MATURITY" errorCode="500" camunda:errorMessage="error occured while updating the loan maturity date" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="update-sme-loan-maturity">
+      <bpmndi:BPMNEdge id="SequenceFlow_1hb08hb_di" bpmnElement="SequenceFlow_1hb08hb">
+        <di:waypoint x="400" y="129" />
+        <di:waypoint x="400" y="100" />
+        <di:waypoint x="592" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1xw1jt2_di" bpmnElement="SequenceFlow_1xw1jt2">
+        <di:waypoint x="450" y="187" />
+        <di:waypoint x="592" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0oeu9lv_di" bpmnElement="SequenceFlow_0oeu9lv">
+        <di:waypoint x="215" y="187" />
+        <di:waypoint x="350" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0pb97bh_di" bpmnElement="EndEvent_0pb97bh">
+        <dc:Bounds x="592" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0n98qg1_di" bpmnElement="EndEvent_0rtxmkh">
+        <dc:Bounds x="592" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_11dihrv_di" bpmnElement="Task_0f4z55r">
+        <dc:Bounds x="350" y="147" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0tjsdgn_di" bpmnElement="IntermediateThrowEvent_0t9foiv">
+        <dc:Bounds x="382" y="129" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

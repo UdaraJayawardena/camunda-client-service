@@ -1,0 +1,24 @@
+paths:
+  /groups/sync:
+    post:
+      tags:
+        - Group
+      summary: "Sync All Jump cloud groups to camunda."
+      produces:
+        - application/json
+      responses:
+        204:
+          description: No content.
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "integer"
+                default: 204
+              success:
+                type: "boolean"
+                default: true
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

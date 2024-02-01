@@ -1,0 +1,21 @@
+{
+  "ALLOWED_DOMAINS": [
+    "http://localhost:3000"
+  ],
+  "camunda": {
+    "baseUrl": "http://localhost:8080/engine-rest",
+    "asyncResponseTimeout": 10000,
+    "manual-process": [
+      "contract-management",
+      "loan-initiation",
+      "revision-flex-loan"
+    ],
+    "auth": {
+      "username": "demo",
+      "password": "demo"
+    }
+  },
+  "authentication": {
+    "baseUrl": "http://localhost:6003/v1"
+  }
+}

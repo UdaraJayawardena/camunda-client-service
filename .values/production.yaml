@@ -1,0 +1,15 @@
+deployment:
+  image:
+    repository: 336144032973.dkr.ecr.eu-central-1.amazonaws.com/bf-api-initiation-camunda-client
+  env:
+    ENVIRONMENT: production
+hostName: camunda-client.bridgefund.net
+secrets:
+  env:
+    enabled: true
+    name: initiation-camunda-client-env
+  config:
+    enabled: true
+    name: initiation-camunda-client-config
+    mountpath: /usr/src/app/config/env/production.json
+    subpath: production.json

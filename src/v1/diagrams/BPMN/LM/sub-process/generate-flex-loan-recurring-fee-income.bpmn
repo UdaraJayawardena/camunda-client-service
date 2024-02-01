@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_05ff3af" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="generate-flex-loan-recurring-fee-income" name="(Sub) Generate Flex Loan Recurring Fee Income" isExecutable="true" camunda:versionTag="1.3.4" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1i795xh</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1i795xh" sourceRef="StartEvent_1" targetRef="Activity_09jitht" />
+    <bpmn:serviceTask id="Activity_09jitht" name="Get flex loans for generate recurring fee income" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:type="external" camunda:topic="Get-flex-loans-for-generate-recurring-fee-income">
+      <bpmn:incoming>Flow_1i795xh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sllb7e</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0a9g943" attachedToRef="Activity_09jitht">
+      <bpmn:outgoing>Flow_0g1xfap</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1ic7n3d" errorRef="Error_1jlmh77" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="Event_1012ipr">
+      <bpmn:incoming>Flow_0szn519</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_0j9dxep" name="Generate flex loan recurring fee income" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:type="external" camunda:topic="Generate-flex-loan-recurring-fee-income">
+      <bpmn:incoming>Flow_1sllb7e</bpmn:incoming>
+      <bpmn:outgoing>Flow_0szn519</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0mdqlxd" attachedToRef="Activity_0j9dxep">
+      <bpmn:outgoing>Flow_0bjddlk</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0k3ld44" errorRef="Error_157t267" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1sllb7e" sourceRef="Activity_09jitht" targetRef="Activity_0j9dxep" />
+    <bpmn:sequenceFlow id="Flow_0szn519" sourceRef="Activity_0j9dxep" targetRef="Event_1012ipr" />
+    <bpmn:endEvent id="Event_1h4ubfo">
+      <bpmn:incoming>Flow_0g1xfap</bpmn:incoming>
+      <bpmn:incoming>Flow_0bjddlk</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1b99ksk" errorRef="Error_1f64aye" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0g1xfap" sourceRef="Event_0a9g943" targetRef="Event_1h4ubfo" />
+    <bpmn:sequenceFlow id="Flow_0bjddlk" sourceRef="Event_0mdqlxd" targetRef="Event_1h4ubfo" />
+  </bpmn:process>
+  <bpmn:error id="Error_1jlmh77" name="Get flex loans error" errorCode="ERROR_GET_FLEX_LOANS_FOR_GENERATE_RECURRING_FEE_INCOME" />
+  <bpmn:error id="Error_157t267" name="Generate recurring fee income error" errorCode="GENERATE_RECURRING_FEE_INCOME_ERROR" />
+  <bpmn:error id="Error_1f64aye" name="Generate flex loan reccuring fee income error" errorCode="GENERATE_FLEX_LOAN_RECURRING_FEE_INCOME_ERROR" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="generate-flex-loan-recurring-fee-income">
+      <bpmndi:BPMNEdge id="Flow_0bjddlk_di" bpmnElement="Flow_0bjddlk">
+        <di:waypoint x="610" y="178" />
+        <di:waypoint x="610" y="250" />
+        <di:waypoint x="812" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g1xfap_di" bpmnElement="Flow_0g1xfap">
+        <di:waypoint x="370" y="178" />
+        <di:waypoint x="370" y="250" />
+        <di:waypoint x="812" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0szn519_di" bpmnElement="Flow_0szn519">
+        <di:waypoint x="660" y="120" />
+        <di:waypoint x="812" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sllb7e_di" bpmnElement="Flow_1sllb7e">
+        <di:waypoint x="420" y="120" />
+        <di:waypoint x="560" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i795xh_di" bpmnElement="Flow_1i795xh">
+        <di:waypoint x="215" y="120" />
+        <di:waypoint x="320" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1i1h65k_di" bpmnElement="Activity_09jitht">
+        <dc:Bounds x="320" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1012ipr_di" bpmnElement="Event_1012ipr">
+        <dc:Bounds x="812" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1gwymk3_di" bpmnElement="Activity_0j9dxep">
+        <dc:Bounds x="560" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_00gmu5k_di" bpmnElement="Event_1h4ubfo">
+        <dc:Bounds x="812" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0v00l0d_di" bpmnElement="Event_0mdqlxd">
+        <dc:Bounds x="592" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0p1xlm2_di" bpmnElement="Event_0a9g943">
+        <dc:Bounds x="352" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

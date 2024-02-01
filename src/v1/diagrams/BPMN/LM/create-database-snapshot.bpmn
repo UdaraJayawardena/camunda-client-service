@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0pnl9nj" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="create-database-snapshot" name="(Main) Create database snapshot" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1jti04h</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1jti04h" sourceRef="StartEvent_1" targetRef="Activity_1bvnxps" />
+    <bpmn:serviceTask id="Activity_1deubbv" name="save database snapshot" camunda:type="external" camunda:topic="add-database-snapshot">
+      <bpmn:incoming>Flow_01wr3e3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0n30yy7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0n30yy7" sourceRef="Activity_1deubbv" targetRef="Activity_1ksj2ra" />
+    <bpmn:serviceTask id="Activity_1ksj2ra" name="create database snapshot" camunda:type="external" camunda:topic="create-database-snapshot">
+      <bpmn:incoming>Flow_0n30yy7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1h88pin</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1h88pin" sourceRef="Activity_1ksj2ra" targetRef="Activity_1uapjmb" />
+    <bpmn:serviceTask id="Activity_1uapjmb" name="save db snapshot bridgefund foundation" camunda:type="external" camunda:topic="add-database-snapshot-bridgefund-foundation">
+      <bpmn:incoming>Flow_1h88pin</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jghz8x</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0jghz8x" sourceRef="Activity_1uapjmb" targetRef="Activity_0u589df" />
+    <bpmn:serviceTask id="Activity_0u589df" name="create database snapshot bridgefund foundation" camunda:type="external" camunda:topic="create-database-snapshot-bridgefund-foundation">
+      <bpmn:incoming>Flow_0jghz8x</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vsxixf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0rmppt3">
+      <bpmn:incoming>Flow_1vsxixf</bpmn:incoming>
+      <bpmn:incoming>Flow_0ovbhci</bpmn:incoming>
+      <bpmn:incoming>Flow_12153w1</bpmn:incoming>
+      <bpmn:incoming>Flow_1semxym</bpmn:incoming>
+      <bpmn:incoming>Flow_0lwat7v</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0tmztjf" camunda:type="external" camunda:topic="end-create-database-snapshot" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1vsxixf" sourceRef="Activity_0u589df" targetRef="Event_0rmppt3" />
+    <bpmn:boundaryEvent id="Event_0hkz0nb" attachedToRef="Activity_1deubbv">
+      <bpmn:outgoing>Flow_0ovbhci</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_06rphh7" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_19tt23d" attachedToRef="Activity_1ksj2ra">
+      <bpmn:outgoing>Flow_12153w1</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_10mwbfc" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_104akee" attachedToRef="Activity_1uapjmb">
+      <bpmn:outgoing>Flow_1semxym</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0k3c6vr" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0z2iwwu" attachedToRef="Activity_0u589df">
+      <bpmn:outgoing>Flow_0lwat7v</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1r79q2p" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0ovbhci" sourceRef="Event_0hkz0nb" targetRef="Event_0rmppt3" />
+    <bpmn:sequenceFlow id="Flow_12153w1" sourceRef="Event_19tt23d" targetRef="Event_0rmppt3" />
+    <bpmn:sequenceFlow id="Flow_1semxym" sourceRef="Event_104akee" targetRef="Event_0rmppt3" />
+    <bpmn:sequenceFlow id="Flow_0lwat7v" sourceRef="Event_0z2iwwu" targetRef="Event_0rmppt3" />
+    <bpmn:boundaryEvent id="Event_0nz7k43" attachedToRef="Activity_1ksj2ra">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_1t1517r" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0roby62" attachedToRef="Activity_1uapjmb">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_10qyo2a" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0310tka" attachedToRef="Activity_0u589df">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_0emk6rw" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_184utak" attachedToRef="Activity_1deubbv">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_04k7heg" />
+    </bpmn:boundaryEvent>
+    <bpmn:task id="Activity_1mj9dq0" name="rollback snapshot db entry" isForCompensation="true" />
+    <bpmn:serviceTask id="Activity_1bvnxps" name="Init" camunda:type="external" camunda:topic="init">
+      <bpmn:incoming>Flow_1jti04h</bpmn:incoming>
+      <bpmn:outgoing>Flow_01wr3e3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_01wr3e3" sourceRef="Activity_1bvnxps" targetRef="Activity_1deubbv" />
+    <bpmn:association id="Association_0d72iqa" associationDirection="One" sourceRef="Event_184utak" targetRef="Activity_1mj9dq0" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="create-database-snapshot">
+      <bpmndi:BPMNEdge id="Flow_01wr3e3_di" bpmnElement="Flow_01wr3e3">
+        <di:waypoint x="330" y="327" />
+        <di:waypoint x="370" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lwat7v_di" bpmnElement="Flow_0lwat7v">
+        <di:waypoint x="940" y="385" />
+        <di:waypoint x="940" y="430" />
+        <di:waypoint x="1090" y="430" />
+        <di:waypoint x="1090" y="345" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1semxym_di" bpmnElement="Flow_1semxym">
+        <di:waypoint x="760" y="385" />
+        <di:waypoint x="760" y="430" />
+        <di:waypoint x="1090" y="430" />
+        <di:waypoint x="1090" y="345" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12153w1_di" bpmnElement="Flow_12153w1">
+        <di:waypoint x="590" y="385" />
+        <di:waypoint x="590" y="430" />
+        <di:waypoint x="1090" y="430" />
+        <di:waypoint x="1090" y="345" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ovbhci_di" bpmnElement="Flow_0ovbhci">
+        <di:waypoint x="420" y="385" />
+        <di:waypoint x="420" y="430" />
+        <di:waypoint x="1090" y="430" />
+        <di:waypoint x="1090" y="345" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vsxixf_di" bpmnElement="Flow_1vsxixf">
+        <di:waypoint x="990" y="327" />
+        <di:waypoint x="1072" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jghz8x_di" bpmnElement="Flow_0jghz8x">
+        <di:waypoint x="810" y="327" />
+        <di:waypoint x="890" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h88pin_di" bpmnElement="Flow_1h88pin">
+        <di:waypoint x="640" y="327" />
+        <di:waypoint x="710" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0n30yy7_di" bpmnElement="Flow_0n30yy7">
+        <di:waypoint x="470" y="327" />
+        <di:waypoint x="540" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jti04h_di" bpmnElement="Flow_1jti04h">
+        <di:waypoint x="188" y="327" />
+        <di:waypoint x="230" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="309" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qrthef_di" bpmnElement="Activity_1deubbv">
+        <dc:Bounds x="370" y="287" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0idr9te_di" bpmnElement="Activity_1ksj2ra">
+        <dc:Bounds x="540" y="287" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gq6bsm_di" bpmnElement="Activity_1uapjmb">
+        <dc:Bounds x="710" y="287" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0fiata3_di" bpmnElement="Activity_0u589df">
+        <dc:Bounds x="890" y="287" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0c5zs3u_di" bpmnElement="Event_0rmppt3">
+        <dc:Bounds x="1072" y="309" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1mj9dq0_di" bpmnElement="Activity_1mj9dq0">
+        <dc:Bounds x="370" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bvnxps_di" bpmnElement="Activity_1bvnxps">
+        <dc:Bounds x="230" y="287" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1noksgt_di" bpmnElement="Event_184utak">
+        <dc:Bounds x="402" y="269" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1x7h12y_di" bpmnElement="Event_0310tka">
+        <dc:Bounds x="922" y="269" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_09j9cpw_di" bpmnElement="Event_0roby62">
+        <dc:Bounds x="742" y="269" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0pt7avs_di" bpmnElement="Event_0nz7k43">
+        <dc:Bounds x="572" y="269" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0cuzphx_di" bpmnElement="Event_0z2iwwu">
+        <dc:Bounds x="922" y="349" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_01otyfk_di" bpmnElement="Event_104akee">
+        <dc:Bounds x="742" y="349" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0bd3910_di" bpmnElement="Event_19tt23d">
+        <dc:Bounds x="572" y="349" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0yzbsib_di" bpmnElement="Event_0hkz0nb">
+        <dc:Bounds x="402" y="349" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0d72iqa_di" bpmnElement="Association_0d72iqa">
+        <di:waypoint x="420" y="269" />
+        <di:waypoint x="420" y="170" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

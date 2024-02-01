@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_17o8bqh" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="calculate-liquidity-requirement-overview" name="(Sub) Calculate Liquidity Requirement Overview" isExecutable="true" camunda:versionTag="1.3.3" camunda:historyTimeToLive="P5D">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0kf1tkz</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0kf1tkz" sourceRef="StartEvent_1" targetRef="Task_1oz8uq1" />
+    <bpmn:serviceTask id="Task_1oz8uq1" name="Calculate Liquidity Requirements" camunda:type="external" camunda:topic="calculate-liquidity-requirement-overview-data">
+      <bpmn:incoming>SequenceFlow_0kf1tkz</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0hu9zfk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0hu9zfk" sourceRef="Task_1oz8uq1" targetRef="EndEvent_0cm0n8n" />
+    <bpmn:boundaryEvent id="IntermediateThrowEvent_1xuq8iz" attachedToRef="Task_1oz8uq1">
+      <bpmn:outgoing>SequenceFlow_096dj7b</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_0lpj13q" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_096dj7b" sourceRef="IntermediateThrowEvent_1xuq8iz" targetRef="EndEvent_0cm0n8n" />
+    <bpmn:endEvent id="EndEvent_0cm0n8n">
+      <bpmn:incoming>SequenceFlow_0hu9zfk</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_096dj7b</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:error id="Error_0lpj13q" name="Calculate liquidity requirement error" errorCode="ERROR_CALCULATE_LIQUIDITY_REQUIREMENT" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="calculate-liquidity-requirement-overview">
+      <bpmndi:BPMNEdge id="SequenceFlow_096dj7b_di" bpmnElement="SequenceFlow_096dj7b">
+        <di:waypoint x="340" y="59" />
+        <di:waypoint x="340" y="39" />
+        <di:waypoint x="450" y="39" />
+        <di:waypoint x="450" y="99" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0hu9zfk_di" bpmnElement="SequenceFlow_0hu9zfk">
+        <di:waypoint x="360" y="117" />
+        <di:waypoint x="432" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0kf1tkz_di" bpmnElement="SequenceFlow_0kf1tkz">
+        <di:waypoint x="188" y="117" />
+        <di:waypoint x="260" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_00kvvnv_di" bpmnElement="Task_1oz8uq1">
+        <dc:Bounds x="260" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0yc2sz0_di" bpmnElement="EndEvent_0cm0n8n">
+        <dc:Bounds x="432" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1mb2t0y_di" bpmnElement="IntermediateThrowEvent_1xuq8iz">
+        <dc:Bounds x="322" y="59" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
